@@ -1,0 +1,121 @@
+{
+  "signature": "DROID_STUDIO_PROJECT_V30",
+  "extension": ".dui",
+  "appTitle": "Droid Mobile Studio",
+  "schemaVersion": 30,
+  "createdAt": "2026-10-27T09:15:00.000Z",
+  "projectMeta": {
+    "id": "proj_ecommerce",
+    "name": "E-Commerce Checkout App",
+    "nodeCount": 6
+  },
+  "workspaceState": {
+    "currentTheme": "dark",
+    "activeLocale": "en",
+    "splashConfig": {
+      "enabled": true,
+      "title": "Storefront Mobile",
+      "subtitle": "Seamless Checkout",
+      "logoIcon": "\ud83d\uded2",
+      "backgroundColor": "#0f172a",
+      "titleColor": "#ffffff",
+      "durationMs": 2000,
+      "showSpinner": true,
+      "animationType": "fade"
+    },
+    "i18nDict": {
+      "checkout_title": {
+        "en": "Order Summary",
+        "es": "Resumen del Pedido",
+        "fr": "R\u00e9capitulatif de Commande",
+        "de": "Bestell\u00fcbersicht",
+        "ja": "\u6ce8\u6587\u306e\u6982\u8981",
+        "zh": "\u8ba2\u5355\u6458\u8981"
+      },
+      "pay_btn": {
+        "en": "Pay 29.99 Now",
+        "es": "Pagar 29.99 Ahora",
+        "fr": "Payer 129,99 $",
+        "de": "Jetzt 129,99 $ Zahlen",
+        "ja": "29.99 \u4eca\u3059\u3050\u652f\u6255\u3046",
+        "zh": "\u7acb\u5373\u652f\u4ed8 29.99"
+      }
+    },
+    "rootNode": {
+      "id": "root_container",
+      "type": "Container",
+      "style": {
+        "flexDirection": "column",
+        "padding": 16,
+        "backgroundColor": "#1e293b",
+        "borderRadius": 12
+      },
+      "children": [
+        {
+          "id": "cart_header",
+          "type": "Text",
+          "props": {
+            "text": "Order Summary",
+            "i18nKey": "checkout_title"
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#f8fafc",
+            "fontWeight": "bold",
+            "marginBottom": 12
+          }
+        },
+        {
+          "id": "item_card",
+          "type": "Card",
+          "style": {
+            "padding": 12,
+            "backgroundColor": "#0f172a",
+            "borderRadius": 8,
+            "marginBottom": 12
+          },
+          "children": [
+            {
+              "id": "item_title",
+              "type": "Text",
+              "props": {
+                "text": "Wireless Noise-Canceling Headphones"
+              },
+              "style": {
+                "fontSize": 14,
+                "color": "#38bdf8",
+                "fontWeight": "bold"
+              }
+            },
+            {
+              "id": "item_price",
+              "type": "Text",
+              "props": {
+                "text": "29.99 \u2022 Qty 1"
+              },
+              "style": {
+                "fontSize": 12,
+                "color": "#10b981",
+                "marginTop": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "btn_pay",
+          "type": "Button",
+          "props": {
+            "label": "Pay 29.99 Now",
+            "i18nKey": "pay_btn"
+          },
+          "style": {
+            "backgroundColor": "#10b981",
+            "padding": 12,
+            "borderRadius": 8,
+            "alignItems": "center"
+          }
+        }
+      ]
+    }
+  }
+}
