@@ -40,7 +40,7 @@ jobs:
 
       - name: Install JavaScript dependencies
         working-directory: app
-        run: npm install --no-audit --no-fund
+        run: npm ci
 
       - name: TypeScript check
         working-directory: app
