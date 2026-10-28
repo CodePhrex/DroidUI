@@ -18,7 +18,7 @@ jobs:
   inspect:
     name: Static inspection and TypeScript
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -27,8 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: app/package-lock.json
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -36,6 +34,8 @@ jobs:
           python-version: "3.12"
 
       - name: Validate package manifests and repository requirements
+        id: repository_qa
+        continue-on-error: true
         run: python scripts/droid_studio_qa_runner.py
 
       - name: Install JavaScript dependencies
@@ -49,6 +49,18 @@ jobs:
       - name: Validate Expo configuration
         working-directory: app
         run: npx expo config --type public
+
+      - name: Enforce repository inspection result
+        if: always()
+        env:
+          REPOSITORY_QA_OUTCOME: ${{ steps.repository_qa.outcome }}
+          INSTALL_OUTCOME: ${{ steps.repository_qa.outcome }}
+        shell: bash
+        run: |
+          if [[ "$REPOSITORY_QA_OUTCOME" != "success" ]]; then
+            echo "Repository inspection gates failed. Review the Python QA output above." >&2
+            exit 1
+          fi
 
       - name: Upload inspection context
         if: always()
