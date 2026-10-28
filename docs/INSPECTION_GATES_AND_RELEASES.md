@@ -64,4 +64,4 @@ npm run typecheck
 npx expo config --type public
 ```
 
-Once `app/package-lock.json` has been generated and committed, prefer `npm ci` for clean, reproducible installs. Runtime acceptance must still cover app cold start, navigation, project save/reopen, asset import, export, clipboard behavior, and at least one physical Android device.
+Commit `app/package-lock.json` as soon as possible. With the lockfile committed, CI uses `npm ci` for clean, reproducible installs. Runtime acceptance must still cover app cold start, navigation, project save/reopen, asset import, export, clipboard behavior, and at least one physical Android device.
