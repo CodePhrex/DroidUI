@@ -1,0 +1,63 @@
+name: DroidUI Inspection Gates
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: inspection-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  inspect:
+    name: Static inspection and TypeScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate package manifests and repository requirements
+        run: python scripts/droid_studio_qa_runner.py
+
+      - name: Install JavaScript dependencies
+        working-directory: app
+        run: npm install --no-audit --no-fund
+
+      - name: TypeScript check
+        working-directory: app
+        run: npm run typecheck
+
+      - name: Validate Expo configuration
+        working-directory: app
+        run: npx expo config --type public
+
+      - name: Upload inspection context
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: droidui-inspection-context
+          path: |
+            app/package.json
+            app/app.json
+            app/tsconfig.json
+          if-no-files-found: warn
+          retention-days: 14
