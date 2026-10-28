@@ -40,7 +40,14 @@ jobs:
 
       - name: Install JavaScript dependencies
         working-directory: app
-        run: npm ci
+        shell: bash
+        run: |
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            echo "::warning::app/package-lock.json is missing; running a non-reproducible install only to continue diagnostics."
+            npm install --package-lock=false --no-audit --no-fund
+          fi
 
       - name: TypeScript check
         working-directory: app
@@ -54,7 +61,6 @@ jobs:
         if: always()
         env:
           REPOSITORY_QA_OUTCOME: ${{ steps.repository_qa.outcome }}
-          INSTALL_OUTCOME: ${{ steps.repository_qa.outcome }}
         shell: bash
         run: |
           if [[ "$REPOSITORY_QA_OUTCOME" != "success" ]]; then
