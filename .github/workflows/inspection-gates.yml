@@ -38,6 +38,15 @@ jobs:
         continue-on-error: true
         run: python scripts/droid_studio_qa_runner.py
 
+      - name: Bootstrap lockfile for diagnostics when absent
+        working-directory: app
+        shell: bash
+        run: |
+          if [[ ! -f package-lock.json ]]; then
+            echo "::warning::app/package-lock.json is missing from the repository. Generating a candidate lockfile for inspection only."
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          fi
+
       - name: Install JavaScript dependencies
         working-directory: app
         shell: bash
@@ -45,8 +54,8 @@ jobs:
           if [[ -f package-lock.json ]]; then
             npm ci
           else
-            echo "::warning::app/package-lock.json is missing; running a non-reproducible install only to continue diagnostics."
-            npm install --package-lock=false --no-audit --no-fund
+            echo "::error::No package-lock.json is available for dependency installation."
+            exit 1
           fi
 
       - name: TypeScript check
@@ -68,7 +77,7 @@ jobs:
             exit 1
           fi
 
-      - name: Upload inspection context
+      - name: Upload inspection context and candidate lockfile
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -77,5 +86,6 @@ jobs:
             app/package.json
             app/app.json
             app/tsconfig.json
+            app/package-lock.json
           if-no-files-found: warn
           retention-days: 14
