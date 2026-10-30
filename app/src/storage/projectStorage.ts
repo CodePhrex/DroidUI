@@ -25,10 +25,10 @@ export const saveProjectToDevice = async (name: string, rootNode: ComponentNode,
       rootNode
     };
 
-    // Save project data
+    // Save project data.
     await AsyncStorage.setItem(STORAGE_KEY_PREFIX + id, JSON.stringify(meta));
 
-    # Update index list
+    // Update index list.
     const indexRaw = await AsyncStorage.getItem(INDEX_KEY);
     let index: { id: string; name: string; updatedAt: string; nodeCount: number }[] = indexRaw ? JSON.parse(indexRaw) : [];
 

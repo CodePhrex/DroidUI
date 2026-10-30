@@ -1,0 +1,81 @@
+name: DroidUI Inspection Gates
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: inspection-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  inspect:
+    name: Static inspection and TypeScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate package manifests and repository requirements
+        id: repository_qa
+        continue-on-error: true
+        run: python scripts/droid_studio_qa_runner.py
+
+      - name: Install JavaScript dependencies
+        working-directory: app
+        shell: bash
+        run: |
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            echo "::warning::app/package-lock.json is missing; running a non-reproducible install only to continue diagnostics."
+            npm install --package-lock=false --no-audit --no-fund
+          fi
+
+      - name: TypeScript check
+        working-directory: app
+        run: npm run typecheck
+
+      - name: Validate Expo configuration
+        working-directory: app
+        run: npx expo config --type public
+
+      - name: Enforce repository inspection result
+        if: always()
+        env:
+          REPOSITORY_QA_OUTCOME: ${{ steps.repository_qa.outcome }}
+        shell: bash
+        run: |
+          if [[ "$REPOSITORY_QA_OUTCOME" != "success" ]]; then
+            echo "Repository inspection gates failed. Review the Python QA output above." >&2
+            exit 1
+          fi
+
+      - name: Upload inspection context
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: droidui-inspection-context
+          path: |
+            app/package.json
+            app/app.json
+            app/tsconfig.json
+          if-no-files-found: warn
+          retention-days: 14
