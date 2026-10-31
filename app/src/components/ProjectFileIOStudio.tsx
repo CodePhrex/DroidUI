@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as Clipboard from 'expo-clipboard';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import {
@@ -106,6 +107,7 @@ export const ProjectFileIOStudio = () => {
     splashConfig,
     i18nDict,
     importDroidUiPackage,
+    saveCurrentProject,
   } = useEditorStore();
 
   const [copied, setCopied] = useState(false);
@@ -124,12 +126,19 @@ export const ProjectFileIOStudio = () => {
     i18nDict
   );
 
-  const handleCopyPackage = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyPackage = async () => {
+    setCopied(false);
+    try {
+      await Clipboard.setStringAsync(exportData.content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      Alert.alert('Clipboard Error', `Unable to copy the .dui project package: ${message}`);
+    }
   };
 
-  const handleImportPayload = (payload: string) => {
+  const handleImportPayload = async (payload: string) => {
     setImportError('');
     setImportSuccess('');
 
@@ -144,8 +153,14 @@ export const ProjectFileIOStudio = () => {
       return;
     }
 
-    importDroidUiPackage(res.data);
-    setImportSuccess(`Successfully loaded native project: "${res.data.projectMeta.name}" (.dui)!`);
+    try {
+      importDroidUiPackage(res.data);
+      await saveCurrentProject(res.data.projectMeta.name);
+      setImportSuccess(`Imported and saved native project: "${res.data.projectMeta.name}" (.dui)!`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setImportError(`Project loaded into the editor but could not be saved: ${message}`);
+    }
   };
 
   return (
@@ -208,9 +223,17 @@ export const ProjectFileIOStudio = () => {
           <TouchableOpacity
             key={sample.filename}
             style={styles.sampleCard}
-            onPress={() => {
-              importDroidUiPackage(sample.pkg);
-              setImportSuccess(`Loaded sample project: "${sample.name}" (${sample.filename})`);
+            onPress={async () => {
+              setImportError('');
+              setImportSuccess('');
+              try {
+                importDroidUiPackage(sample.pkg);
+                await saveCurrentProject(sample.name);
+                setImportSuccess(`Loaded and saved sample project: "${sample.name}" (${sample.filename})`);
+              } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                setImportError(`Sample loaded into the editor but could not be saved: ${message}`);
+              }
             }}
           >
             <View style={styles.sampleHeaderRow}>
