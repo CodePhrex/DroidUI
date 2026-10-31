@@ -74,16 +74,6 @@ export const generateReactNativeTSX = (rootNode: ComponentNode): string => {
 
     if (node.type === 'SvgVector') {
       const xmlStr = JSON.stringify(node.props?.svgXml || '<svg></svg>');
-      if (node.type === 'SvgVector') {
-      const name = (node.props?.svgName || 'vector').toLowerCase().replace(/[^a-z0-9]/g, '_');
-      return ;
-    }
-
-    return ;
-    }
-
-    if (node.type === 'SvgVector') {
-      const xmlStr = JSON.stringify(node.props?.svgXml || '<svg></svg>');
       return `${indent}<SvgXml xml={${xmlStr}} width={${node.style.width || 48}} height={${node.style.height || 48}}${accStr} />`;
     }
 
@@ -98,7 +88,6 @@ export const generateReactNativeTSX = (rootNode: ComponentNode): string => {
 
   return `import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Switch, StyleSheet } from 'react-native';
-import { SvgXml } from 'react-native-svg';
 import { SvgXml } from 'react-native-svg';
 import Animated, { FadeIn, SpringIn } from 'react-native-reanimated';
 

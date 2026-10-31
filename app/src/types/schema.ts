@@ -15,29 +15,17 @@ export type ComponentType =
   | 'AnimatedAsset'
   | 'SvgVector';
 
-export interface ComponentStyle {
-  flexDirection?: 'row' | 'column';
-  padding?: number;
-  margin?: number;
-  marginTop?: number;
-  marginBottom?: number;
-  backgroundColor?: string;
-  borderRadius?: number;
-  borderWidth?: number;
-  borderColor?: string;
-  fontSize?: number;
-  color?: string;
-  fontWeight?: 'normal' | 'bold' | '600' | '700' | '100' | '300' | '500' | '800' | '900';
-  fontFamily?: string;
-  letterSpacing?: number;
-  lineHeight?: number;
-  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
-  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between';
-  width?: number | string;
-  height?: number | string;
-  opacity?: number; // Transparency: 0.0 to 1.0
-  rotation?: number; // Rotation in degrees: e.g., 0, 15, 45, 90, 180, 270
-}
+import type { ImageStyle, TextStyle, ViewStyle } from 'react-native';
+
+/**
+ * Shared editor style contract.
+ * Uses React Native's native style definitions so dimensions and
+ * supported properties remain compatible with the installed RN version.
+ */
+export type ComponentStyle = Partial<ViewStyle & TextStyle & ImageStyle> & {
+  /** Editor-specific rotation in degrees. Converted to transform at render/export time. */
+  rotation?: number;
+};
 
 export interface AnimationSpec {
   preset: 'none' | 'fadeIn' | 'springIn' | 'slideInLeft' | 'slideInRight' | 'zoomIn';
