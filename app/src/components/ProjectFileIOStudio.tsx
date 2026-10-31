@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as Clipboard from 'expo-clipboard';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import {
@@ -125,9 +126,16 @@ export const ProjectFileIOStudio = () => {
     i18nDict
   );
 
-  const handleCopyPackage = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyPackage = async () => {
+    setCopied(false);
+    try {
+      await Clipboard.setStringAsync(exportData.content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      Alert.alert('Clipboard Error', `Unable to copy the .dui project package: ${message}`);
+    }
   };
 
   const handleImportPayload = async (payload: string) => {
