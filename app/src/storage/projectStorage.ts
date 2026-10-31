@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ComponentNode, ProjectMeta, SplashScreenConfig } from '../types/schema';
 import { ThemeMode } from '../theme/themeConfig';
 import { SupportedLocale, I18nDictionary } from '../types/localization';
+import { validateComponentTree, validateSplashConfig, validateI18nDictionary, isThemeMode, isSupportedLocale } from './projectValidation';
 
 const STORAGE_KEY_PREFIX = '@droid_studio_project_';
 const INDEX_KEY = '@droid_studio_project_index';
@@ -52,42 +53,33 @@ export const createProjectId = (): string =>
   'proj_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
 
 export const countNodes = (node: ComponentNode): number => {
-  const visited = new Set<ComponentNode>();
-  const count = (current: ComponentNode, depth: number): number => {
-    if (!current || depth > 500 || visited.has(current)) {
-      throw new Error('Project component tree is invalid or exceeds the maximum nesting depth.');
-    }
-    visited.add(current);
-    if (!Array.isArray(current.children)) return 1;
-    return 1 + current.children.reduce((total, child) => total + count(child, depth + 1), 0);
-  };
-  return count(node, 0);
+  const result = validateComponentTree(node);
+  if (!result.valid) throw new Error(result.error || 'Invalid project component tree.');
+  return result.nodeCount;
 };
 
 const normalizeStoredProject = (value: unknown): StoredProject | null => {
-  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.name !== 'string' ||
-      typeof value.updatedAt !== 'string' || !isRecord(value.rootNode) ||
-      typeof value.rootNode.id !== 'string' || typeof value.rootNode.type !== 'string' ||
-      !isRecord(value.rootNode.style)) return null;
+  if (!isRecord(value) || typeof value.id !== 'string' || !value.id.trim() ||
+      typeof value.name !== 'string' || !value.name.trim() ||
+      typeof value.updatedAt !== 'string' || !isRecord(value.rootNode)) return null;
 
   const rootNode = value.rootNode as ComponentNode;
-  let nodeCount: number;
-  try {
-    nodeCount = countNodes(rootNode);
-  } catch {
-    return null;
-  }
+  const tree = validateComponentTree(rootNode);
+  if (!tree.valid) return null;
+  const nodeCount = tree.nodeCount;
 
   const workspace = isRecord(value.workspaceState) ? value.workspaceState : undefined;
   const theme = workspace?.currentTheme;
   const locale = workspace?.activeLocale;
   const workspaceState: ProjectWorkspaceState | undefined = workspace ? {
-    currentTheme: ['dark', 'light', 'material_you', 'cyberpunk'].includes(theme) ? theme : 'dark',
-    activeLocale: ['en', 'es', 'fr', 'de', 'ja', 'zh'].includes(locale) ? locale : 'en',
-    splashConfig: isRecord(workspace.splashConfig)
-      ? { ...DEFAULT_SPLASH, ...workspace.splashConfig } as SplashScreenConfig
-      : DEFAULT_SPLASH,
-    i18nDict: isRecord(workspace.i18nDict) ? workspace.i18nDict as I18nDictionary : DEFAULT_DICTIONARY,
+    currentTheme: isThemeMode(theme) ? theme : 'dark',
+    activeLocale: isSupportedLocale(locale) ? locale : 'en',
+    splashConfig: validateSplashConfig(workspace.splashConfig)
+      ? { ...DEFAULT_SPLASH, ...workspace.splashConfig }
+      : { ...DEFAULT_SPLASH },
+    i18nDict: validateI18nDictionary(workspace.i18nDict)
+      ? JSON.parse(JSON.stringify(workspace.i18nDict)) as I18nDictionary
+      : JSON.parse(JSON.stringify(DEFAULT_DICTIONARY)) as I18nDictionary,
   } : undefined;
 
   return {
