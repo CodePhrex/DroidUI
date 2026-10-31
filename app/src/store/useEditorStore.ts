@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { ComponentNode, ComponentStyle, AnimationSpec, PressStateSpec, AccessibilitySpec, SoundEffectSpec, TransitionSpec, SplashScreenConfig } from '../types/schema';
 import { ThemeMode } from '../theme/themeConfig';
 import { SupportedLocale, I18nDictionary, TranslationMap } from '../types/localization';
-import { saveProjectToDevice, loadProjectFromDevice, listProjectsFromDevice, deleteProjectFromDevice } from '../storage/projectStorage';
+import { saveProjectToDevice, loadProjectFromDevice, listProjectsFromDevice, deleteProjectFromDevice, SavedProjectSummary } from '../storage/projectStorage';
 import { DroidUiProjectPackage } from '../storage/droidUiProjectFile';
 
 const defaultDict: I18nDictionary = {
