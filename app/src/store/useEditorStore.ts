@@ -555,9 +555,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   // Project Saver Implementations
   saveCurrentProject: async (customName) => {
-    const { rootNode, currentProjectId, currentProjectName } = get();
-    const name = customName || currentProjectName;
-    const meta = await saveProjectToDevice(name, rootNode, currentProjectId || undefined);
+    const state = get();
+    const name = customName || state.currentProjectName;
+    const meta = await saveProjectToDevice(name, state.rootNode, state.currentProjectId || undefined, {
+      currentTheme: state.currentTheme,
+      activeLocale: state.activeLocale,
+      splashConfig: state.splashConfig,
+      i18nDict: state.i18nDict,
+    });
     set({ currentProjectId: meta.id, currentProjectName: meta.name });
     await get().refreshProjectList();
   },
@@ -565,10 +570,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   loadProject: async (id) => {
     const meta = await loadProjectFromDevice(id);
     if (meta) {
+      const workspace = meta.workspaceState;
       set({
         rootNode: meta.rootNode,
         currentProjectId: meta.id,
         currentProjectName: meta.name,
+        currentTheme: workspace?.currentTheme || 'dark',
+        activeLocale: workspace?.activeLocale || 'en',
+        splashConfig: workspace?.splashConfig || { ...initialSplash },
+        i18nDict: workspace?.i18nDict || defaultDict,
+        activeSimMode: 'default',
+        activeSplashPreview: false,
         selectedNodeId: meta.rootNode.id,
         history: [],
         future: []
@@ -588,9 +600,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   createNewProject: (name) => {
     set({
-      rootNode: initialRoot,
+      rootNode: JSON.parse(JSON.stringify(initialRoot)) as ComponentNode,
       currentProjectId: null,
       currentProjectName: name || 'New UI Project',
+      currentTheme: 'dark',
+      activeLocale: 'en',
+      i18nDict: { ...defaultDict },
+      splashConfig: { ...initialSplash },
+      activeSimMode: 'default',
+      activeSplashPreview: false,
       selectedNodeId: 'root_container',
       history: [],
       future: []
