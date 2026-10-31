@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import * as ImagePicker from 'expo-image-picker';
 import { buildAssetManifestFromTree, createAssetId, getAssetUsageCounts, getMissingAssetIds, removeAssetReferences, updateAssetReferences } from '../storage/assetManagement';
@@ -55,7 +55,6 @@ export const AssetPickerStudio = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [renameId, setRenameId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
-
   const assets = useMemo(() => buildAssetManifestFromTree(rootNode), [rootNode]);
   const usageCounts = useMemo(() => getAssetUsageCounts(rootNode), [rootNode]);
   const missingIds = useMemo(() => getMissingAssetIds(rootNode, assets), [rootNode, assets]);
@@ -119,9 +118,7 @@ export const AssetPickerStudio = () => {
       Alert.alert('Asset In Use', `This asset is used by ${usageCount} component${usageCount === 1 ? '' : 's'}. Remove it from those components?`, [
         { text: 'Cancel', style: 'cancel' }, { text: 'Remove', style: 'destructive', onPress: remove },
       ]);
-    } else {
-      remove();
-    }
+    } else remove();
   };
 
   const handleSelectIcon = (symbol: string) => {
@@ -144,21 +141,14 @@ export const AssetPickerStudio = () => {
       <TouchableOpacity style={styles.galleryBtn} onPress={pickDeviceGalleryImage}>
         <Text style={styles.galleryBtnIcon}>📷</Text><Text style={styles.galleryBtnText}>Import Gallery Image</Text>
       </TouchableOpacity>
-
       <Text style={styles.sectionHeader}>Project Assets</Text>
-      {assets.length === 0 && missingIds.length === 0 ? (
-        <Text style={styles.emptyText}>No imported image assets in this project.</Text>
-      ) : (
+      {assets.length === 0 && missingIds.length === 0 ? <Text style={styles.emptyText}>No imported image assets in this project.</Text> : (
         <View style={styles.assetList}>
           {assets.map((asset) => (
             <View key={asset.id} style={styles.assetRow}>
-              <View style={styles.assetPreview}>
-                <Text style={styles.assetPreviewText}>🖼️</Text>
-              </View>
+              <Image source={{ uri: asset.dataUri }} style={styles.assetPreview} resizeMode="cover" />
               <View style={styles.assetDetails}>
-                {renameId === asset.id ? (
-                  <TextInput autoFocus value={renameValue} onChangeText={setRenameValue} onSubmitEditing={() => renameAsset(asset.id)} style={styles.renameInput} />
-                ) : <Text style={styles.assetName} numberOfLines={1}>{asset.name}</Text>}
+                {renameId === asset.id ? <TextInput autoFocus value={renameValue} onChangeText={setRenameValue} onSubmitEditing={() => renameAsset(asset.id)} style={styles.renameInput} /> : <Text style={styles.assetName} numberOfLines={1}>{asset.name}</Text>}
                 <Text style={styles.assetMeta}>{asset.width || '?'}×{asset.height || '?'} · Used {usageCounts[asset.id] || 0}×</Text>
               </View>
               <TouchableOpacity style={styles.smallBtn} onPress={() => { setRenameId(asset.id); setRenameValue(asset.name); }}><Text style={styles.smallBtnText}>Rename</Text></TouchableOpacity>
@@ -169,20 +159,17 @@ export const AssetPickerStudio = () => {
           {missingIds.map((id) => <View key={id} style={styles.missingRow}><Text style={styles.missingText}>⚠ Missing asset: {id}</Text></View>)}
         </View>
       )}
-
       <Text style={styles.sectionHeader}>Search Icon Library</Text>
       <TextInput style={styles.searchInput} placeholder="Filter icons (e.g., home, play, battery, user)..." value={searchQuery} onChangeText={setSearchQuery} placeholderTextColor="#64748b" />
       <ScrollView style={styles.iconScroll}>
         {filteredCategories.map((cat) => (
           <View key={cat.category} style={styles.categoryBlock}>
             <Text style={styles.categoryTitle}>{cat.category}</Text>
-            <View style={styles.iconGrid}>
-              {cat.icons.map((icon) => (
-                <TouchableOpacity key={icon.name} style={styles.iconTile} onPress={() => handleSelectIcon(icon.symbol)}>
-                  <Text style={styles.iconSymbol}>{icon.symbol}</Text><Text style={styles.iconName} numberOfLines={1}>{icon.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <View style={styles.iconGrid}>{cat.icons.map((icon) => (
+              <TouchableOpacity key={icon.name} style={styles.iconTile} onPress={() => handleSelectIcon(icon.symbol)}>
+                <Text style={styles.iconSymbol}>{icon.symbol}</Text><Text style={styles.iconName} numberOfLines={1}>{icon.name}</Text>
+              </TouchableOpacity>
+            ))}</View>
           </View>
         ))}
       </ScrollView>
@@ -196,11 +183,9 @@ const styles = StyleSheet.create({
   galleryBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#2563eb', padding: 10, borderRadius: 8, gap: 8, marginBottom: 12 },
   galleryBtnIcon: { fontSize: 16 }, galleryBtnText: { color: '#ffffff', fontWeight: 'bold', fontSize: 12 },
   sectionHeader: { fontSize: 12, fontWeight: '600', color: '#38bdf8', marginBottom: 6, marginTop: 6 },
-  emptyText: { fontSize: 11, color: '#64748b', marginBottom: 8 },
-  assetList: { marginBottom: 8 },
+  emptyText: { fontSize: 11, color: '#64748b', marginBottom: 8 }, assetList: { marginBottom: 8 },
   assetRow: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#0f172a', borderWidth: 1, borderColor: '#334155', borderRadius: 7, padding: 6, marginBottom: 5 },
-  assetPreview: { width: 34, height: 34, borderRadius: 5, backgroundColor: '#1e293b', alignItems: 'center', justifyContent: 'center' },
-  assetPreviewText: { fontSize: 17 }, assetDetails: { flex: 1, minWidth: 80 }, assetName: { color: '#f8fafc', fontSize: 11, fontWeight: '600' },
+  assetPreview: { width: 34, height: 34, borderRadius: 5, backgroundColor: '#1e293b' }, assetDetails: { flex: 1, minWidth: 80 }, assetName: { color: '#f8fafc', fontSize: 11, fontWeight: '600' },
   assetMeta: { color: '#64748b', fontSize: 9, marginTop: 2 }, renameInput: { color: '#fff', fontSize: 11, borderBottomWidth: 1, borderBottomColor: '#38bdf8', paddingVertical: 2 },
   smallBtn: { paddingHorizontal: 6, paddingVertical: 5, borderRadius: 5, backgroundColor: '#334155' }, deleteBtn: { paddingHorizontal: 6, paddingVertical: 5, borderRadius: 5, backgroundColor: '#7f1d1d' }, smallBtnText: { color: '#fff', fontSize: 9, fontWeight: '700' },
   missingRow: { backgroundColor: '#451a03', padding: 7, borderRadius: 6, marginBottom: 5 }, missingText: { color: '#fbbf24', fontSize: 10 },
