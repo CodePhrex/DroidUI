@@ -119,6 +119,9 @@ def main() -> int:
         record("Expo dependency declared", "PASS" if "expo" in dependencies else "FAIL")
         record("Image picker dependency declared", "PASS" if "expo-image-picker" in dependencies else "FAIL",
                "required by AssetPickerStudio")
+        record("Clipboard dependency declared", "PASS" if "expo-clipboard" in dependencies else "FAIL",
+               "required by the native .dui copy action")
+        record("Project validation test script declared", "PASS" if package.get("scripts", {}).get("test:validation") else "FAIL")
         record("Type-check script declared", "PASS" if package.get("scripts", {}).get("typecheck") else "FAIL")
 
     if expo_config:
@@ -152,6 +155,9 @@ def main() -> int:
                 if asset_path.is_relative_to(ROOT.resolve())
                 else "path escapes app directory",
             )
+
+    record("Project validation test runner exists", "PASS" if (ROOT / "scripts/project-validation-tests.cjs").is_file()
+           else "FAIL", "scripts/project-validation-tests.cjs")
 
     storage_path = APP / "src/storage/projectStorage.ts"
     if storage_path.is_file():
