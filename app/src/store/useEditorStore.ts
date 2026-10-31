@@ -252,7 +252,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   importDroidUiPackage: (pkg) => {
     const state = pkg.workspaceState;
     set({
-      currentProjectId: pkg.projectMeta.id || 'proj_' + Date.now(),
+      currentProjectId: null,
       currentProjectName: pkg.projectMeta.name || 'Imported Droid UI Project',
       rootNode: state.rootNode,
       currentTheme: state.currentTheme || 'dark',
