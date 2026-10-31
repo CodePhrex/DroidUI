@@ -1,6 +1,7 @@
 import { ComponentNode, SplashScreenConfig } from '../types/schema';
 import { ThemeMode } from '../theme/themeConfig';
 import { SupportedLocale, I18nDictionary } from '../types/localization';
+import { isRecord, isThemeMode, isSupportedLocale, validateComponentTree, validateSplashConfig, validateI18nDictionary } from './projectValidation';
 
 export const DROID_UI_FILE_EXTENSION = '.dui';
 export const DROID_UI_SIGNATURE = 'DROID_STUDIO_PROJECT_V30';
@@ -73,22 +74,6 @@ export const exportProjectToDroidUiFile = (
   };
 };
 
-const isRecord = (value: unknown): value is Record<string, any> =>
-  !!value && typeof value === 'object' && !Array.isArray(value);
-
-const isValidComponentNode = (value: unknown, depth = 0): value is ComponentNode => {
-  if (!isRecord(value) || depth > 500 ||
-      typeof value.id !== 'string' || !value.id ||
-      typeof value.type !== 'string' ||
-      !['Container', 'Text', 'Button', 'Input', 'Card', 'Badge', 'Icon', 'Image',
-        'ProgressBar', 'Graph', 'Switch', 'Slider', 'Checkbox', 'AnimatedAsset', 'SvgVector'].includes(value.type) ||
-      !isRecord(value.style)) return false;
-  if (value.props !== undefined && !isRecord(value.props)) return false;
-  if (value.children !== undefined &&
-      (!Array.isArray(value.children) || !value.children.every(child => isValidComponentNode(child, depth + 1)))) return false;
-  return true;
-};
-
 export const parseDroidUiFile = (
   fileContent: string
 ): { success: boolean; data?: DroidUiProjectPackage; error?: string } => {
@@ -119,19 +104,18 @@ export const parseDroidUiFile = (
       return { success: false, error: 'Malformed .dui file: project metadata is missing or invalid.' };
     }
 
-    if (!isRecord(raw.workspaceState) || !isValidComponentNode(raw.workspaceState.rootNode)) {
-      return { success: false, error: 'Malformed .dui file: workspace state or component tree is invalid.' };
+    if (!isRecord(raw.workspaceState)) {
+      return { success: false, error: 'Malformed .dui file: workspace state is missing or invalid.' };
     }
 
     const state = raw.workspaceState;
-    const validTheme = ['dark', 'light', 'material_you', 'cyberpunk'].includes(state.currentTheme);
-    const validLocale = ['en', 'es', 'fr', 'de', 'ja', 'zh'].includes(state.activeLocale);
-    if (!isRecord(state.splashConfig) || !isRecord(state.i18nDict)) {
+    const tree = validateComponentTree(state.rootNode);
+    if (!tree.valid) {
+      return { success: false, error: `Malformed .dui component tree: ${tree.error}` };
+    }
+    if (!validateSplashConfig(state.splashConfig) || !validateI18nDictionary(state.i18nDict)) {
       return { success: false, error: 'Malformed .dui file: splash configuration or translation dictionary is invalid.' };
     }
-
-    const nodeCount = (node: ComponentNode): number =>
-      1 + (node.children || []).reduce((sum, child) => sum + nodeCount(child), 0);
 
     const normalized: DroidUiProjectPackage = {
       signature: DROID_UI_SIGNATURE,
@@ -142,11 +126,11 @@ export const parseDroidUiFile = (
       projectMeta: {
         id: raw.projectMeta.id,
         name: raw.projectMeta.name,
-        nodeCount: nodeCount(state.rootNode),
+        nodeCount: tree.nodeCount,
       },
       workspaceState: {
-        currentTheme: validTheme ? state.currentTheme : 'dark',
-        activeLocale: validLocale ? state.activeLocale : 'en',
+        currentTheme: isThemeMode(state.currentTheme) ? state.currentTheme : 'dark',
+        activeLocale: isSupportedLocale(state.activeLocale) ? state.activeLocale : 'en',
         splashConfig: state.splashConfig as SplashScreenConfig,
         i18nDict: state.i18nDict as I18nDictionary,
         rootNode: state.rootNode,
