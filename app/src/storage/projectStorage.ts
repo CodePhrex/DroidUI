@@ -167,18 +167,8 @@ export const saveProjectToDevice = async (
 };
 
 export const listProjectsFromDevice = async (): Promise<SavedProjectSummary[]> => {
-  try {
-    const indexRaw = await AsyncStorage.getItem(INDEX_KEY);
-    if (indexRaw) {
-      const parsed: unknown = JSON.parse(indexRaw);
-      if (Array.isArray(parsed) && parsed.every(item =>
-        isRecord(item) && typeof item.id === 'string' && typeof item.name === 'string' &&
-        typeof item.updatedAt === 'string' && typeof item.nodeCount === 'number'
-      )) return parsed as SavedProjectSummary[];
-    }
-  } catch (error) {
-    console.warn('Project index is unreadable; rebuilding it from saved project records.', error);
-  }
+  // Rebuild from project records on every refresh so stale or incomplete indexes
+  // never hide a successfully saved project.
   return rebuildProjectIndex();
 };
 
