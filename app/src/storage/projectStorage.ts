@@ -3,6 +3,7 @@ import { ComponentNode, ProjectMeta, SplashScreenConfig } from '../types/schema'
 import { ThemeMode } from '../theme/themeConfig';
 import { SupportedLocale, I18nDictionary } from '../types/localization';
 import { validateComponentTree, validateSplashConfig, validateI18nDictionary, isThemeMode, isSupportedLocale } from './projectValidation';
+import { AssetManifest, buildAssetManifestFromTree, normalizeAssetManifest } from './assetManagement';
 
 const STORAGE_KEY_PREFIX = '@droid_studio_project_';
 const INDEX_KEY = '@droid_studio_project_index';
@@ -18,6 +19,8 @@ export interface ProjectWorkspaceState {
 export interface StoredProject extends ProjectMeta {
   schemaVersion: number;
   workspaceState?: ProjectWorkspaceState;
+  /** Phase 2B manifest. Legacy projects may omit this field. */
+  assets: AssetManifest;
 }
 
 export interface SavedProjectSummary {
@@ -82,6 +85,10 @@ const normalizeStoredProject = (value: unknown): StoredProject | null => {
       : JSON.parse(JSON.stringify(DEFAULT_DICTIONARY)) as I18nDictionary,
   } : undefined;
 
+  const treeAssets = buildAssetManifestFromTree(rootNode);
+  const storedAssets = normalizeAssetManifest(value.assets);
+  const assets = storedAssets.length ? storedAssets : treeAssets;
+
   return {
     id: value.id,
     name: value.name,
@@ -90,6 +97,7 @@ const normalizeStoredProject = (value: unknown): StoredProject | null => {
     rootNode,
     schemaVersion: PROJECT_STORAGE_SCHEMA_VERSION,
     workspaceState,
+    assets,
   };
 };
 
@@ -130,7 +138,8 @@ export const saveProjectToDevice = async (
   name: string,
   rootNode: ComponentNode,
   existingId?: string,
-  workspaceState?: ProjectWorkspaceState
+  workspaceState?: ProjectWorkspaceState,
+  assets?: AssetManifest
 ): Promise<StoredProject> => {
   const id = existingId || createProjectId();
   const cleanName = name.trim() || 'Untitled Project';
@@ -142,6 +151,7 @@ export const saveProjectToDevice = async (
     rootNode,
     schemaVersion: PROJECT_STORAGE_SCHEMA_VERSION,
     workspaceState,
+    assets: assets || buildAssetManifestFromTree(rootNode),
   });
   if (!normalized) throw new Error('Cannot save an invalid project tree.');
 
@@ -159,8 +169,6 @@ export const saveProjectToDevice = async (
 };
 
 export const listProjectsFromDevice = async (): Promise<SavedProjectSummary[]> => {
-  // Rebuild from project records on every refresh so stale or incomplete indexes
-  // never hide a successfully saved project.
   return rebuildProjectIndex();
 };
 
