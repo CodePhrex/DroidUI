@@ -132,13 +132,6 @@ const randomizeIds = (node: ComponentNode): ComponentNode => {
   };
 };
 
-interface SavedProjectSummary {
-  id: string;
-  name: string;
-  updatedAt: string;
-  nodeCount: number;
-}
-
 export type SimMode = 'default' | 'pressed' | 'hovered';
 
 interface EditorState {
