@@ -1,36 +1,168 @@
-import React, { wstate } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
-import { generateStoreListingText, generatePrivacyPolicyMarkdown } from '../compiler/storeMetadataGenerator';
+import {
+  generatePrivacyPolicyMarkdown,
+  generateStoreListingText,
+} from '../compiler/storeMetadataGenerator';
 
 export const StoreMetadataStudio = () => {
   const { rootNode, currentProjectName } = useEditorStore();
 
   const [appName, setAppName] = useState(currentProjectName || 'My Android App');
-  const [shortDesc, setShortDesc] = useState('Powerful and sleek mobile app built with Droid Studio UI.');
+  const [shortDesc, setShortDesc] = useState(
+    'Powerful and sleek mobile app built with Droid Studio UI.',
+  );
   const [category, setCategory] = useState('Tools & Productivity');
   const [email, setEmail] = useState('support@mycompany.com');
   const [privacyUrl, setPrivacyUrl] = useState('https://mycompany.com/privacy');
-
-  const [activeTab, setActiveTab] = useState<'listing' | 'privacy' | 'banners'>('listing');
-  const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<'listing' | 'privacy'>('listing');
 
   const listingText = generateStoreListingText(rootNode, {
     appName,
     shortDescription: shortDesc,
     category,
     supportEmail: email,
-    privacyPolicyUsl: privacyUrl,
+    privacyPolicyUrl: privacyUrl,
   });
 
   const privacyText = generatePrivacyPolicyMarkdown(appName, 'My Company Studio');
-
-  const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const output = activeTab === 'listing' ? listingText : privacyText;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        <Text style={styles.title}>Play Store & App Metadata Studi½Ð½Q•áÐø(€€€€€€€€ñQ½Õ¡…‰±•=Á…¥ÑäÍÑå±”õíÍÑå±•Ì¹½Áå	Ñ¹ô½¹AÉ•ÍÌõí¡…¹‘±•½Áåôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹½Áå	Ñ¹Q•áÑôùí½Á¥•€ü€Ø½Á¥•œ€è€ŸÀ½Áä=ÕÑÁÕÐôð½Q•áÐø(€€€€€€€€ð½Q½Õ¡…‰±•=Á…¥Ñäø(€€€€€€ð½Y¥•Üø((€€€€€ì¼¨Q…ˆM•±•Ñ½ÉÌ€¨½ô(€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹Ñ…‰I½Ýôø(€€€€€€€€ñQ½Õ¡…‰±•=Á…¥Ñä(€€€€€€€€€ÍÑå±”õ}íÍÑå±•Ì¹Ñ…‰	Ñ¸°…Ñ¥Ù•Q…ˆ€ôôô€±¥ÍÑ¥¹œœ€˜˜ÍÑå±•Ì¹…Ñ¥Ù•Q…‰	Ñ¹uô(€€€€€€€€€½¹AÉ•ÍÌõì ¤€ôøÍ•ÑÑ¥Ù•Q…ˆ ±¥ÍÑ¥¹œœ¥ô(€€€€€€€€ø(€€€€€€€€€€ñQ•áÐÍÑå±”õ}íÍÑå±•Ì¹Ñ…‰	Ñ¹Q•áÐ°…Ñ¥Ù•Q…ˆ€ôôô€±¥ÍÑ¥¹œœ€˜˜ÍÑå±•Ì¹…Ñ¥Ù•Q…‰	Ñ¹Q•áÑuôûÂvNÇ‚ÞäMÑ½É”1¥ÍÑ¥¹œð½Q•áÐø(€€€€€€€€ð½Q½Õ¡…‰±•=Á…¥Ñäø(€€€€€€€€ñQ½Õ¡…‰±•=Á…¥Ñä(€€€€€€€€€ÍÑå±”õ}íÍÑå±•Ì¹Ñ…‰	Ñ¸°…Ñ¥Ù•Q…ˆ€ôôô€ÁÉ¥Ù…äœ€˜˜ÍÑå±•Ì¹…Ñ¥Ù•Q…‰	Ñ¹uô(€€€€€€€€€½¹AÉ•ÍÌõì ¤€ôøÍ•ÑÑ¥Ù•Q…ˆ ÁÉ¥Ù…äœ¥ô(€€€€€€€€ø(€€€€€€€€€€ñQ•áÐÍÑå±”õ}íÍÑå±•Ì¹Ñ…‰	Ñ¹Q•áÐ°…Ñ¥Ù•Q…ˆ€ôôô€ÁÉ¥Ù…äœ€˜˜ÍÑå±•Ì¹…Ñ¥Ù•Q…‰	Ñ¹Q•áÑuôûÂvf‡‚ÞäA½±¥ä½Œð½Q•áÐø(€€€€€€€€ð½Q½Õ¡…‰±•=Á…¥Ñäø(€€€€€€€€ñQ½Õ¡…‰±•=Á…¥Ñä(€€€€€€€€€ÍÑå±”õ}íÍÑå±•Ì¹Ñ…‰	Ñ¸°…Ñ¥Ù•Q…ˆ€ôôô€‰…¹¹•ÉÌœ€˜˜ÍÑå±•Ì¹…Ñ¥Ù•Q…‰	Ñ¹uô(€€€€€€€€€½¹AÉ•ÍÌõì ¤€ôøÍ•ÑÑ¥Ù•Q…ˆ ‰…¹¹•ÉÌœ¥ô(€€€€€€€€ø(€€€€€€€€€€ñQ•áÐÍÑå±”õ}íÍÑå±•Ì¹Ñ…‰	Ñ¹Q•áÐ°…Ñ¥Ù•Q…ˆ€ôôô€‰…¹¹•ÉÌœ€˜˜ÍÑå±•Ì¹…Ñ¥Ù•Q…‰	Ñ¹Q•áÑuôûÂvVÃ‚ÞäÉ…Á¡¥ŒMÁ•Ìð½Q•áÐø(€€€€€€€€ð½Q½Õ¡…‰±•=Á…¥Ñäø(€€€€€€ð½Y¥•Üø((€€€€€ì¼¨½¹™¥œ%¹ÁÕÑÌ€¨½ô(€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹…É‘ôø(€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹…É‘Q¥Ñ±•ôùÁÀ%‘•¹Ñ¥Ñä€˜½¹Ñ…Ð•Ñ…¥±Ìð½Q•áÐø(€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑÉ½ÕÁôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑ1…‰•±ôùÁÀQ¥Ñ±”€¡A±…äMÑ½É”9…µ”¤èð½Q•áÐø(€€€€€€€€€€ñQ•áÑ%¹ÁÕÐÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑôÙ…±Õ”õí…ÁÁ9…µ•ô½¹¡…¹•Q•áÐõíÍ•ÑÁÁ9…µ•ôµ…á1•¹Ñ õìÌÁô€¼ø(€€€€€€€€ð½Y¥•Üø(€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑÉ½ÕÁôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑ1…‰•±ôùM¡½ÉÐ•ÍÉ¥ÁÑ¥½¸€¡5…à€àÀ¡…ÉÌ¤èð½Q•áÐø(€€€€€€€€€€ñQ•áÑ%¹ÁÕÐÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑôÙ…±Õ”õíÍ¡½ÉÑ•Íô½¹¡…¹•Q•áÐõíÍ•ÑM¡½ÉÑ•Íôµ…á1•¹Ñ õìàÁô€¼ø(€€€€€€€€ð½Y¥•Üø(€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑÉ½ÕÁôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑ1…‰•±ôùMÕÁÁ½ÉÐµ…¥°èð½Q•áÐø(€€€€€€€€€€ñQ•áÑ%¹ÁÕÐÍÑå±”õíÍÑå±•Ì¹¥¹ÁÕÑôÙ…±Õ”õí•µ…¥±ô½¹¡…¹•Q•áÐõíÍ•Ñµ…¥±ô€¼ø(€€€€€€€€ð½Y¥•Üø(€€€€€€ð½Y¥•Üø((€€€€€ì¼¨=ÕÑÁÕÐ½¹Ñ•¹Ð€¨½ô(€€€€€í…Ñ¥Ù•Q…ˆ€ôôô€±¥ÍÑ¥¹œœ€˜˜€ (€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹½‘•…É‘ôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹½‘•…É‘Q¥Ñ±•ôù•¹•É…Ñ•½½±”A±…ä1¥ÍÑ¥¹œMÁ•¥™¥…Ñ¥½¸ð½Q•áÐø(€€€€€€€€€€ñMÉ½±±Y¥•ÜÍÑå±”õíÍÑå±•Ì¹½‘•	½áô¡½É¥é½¹Ñ…°õíÑÉÕ•ôø(€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹½‘•Q•áÑôùí±¥ÍÑ¥¹Q•áÑôð½Q•áÐø(€€€€€€€€€€ð½MÉ½±±Y¥•Üø(€€€€€€€€ð½Y¥•Üø(€€€€€¥ô((€€€€€í…Ñ¥Ù•Q…ˆ€ôôô€ÁÉ¥Ù…äœ€˜˜€ (€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹½‘•…É‘ôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹½‘•…É‘Q¥Ñ±•ôù•¹•É…Ñ•½µÁ±¥…¹”A½±¥ä5…É­‘½Ý¸ð½Q•áÐø(€€€€€€€€€€ñMÉ½±±Y¥•ÜÍÑå±”õíÍÑå±•Ì¹½‘•	½áô¡½É¥é½¹Ñ…°õíÑÉÕ•ôø(€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹½‘•Q•áÑôùíÁÉ¥Ù…åQ•áÑôð½Q•áÐø(€€€€€€€€€€ð½MÉ½±±Y¥•Üø(€€€€€€€€ð½Y¥•Üø(€€€€€¥ô((€€€€€í…Ñ¥Ù•Q…ˆ€ôôô€‰…¹¹•ÉÌœ€˜˜€ (€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹…É‘ôø(€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹…É‘Q¥Ñ±•ôùA±…äMÑ½É”É…Á¡¥ŒÍÍ•ÐI•ÅÕ¥É•µ•¹ÑÌð½Q•áÐø(€€€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹ÍÁ•I½Ýôø(€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•%½¹ôûÂ~’Àð½Q•áÐø(€€€€€€€€€€€€ñY¥•Üø(€€€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•Q¥Ñ±•ôùÁÀ!¤µI•Ì%½¸ð½Q•áÐø(€€€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•MÕ‰ôøÔÄÈƒ\ÔÄÈÁàA9ð€ÌÈµ‰¥Ðð5…à€Ä°ÀÈÐ-ð½Q•áÐø(€€€€€€€€€€€€ð½Y¥•Üø(€€€€€€€€€€ð½Y¥•Üø(€€€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹ÍÁ•I½Ýôø(€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•%½¹ôûÂ~’àð½Q•áÐø(€€€€€€€€€€€€ñY¥•Üø(€€€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•Q¥Ñ±•ôù•…ÑÕÉ”É…Á¡¥Œ	…¹¹•Èð½Q•áÐø(€€€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•MÕ‰ôøÄÀÈÐƒ\ÔÀÀÁàA9€¼)Að5…à€ÄÔ5ð½Q•áÐø(€€€€€€€€€€€€ð½Y¥•Üø(€€€€€€€€€€ð½Y¥•Üø(€€€€€€€€€€ñY¥•ÜÍÑå±”õíÍÑå±•Ì¹ÍÁ•I½Ýôø(€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•%½¹ôûÂ~’Àð½Q•áÐø(€€€€€€€€€€€€ñY¥•Üø(€€€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•Q¥Ñ±•ôùMµ…ÉÑÁ¡½¹”MÉ••¹Í¡½ÑÌð½Q•áÐø(€€€€€€€€€€€€€€ñQ•áÐÍÑå±”õíÍÑå±•Ì¹ÍÁ•MÕ‰ôù5¥¸€Èð5…à€àð€ÄØèä½È€äèÄØ…ÍÁ•ÐÉ…Ñ¥¼€¡”¹œ¸€ÄÀàÀƒ\ÄäÈÀÁà¤ð½Q•áÐø(€€€€€€€€€€€€ð½Y¥•Üø(€€€€€€€€€€ð½Y¥•Üø(€€€€€€€€ð½Y¥•Üø(€€€€€¥ô(€€€€ð½MÉ½±±Y¥•Üø(€€¤ì)ôì()½¹ÍÐÍÑå±•Ì€ôMÑå±•M¡••Ð¹É•…Ñ”¡ì(€½¹Ñ…¥¹•ÈèìÁ…‘‘¥¹œè€ÄÈô°(€¡•…‘•Èèì™±•á¥É•Ñ¥½¸è€É½Üœ°©ÕÍÑ¥™å½¹Ñ•¹Ðè€ÍÁ…”µ‰•ÑÝ••¸œ°…±¥¹%Ñ•µÌè€•¹Ñ•Èœ°µ…É¥¹	½ÑÑ½´è€ÄÈô°(€Ñ¥Ñ±”èì™½¹ÑM¥é”è€ÄÌ°™½¹Ñ]•¥¡Ðè€‰½±œ°½±½Èè€œ˜á™…™Œœô°(€½Áå	Ñ¸èì‰…­É½Õ¹‘½±½Èè€œŒÍˆàÉ˜Øœ°Á…‘‘¥¹!½É¥é½¹Ñ…°è€ÄÀ°Á…‘‘¥¹Y•ÉÑ¥…°è€Ô°‰½É‘•ÉI…‘¥ÕÌè€Ðô°(€½Áå	Ñ¹Q•áÐèì½±½Èè€œ™™™™™˜œ°™½¹ÑM¥é”è€ÄÀ°™½¹Ñ]•¥¡Ðè€‰½±œô°(€Ñ…‰I½Üèì™±•á¥É•Ñ¥½¸è€É½Üœ°…Àè€Ø°µ…É¥¹	½ÑÑ½´è€ÄÈô°(€Ñ…‰	Ñ¸èì‰…­É½Õ¹‘½±½Èè€œŒÅ”ÈäÍˆœ°Á…‘‘¥¹!½É¥é½¹Ñ…°è€ÄÀ°Á…‘‘¥¹Y•ÉÑ¥…°è€Ø°‰½É‘•ÉI…‘¥ÕÌè€Ø°‰½É‘•É]¥‘Ñ è€Ä°‰½É‘•É½±½Èè€œŒÌÌÐÄÔÔœô°(€…Ñ¥Ù•Q…‰	Ñ¸èì‰…­É½Õ¹‘½±½Èè€œŒÈÔØÍ•ˆœ°‰½É‘•É½±½Èè€œŒÍˆàÉ˜Øœô°(€Ñ…‰	Ñ¹Q•áÐèì½±½Èè€œŒäÑ„Íˆàœ°™½¹ÑM¥é”è€ÄÄ°™½¹Ñ]•¥¡Ðè€‰½±œô°(€…Ñ¥Ù•Q…‰	Ñ¹Q•áÐèì½±½Èè€œ™™™™™˜œô°(€…Éèì‰…­É½Õ¹‘½±½Èè€œŒÅ”ÈäÍˆœ°Á…‘‘¥¹œè€ÄÈ°‰½É‘•ÉI…‘¥ÕÌè€ÄÀ°‰½É‘•É]¥‘Ñ è€Ä°‰½É‘•É½±½Èè€œŒÌÌÐÄÔÔœ°µ…É¥¹	½ÑÑ½´è€ÄÈô°(€…É‘Q¥Ñ±”èì™½¹ÑM¥é”è€ÄÈ°™½¹Ñ]•¥¡Ðè€‰½±œ°½±½Èè€œŒÌá‰‘˜àœ°µ…É¥¹	½ÑÑ½´è€ÄÀô°(€¥¹ÁÕÑÉ½ÕÀèìµ…É¥¹	½ÑÑ½´è€àô°(€¥¹ÁÕÑ1…‰•°èì™½¹ÑM¥é”è€ÄÀ°½±½Èè€œ‰Õ•„œ°µ…É¥¹	½ÑÑ½´è€Ðô°(€¥¹ÁÕÐèì‰…­É½Õ¹‘½±½Èè€œŒÁ˜ÄÜÉ„œ°½±½Èè€œ™™™™™˜œ°Á…‘‘¥¹œè€à°‰½É‘•ÉI…‘¥ÕÌè€Ø°‰½É‘•É]¥‘Ñ è€Ä°‰½É‘•É½±½Èè€œŒÐÜÔÔØäœ°™½¹ÑM¥é”è€ÄÄô°(€½‘•…Éèì‰…­É½Õ¹‘½±½Èè€œŒÁ˜ÄÜÉ„œ°Á…‘‘¥¹œè€ÄÈ°‰½É‘•ÉI…‘¥ÕÌè€ÄÀ°‰½É‘•É]¥‘Ñ è€Ä°‰½É‘•É½±½Èè€œŒÌÌÐÄÔÔœô°(€½‘•…É‘Q¥Ñ±”èì™½¹ÑM¥é”è€ÄÈ°™½¹Ñ]•¥¡Ðè€‰½±œ°½±½Èè€œŒÄÁˆäàÄœ°µ…É¥¹	½ÑÑ½´è€àô°(€½‘•	½àèì‰…­É½Õ¹‘½±½Èè€œŒÅ”ÈäÍˆœ°Á…‘‘¥¹œè€ÄÀ°‰½É‘•ÉI…‘¥ÕÌè€Øô°(€½‘•Q•áÐìí½±½Èè€œŒÌá‰‘˜àœ°™½¹Ñ…µ¥±äè€µ½¹½ÍÁ…”œ°™½¹ÑM¥é”è€ÄÄô°(€ÍÁ•I½Üèì™±•Ù¥É•Ñ¥½¸è€É½Üœ°…±¥¹%Ñ•µÌè€•¹Ñ•Èœ°…Àè€ÄÀ°Á…‘‘¥¹Y•ÉÑ¥…°è€à°‰½É‘•É	½ÑÑ½µ]¥‘Ñ è€Ä°‰½É‘•É½±½Èè€œŒÌÌÐÄÔÔœô°(€ÍÁ•%½¸èì™½¹ÑM¥é”è€ÈÀô°(€ÍÁ•Q¥Ñ±”èì½±½Èè€œ˜á™…™Œœ°™½¹ÑM¥é”è€ÄÈ°™½¹Ñ]•¥¡Ðè€‰½±œô°(€ÍÁ•MÕˆèì½±½Èè€œŒäÑ„Íˆàœ°™½¹ÑM¥é”è€ÄÀô°)ô¤ì(
+        <Text style={styles.title}>Play Store & App Metadata Studio</Text>
+        <Text style={styles.subtitle}>
+          Generate editable store listing and privacy-policy content from the current project.
+        </Text>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>App metadata</Text>
+
+        <Text style={styles.label}>App name</Text>
+        <TextInput
+          value={appName}
+          onChangeText={setAppName}
+          style={styles.input}
+          placeholder="My Android App"
+          placeholderTextColor="#64748b"
+          accessibilityLabel="App name"
+        />
+
+        <Text style={styles.label}>Short description</Text>
+        <TextInput
+          value={shortDesc}
+          onChangeText={setShortDesc}
+          style={[styles.input, styles.multiline]}
+          placeholder="Describe the app"
+          placeholderTextColor="#64748b"
+          multiline
+          accessibilityLabel="Short description"
+        />
+
+        <Text style={styles.label}>Category</Text>
+        <TextInput
+          value={category}
+          onChangeText={setCategory}
+          style={styles.input}
+          placeholder="Tools & Productivity"
+          placeholderTextColor="#64748b"
+          accessibilityLabel="App category"
+        />
+
+        <Text style={styles.label}>Support email</Text>
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholder="support@example.com"
+          placeholderTextColor="#64748b"
+          accessibilityLabel="Support email"
+        />
+
+        <Text style={styles.label}>Privacy policy URL</Text>
+        <TextInput
+          value={privacyUrl}
+          onChangeText={setPrivacyUrl}
+          style={styles.input}
+          keyboardType="url"
+          autoCapitalize="none"
+          placeholder="https://example.com/privacy"
+          placeholderTextColor="#64748b"
+          accessibilityLabel="Privacy policy URL"
+        />
+      </View>
+
+      <View style={styles.tabs}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'listing' && styles.activeTab]}
+          onPress={() => setActiveTab('listing')}
+          accessibilityRole="button"
+          accessibilityLabel="Show store listing"
+        >
+          <Text style={styles.tabText}>Store Listing</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'privacy' && styles.activeTab]}
+          onPress={() => setActiveTab('privacy')}
+          accessibilityRole="button"
+          accessibilityLabel="Show privacy policy"
+        >
+          <Text style={styles.tabText}>Privacy Policy</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.outputCard}>
+        <Text style={styles.sectionTitle}>Generated content</Text>
+        <Text selectable style={styles.output}>
+          {output}
+        </Text>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#0f172a' },
+  content: { padding: 16, paddingBottom: 40, gap: 16 },
+  header: { gap: 6 },
+  title: { color: '#f8fafc', fontSize: 24, fontWeight: '700' },
+  subtitle: { color: '#94a3b8', fontSize: 14, lineHeight: 20 },
+  card: { backgroundColor: '#111827', borderRadius: 12, padding: 16, gap: 8 },
+  sectionTitle: { color: '#f8fafc', fontSize: 17, fontWeight: '700', marginBottom: 4 },
+  label: { color: '#cbd5e1', fontSize: 13, fontWeight: '600', marginTop: 6 },
+  input: {
+    minHeight: 44,
+    borderWidth: 1,
+    borderColor: '#334155',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    color: '#f8fafc',
+    backgroundColor: '#0f172a',
+  },
+  multiline: { minHeight: 76, paddingTop: 10, textAlignVertical: 'top' },
+  tabs: { flexDirection: 'row', gap: 8 },
+  tab: {
+    flex: 1,
+    minHeight: 44,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1e293b',
+  },
+  activeTab: { backgroundColor: '#334155' },
+  tabText: { color: '#f8fafc', fontWeight: '600' },
+  outputCard: { backgroundColor: '#111827', borderRadius: 12, padding: 16 },
+  output: { color: '#cbd5e1', fontSize: 13, lineHeight: 20, fontFamily: 'monospace' },
+});

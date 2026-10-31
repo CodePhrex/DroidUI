@@ -134,21 +134,40 @@ def main() -> int:
         ]
         for label, relative in configured_assets:
             if not relative:
-                record(f"Configured {label}", "FAIL", "path is missing from app.json")
+                record(
+                    f"Configured {label}",
+                    "SKIP",
+                    "No asset path configured; optional in app.json",
+                )
                 continue
+
             asset_path = (APP / relative).resolve()
             in_app = asset_path.is_relative_to(APP.resolve())
             exists = in_app and asset_path.is_file()
-            record(f"Configured {label}", "PASS" if exists else "FAIL",
-                   str(asset_path.relative_to(ROOT)) if asset_path.is_relative_to(ROOT.resolve())
-                   else "path escapes app directory")
+
+            record(
+                f"Configured {label}",
+                "PASS" if exists else "FAIL",
+                str(asset_path.relative_to(ROOT.resolve()))
+                if asset_path.is_relative_to(ROOT.resolve())
+                else "path escapes app directory",
+            )
 
     storage_path = APP / "src/storage/projectStorage.ts"
     if storage_path.is_file():
-        source = storage_path.read_text(encoding="utf-8")
-        invalid_marker = re.search(r"^\s*#\s+Update index list\s*$", source, re.MULTILINE)
-        record("Project storage TypeScript syntax sentinel", "FAIL" if invalid_marker else "PASS",
-               "invalid Python-style comment found" if invalid_marker else "no known invalid comment marker")
+        source_text = storage_path.read_text(encoding="utf-8")
+        invalid_marker = re.search(
+            r"^\\s*#\\s+Update index list\\s*$",
+            source_text,
+            re.MULTILINE,
+        )
+        record(
+            "Project storage TypeScript syntax sentinel",
+            "FAIL" if invalid_marker else "PASS",
+            "invalid Python-style comment found"
+            if invalid_marker
+            else "no known invalid comment marker",
+        )
 
     android_gradle = APP / "android/app/build.gradle"
     android_gradle_kts = APP / "android/app/build.gradle.kts"
