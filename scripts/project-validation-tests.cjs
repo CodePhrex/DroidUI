@@ -8,13 +8,13 @@ const source = fs.readFileSync(sourcePath, 'utf8');
 const compiled = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
 }).outputText;
-const module = { exports: {} };
-new Function('exports', 'require', 'module', compiled)(module.exports, require, module);
+const loadedModule = { exports: {} };
+new Function('exports', 'require', 'module', compiled)(loadedModule.exports, require, loadedModule);
 const {
   validateComponentTree,
   validateSplashConfig,
   validateI18nDictionary,
-} = module.exports;
+} = loadedModule.exports;
 
 const validTree = {
   id: 'root', type: 'Container', style: {},
