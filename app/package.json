@@ -8,7 +8,8 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "qa:static": "python3 ../scripts/droid_studio_qa_runner.py",
-    "test:validation": "node ../scripts/project-validation-tests.cjs"
+    "test:validation": "node ../scripts/project-validation-tests.cjs",
+    "test:editor-state": "node ../scripts/editor-state-validation.cjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
