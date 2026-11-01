@@ -130,6 +130,7 @@ export const generateAndroidProjectBundle = (
   diagnostics.push(...renderDiagnostics);
   const appName = escapeKotlin(config.appName);
   const appClass = safeIdentifier(config.appName);
+  const abiFilters = config.abiFilter === 'all' ? '' : `\n        ndk { abiFilters += listOf("${config.abiFilter}") }`;
   const appGradle = `plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -144,7 +145,7 @@ android {
         minSdk = ${config.minSdk}
         targetSdk = ${config.targetSdk}
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0.0"${abiFilters}
     }
 
     buildFeatures { compose = true }
@@ -182,7 +183,6 @@ include(":app")
 }
 ` },
     { path: 'gradle.properties', content: 'org.gradle.jvmargs=-Xmx2g -Dfile.encoding=UTF-8\nandroid.useAndroidX=true\nkotlin.code.style=official\n' },
-    { path: 'gradle/wrapper/gradle-wrapper.properties', content: 'distributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.7-bin.zip\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists\n' },
     { path: 'app/build.gradle.kts', content: appGradle },
     { path: 'app/src/main/AndroidManifest.xml', content: `<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application android:allowBackup="true" android:label="${appName}" android:supportsRtl="true" android:theme="@android:style/Theme.Material.Light.NoActionBar">
