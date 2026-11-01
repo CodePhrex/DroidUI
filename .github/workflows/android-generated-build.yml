@@ -40,6 +40,9 @@ jobs:
         working-directory: app
         run: npm ci --ignore-scripts --no-audit --no-fund
 
+      - name: Validate release version and write manifest
+        run: npm run release:integrity --prefix app -- --write-manifest "${{ runner.temp }}/droidui-release-manifest.json"
+
       - name: TypeScript check
         working-directory: app
         run: npm run typecheck
@@ -74,13 +77,14 @@ jobs:
         working-directory: ${{ runner.temp }}/droidui-generated-android
         run: gradle --no-daemon assembleDebug assembleRelease
 
-      - name: Upload generated APKs
+      - name: Upload generated APKs and release manifest
         uses: actions/upload-artifact@v4
         with:
           name: droidui-generated-android-apks
           path: |
             ${{ runner.temp }}/droidui-generated-android/app/build/outputs/apk/debug/*.apk
             ${{ runner.temp }}/droidui-generated-android/app/build/outputs/apk/release/*.apk
+            ${{ runner.temp }}/droidui-release-manifest.json
           if-no-files-found: error
           retention-days: 14
 
