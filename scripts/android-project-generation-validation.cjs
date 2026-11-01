@@ -14,9 +14,14 @@ const load = (relativePath) => {
   return loaded.exports;
 };
 
-const { generateAndroidProjectBundle, serializeAndroidProjectBundle, validateAndroidExportConfig } =
-  load('src/compiler/androidProjectBundle.ts');
-const { defaultConfig } = load('src/compiler/androidProjectExporter.ts');
+const exporter = load('src/compiler/androidProjectExporter.ts');
+const { defaultConfig } = exporter;
+const source = fs.readFileSync(path.join(process.cwd(), 'src/compiler/androidProjectBundle.ts'), 'utf8');
+const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
+const loaded = { exports: {} };
+const localRequire = (id) => id === '../types/schema' ? {} : id === './androidProjectExporter' ? exporter : require(id);
+new Function('exports', 'require', 'module', output)(loaded.exports, localRequire, loaded);
+const { generateAndroidProjectBundle, serializeAndroidProjectBundle, validateAndroidExportConfig } = loaded.exports;
 const tree = {
   id: 'root', type: 'Container', style: { padding: 16, flexDirection: 'column' },
   children: [
