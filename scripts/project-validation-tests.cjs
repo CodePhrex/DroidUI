@@ -46,8 +46,6 @@ assert.equal(validateI18nDictionary({ greeting: { en: 'Hello', es: 'Hola' } }), 
 assert.equal(validateI18nDictionary({ greeting: { xx: 'Hello' } }), false);
 assert.equal(validateI18nDictionary({ greeting: 'Hello' }), false);
 
-// Phase 2B asset manifest gates. These utilities are intentionally dependency-light so
-// CI can execute them without a React Native runtime.
 const assets = loadTsModule('src/storage/assetManagement.ts');
 const { buildAssetManifestFromTree, getAssetUsageCounts, getMissingAssetIds, removeAssetReferences, updateAssetReferences } = assets;
 const imageData = 'data:image/jpeg;base64,ZmFrZQ==';
@@ -70,4 +68,19 @@ const removed = removeAssetReferences(assetTree, 'asset_one');
 assert.equal(removed.children[0].props.assetId, undefined);
 assert.equal(removed.children[0].props.imageUri, undefined);
 
-console.log('Project validation + Phase 2B asset tests: 18 assertions passed.');
+// Phase 2C SVG import/normalization gates.
+const svg = loadTsModule('src/storage/svgAsset.ts');
+const { validateAndNormalizeSvg, normalizeSvgXml, svgToDataUri, exportSvgAsset } = svg;
+const validSvg = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#38bdf8" d="M0 0h24v24H0z"/></svg>';
+const normalized = validateAndNormalizeSvg(validSvg);
+assert.equal(normalized.valid, true);
+assert.match(normalized.svgXml, /^<svg\b/);
+assert.equal(normalized.metadata.viewBox, '0 0 24 24');
+assert.equal(validateAndNormalizeSvg('<div>not svg</div>').valid, false);
+assert.equal(validateAndNormalizeSvg('<svg><script>alert(1)</script></svg>').valid, false);
+assert.equal(validateAndNormalizeSvg('<svg><a href="javascript:alert(1)"><path/></a></svg>').valid, false);
+assert.match(normalizeSvgXml('```svg\n' + validSvg + '\n```'), /^<svg\b/);
+assert.match(svgToDataUri(validSvg), /^data:image\/svg\+xml;utf8,/);
+assert.equal(exportSvgAsset(validSvg, 'My Hero Icon').filename, 'my_hero_icon.svg');
+
+console.log('Project validation + Phase 2B/2C asset tests: 26 assertions passed.');
