@@ -1,225 +1,179 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { useEditorStore } from '../store/useEditorStore';
-import {
-  AndroidExportConfig,
-  defaultConfig,
-  generateAppBuildGradleKts,
-  generateSettingsGradleKts,
-  generateFullProjectFileTree,
-  FrameworkTarget,
-  GradleDSL,
-  TargetSDK,
-  MinSDK,
-  ABIFilter
-} from '../compiler/androidProjectExporter';
+import { AndroidExportConfig, defaultConfig, FrameworkTarget, TargetSDK, MinSDK, ABIFilter } from '../compiler/androidProjectExporter';
+import { generateAndroidProjectBundle, serializeAndroidProjectBundle } from '../compiler/androidProjectBundle';
 
 export const AndroidProjectExportStudio = () => {
   const { rootNode } = useEditorStore();
-  const [config, setConfig] = useState<AndroidExportConfig>(defaultConfig);
-  const [activePreviewTab, setActivePreviewTab] = useState<'tree' | 'gradle' | 'settings'>('tree');
+  const [config, setConfig] = useState<AndroidExportConfig>({ ...defaultConfig });
+  const [selectedPath, setSelectedPath] = useState('app/src/main/java/com/droidstudio/app/MainActivity.kt');
   const [copied, setCopied] = useState(false);
+  const bundle = useMemo(() => generateAndroidProjectBundle(rootNode, config), [rootNode, config]);
+  const selectedFile = bundle.files.find((file) => file.path === selectedPath) || bundle.files[0];
+  const hasErrors = bundle.diagnostics.some((item) => item.severity === 'error');
 
-  const getPreviewText = () => {
-    switch (activePreviewTab) {
-      case 'tree':
-        return generateFullProjectFileTree(rootNode, config);
-      case 'gradle':
-        return generateAppBuildGradleKts(config);
-      case 'settings':
-        return generateSettingsGradleKts(config);
-      default:
-        return generateFullProjectFileTree(rootNode, config);
+  const copyBundle = async () => {
+    if (hasErrors || bundle.files.length === 0) {
+      Alert.alert('Export blocked', 'Resolve the generation errors before copying the Android project bundle.');
+      return;
     }
-  };
-
-  const textToCopy = getPreviewText();
-
-  const handleCopy = () => {
+    await Clipboard.setStringAsync(serializeAndroidProjectBundle(bundle));
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    Alert.alert('Project bundle copied', 'The generated project manifest and all source files are on your clipboard as JSON. Save it as a .json file or transfer it to your development environment.');
   };
+
+  const copySelectedFile = async () => {
+    if (!selectedFile) return;
+    await Clipboard.setStringAsync(selectedFile.content);
+    Alert.alert('File copied', selectedFile.path);
+  };
+
+  const updateConfig = <K extends keyof AndroidExportConfig>(key: K, value: AndroidExportConfig[K]) =>
+    setConfig((current) => ({ ...current, [key]: value }));
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Android Project & Environment Exporter</Text>
-        <TouchableOpacity style={styles.copyBtn} onPress={handleCopy}>
-          <Text style={styles.copyBtnText}>{copied ? '✓ Copied' : '📋 Copy Spec'}</Text>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <View style={styles.header}>
+        <View style={styles.headerCopy}>
+          <Text style={styles.title}>Native Android Project Generator</Text>
+          <Text style={styles.subtitle}>Generate a source project from the current component tree.</Text>
+        </View>
+        <View style={[styles.status, hasErrors ? styles.statusError : styles.statusReady]}>
+          <Text style={styles.statusText}>{hasErrors ? 'Needs attention' : 'Generation ready'}</Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Project identity</Text>
+        <Text style={styles.label}>Application name</Text>
+        <TextInput style={styles.input} value={config.appName} onChangeText={(value) => updateConfig('appName', value)} />
+        <Text style={styles.label}>Android package name</Text>
+        <TextInput autoCapitalize="none" style={styles.input} value={config.packageName} onChangeText={(value) => updateConfig('packageName', value)} />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Generation target</Text>
+        <View style={styles.frameworkActive}>
+          <Text style={styles.frameworkTitle}>Jetpack Compose · Kotlin</Text>
+          <Text style={styles.muted}>Supported native Android target</Text>
+        </View>
+        <Text style={styles.label}>Other targets</Text>
+        <Text style={styles.muted}>XML Views, React Native modules, and Flutter exports are not enabled until their generators and validation gates are implemented.</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Android SDK configuration</Text>
+        <Text style={styles.label}>Target SDK</Text>
+        <View style={styles.chips}>
+          {([35, 34, 33] as TargetSDK[]).map((sdk) => (
+            <TouchableOpacity key={sdk} style={[styles.chip, config.targetSdk === sdk && styles.chipActive]} onPress={() => updateConfig('targetSdk', sdk)}>
+              <Text style={styles.chipText}>API {sdk}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={styles.label}>Minimum SDK</Text>
+        <View style={styles.chips}>
+          {([21, 24, 26] as MinSDK[]).map((sdk) => (
+            <TouchableOpacity key={sdk} style={[styles.chip, config.minSdk === sdk && styles.chipActive]} onPress={() => updateConfig('minSdk', sdk)}>
+              <Text style={styles.chipText}>API {sdk}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Text style={styles.label}>ABI filter</Text>
+        <View style={styles.chips}>
+          {(['all', 'arm64-v8a', 'armeabi-v7a', 'x86_64'] as ABIFilter[]).map((abi) => (
+            <TouchableOpacity key={abi} style={[styles.chip, config.abiFilter === abi && styles.chipActive]} onPress={() => updateConfig('abiFilter', abi)}>
+              <Text style={styles.chipText}>{abi === 'all' ? 'Universal' : abi}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Generated project files</Text>
+          <Text style={styles.count}>{bundle.files.length} files</Text>
+        </View>
+        {bundle.files.map((file) => (
+          <TouchableOpacity key={file.path} style={[styles.fileRow, selectedFile?.path === file.path && styles.fileSelected]} onPress={() => setSelectedPath(file.path)}>
+            <Text style={styles.fileName}>{file.path}</Text>
+            <Text style={styles.fileAction}>{selectedFile?.path === file.path ? 'Selected' : 'View'}</Text>
+          </TouchableOpacity>
+        ))}
+        {selectedFile ? (
+          <View style={styles.preview}>
+            <View style={styles.previewHeader}>
+              <Text style={styles.previewPath}>{selectedFile.path}</Text>
+              <TouchableOpacity onPress={copySelectedFile} style={styles.copySmall}><Text style={styles.copySmallText}>Copy file</Text></TouchableOpacity>
+            </View>
+            <ScrollView horizontal style={styles.codeScroll}>
+              <Text selectable style={styles.code}>{selectedFile.content}</Text>
+            </ScrollView>
+          </View>
+        ) : null}
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Generation inspection</Text>
+        {bundle.diagnostics.length === 0 ? <Text style={styles.success}>No generation diagnostics.</Text> : bundle.diagnostics.map((item, index) => (
+          <View key={item.code + index} style={styles.diagnostic}>
+            <Text style={item.severity === 'error' ? styles.error : styles.warning}>{item.severity.toUpperCase()} · {item.code}</Text>
+            <Text style={styles.diagnosticMessage}>{item.message}{item.nodeId ? ` (node: ${item.nodeId})` : ''}</Text>
+          </View>
+        ))}
+        <Text style={styles.note}>This exports source files as a JSON project bundle. It does not build or certify an APK; Android build verification belongs to Phase 2F.</Text>
+        <TouchableOpacity disabled={hasErrors || bundle.files.length === 0} style={[styles.exportButton, (hasErrors || bundle.files.length === 0) && styles.exportDisabled]} onPress={copyBundle}>
+          <Text style={styles.exportText}>{copied ? '✓ Bundle copied' : 'Copy complete Android project bundle'}</Text>
         </TouchableOpacity>
-      </View>
-
-      {/* Package & App Name Configuration */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>1. Project Identity & Namespace</Text>
-        <View style={styles.inputRow}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.inputLabel}>App Title:</Text>
-            <TextInput
-              style={styles.textInput}
-              value={config.appName}
-              onChangeText={(txt) => setConfig({ ...config, appName: txt })}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.inputLabel}>Package Name:</Text>
-            <TextInput
-              style={styles.textInput}
-              value={config.packageName}
-              onChangeText={(txt) => setConfig({ ...config, packageName: txt })}
-            />
-          </View>
-        </View>
-      </View>
-
-      {/* Target UI Framework */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>2. Target Android UI Framework</Text>
-        <View style={styles.chipGrid}>
-          {[
-            { id: 'compose', label: 'Jetpack Compose', desc: 'Material3 Kotlin' },
-            { id: 'xml_native', label: 'XML Layout Views', desc: 'ConstraintLayout' },
-            { id: 'react_native_module', label: 'React Native Module', desc: 'ReactPackage' },
-            { id: 'flutter_widget', label: 'Flutter Package', desc: 'StatelessWidget' },
-          ].map((fw) => (
-            <TouchableOpacity
-              key={fw.id}
-              style={[styles.chip, config.framework === fw.id && styles.activeChip]}
-              onPress={() => setConfig({ ...config, framework: fw.id as FrameworkTarget })}
-            >
-              <Text style={[styles.chipText, config.framework === fw.id && styles.activeChipText]}>{fw.label}</Text>
-              <Text style={styles.chipSubText}>{fw.desc}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      {/* Android SDK & Build System Settings */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>3. Build System & SDK Compatibility</Text>
-        <Text style={styles.subLabel}>Target SDK Level:</Text>
-        <View style={styles.row}>
-          {[35, 34, 33].map((sdk) => (
-            <TouchableOpacity
-              key={sdk}
-              style={[styles.smallChip, config.targetSdk === sdk && styles.activeChip]}
-              onPress={() => setConfig({ ...config, targetSdk: sdk as TargetSDK })}
-            >
-              <Text style={styles.smallChipText}>Android {sdk === 35 ? '15 (SDK 35)' : sdk === 34 ? '14 (SDK 34)' : '13 (SDK 33)'}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Text style={[styles.subLabel, { marginTop: 8 }]}>Minimum Supported SDK:</Text>
-        <View style={styles.row}>
-          {[21, 24, 26].map((sdk) => (
-            <TouchableOpacity
-              key={sdk}
-              style={[styles.smallChip, config.minSdk === sdk && styles.activeChip]}
-              onPress={() => setConfig({ ...config, minSdk: sdk as MinSDK })}
-            >
-              <Text style={styles.smallChipText}>{sdk === 21 ? 'API 21 (Lollipop)' : sdk === 24 ? 'API 24 (Nougat)' : 'API 26 (Oreo)'}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      {/* CPU Architectures & ABI Filters */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>4. Hardware CPU Architectures (ABI Filters)</Text>
-        <View style={styles.chipGrid}>
-          {[
-            { id: 'all', label: 'Universal (All ABIs)' },
-            { id: 'arm64-v8a', label: 'arm64-v8a (64-bit ARM)' },
-            { id: 'armeabi-v7a', label: 'armeabi-v7a (32-bit ARM)' },
-            { id: 'x86_64', label: 'x86_64 (Intel Emulator)' },
-          ].map((abi) => (
-            <TouchableOpacity
-              key={abi.id}
-              style={[styles.smallChip, config.abiFilter === abi.id && styles.activeChip]}
-              onPress={() => setConfig({ ...config, abiFilter: abi.id as ABIFilter })}
-            >
-              <Text style={styles.smallChipText}>{abi.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <View style={styles.toggleRow}>
-          <TouchableOpacity
-            style={[styles.toggleBtn, config.enableFlavors && styles.activeToggle]}
-            onPress={() => setConfig({ ...config, enableFlavors: !config.enableFlavors })}
-          >
-            <Text style={styles.toggleText}>{config.enableFlavors ? '✓ Build Flavors (dev, staging, prod)' : '✗ Single Build Variant'}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.toggleBtn, config.enableABISplit && styles.activeToggle]}
-            onPress={() => setConfig({ ...config, enableABISplit: !config.enableABISplit })}
-          >
-            <Text style={styles.toggleText}>{config.enableABISplit ? '✓ ABI Splits Enabled' : '✗ Single APK Output'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Code Preview Tabs */}
-      <View style={styles.section}>
-        <View style={styles.previewTabRow}>
-          <TouchableOpacity
-            style={[styles.previewTab, activePreviewTab === 'tree' && styles.activePreviewTab]}
-            onPress={() => setActivePreviewTab('tree')}
-          >
-            <Text style={styles.previewTabText}>📂 File Tree</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.previewTab, activePreviewTab === 'gradle' && styles.activePreviewTab]}
-            onPress={() => setActivePreviewTab('gradle')}
-          >
-            <Text style={styles.previewTabText}>📄 build.gradle.kts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.previewTab, activePreviewTab === 'settings' && styles.activePreviewTab]}
-            onPress={() => setActivePreviewTab('settings')}
-          >
-            <Text style={styles.previewTabText}>⚙️ settings.gradle.kts</Text>
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView horizontal style={styles.codeBox}>
-          <Text style={styles.codeText}>{textToCopy}</Text>
-        </ScrollView>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 12 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  title: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc' },
-  copyBtn: { backgroundColor: '#2563eb', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6 },
-  copyBtnText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
-  section: { marginBottom: 16, backgroundColor: '#0f172a', padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#334155' },
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#38bdf8', marginBottom: 8 },
-  inputRow: { flexDirection: 'row', gap: 8 },
-  inputLabel: { color: '#94a3b8', fontSize: 10, marginBottom: 4 },
-  textInput: { backgroundColor: '#1e293b', color: '#f8fafc', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontSize: 12 },
-  chipGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  chip: { backgroundColor: '#1e293b', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#334155', minWidth: '47%' },
-  activeChip: { backgroundColor: '#2563eb', borderColor: '#3b82f6' },
-  chipText: { color: '#f8fafc', fontSize: 12, fontWeight: 'bold' },
-  activeChipText: { color: '#ffffff' },
-  chipSubText: { color: '#94a3b8', fontSize: 10, marginTop: 2 },
-  subLabel: { color: '#cbd5e1', fontSize: 11, fontWeight: '600', marginBottom: 4 },
-  row: { flexDirection: 'row', gap: 6 },
-  smallChip: { backgroundColor: '#1e293b', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, borderWidth: 1, borderColor: '#334155' },
-  smallChipText: { color: '#f8fafc', fontSize: 11, fontWeight: '600' },
-  toggleRow: { flexDirection: 'column', gap: 6, marginTop: 10 },
-  toggleBtn: { backgroundColor: '#1e293b', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155' },
-  activeToggle: { borderColor: '#10b981', backgroundColor: '#064e3b' },
-  toggleText: { color: '#f8fafc', fontSize: 11, fontWeight: 'bold' },
-  previewTabRow: { flexDirection: 'row', gap: 6, marginBottom: 8 },
-  previewTab: { backgroundColor: '#1e293b', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
-  activePreviewTab: { backgroundColor: '#3b82f6' },
-  previewTabText: { color: '#f8fafc', fontSize: 11, fontWeight: 'bold' },
-  codeBox: { backgroundColor: '#1e293b', padding: 12, borderRadius: 8, maxHeight: 200 },
-  codeText: { color: '#38bdf8', fontFamily: 'monospace', fontSize: 11 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  content: { padding: 12, paddingBottom: 28 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 8 },
+  headerCopy: { flex: 1 },
+  title: { color: '#f8fafc', fontSize: 16, fontWeight: '800' },
+  subtitle: { color: '#94a3b8', fontSize: 11, marginTop: 4 },
+  status: { paddingHorizontal: 8, paddingVertical: 6, borderRadius: 8 },
+  statusReady: { backgroundColor: '#064e3b' },
+  statusError: { backgroundColor: '#7f1d1d' },
+  statusText: { color: '#fff', fontSize: 10, fontWeight: '700' },
+  section: { backgroundColor: '#0f172a', borderColor: '#334155', borderWidth: 1, borderRadius: 10, padding: 12, marginBottom: 12 },
+  sectionTitle: { color: '#38bdf8', fontSize: 13, fontWeight: '800', marginBottom: 9 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  count: { color: '#94a3b8', fontSize: 10 },
+  label: { color: '#cbd5e1', fontSize: 11, marginTop: 8, marginBottom: 5 },
+  input: { color: '#f8fafc', backgroundColor: '#1e293b', borderColor: '#475569', borderWidth: 1, borderRadius: 7, paddingHorizontal: 9, paddingVertical: 8, fontSize: 12 },
+  frameworkActive: { borderWidth: 1, borderColor: '#2563eb', backgroundColor: '#172554', borderRadius: 8, padding: 10 },
+  frameworkTitle: { color: '#fff', fontSize: 12, fontWeight: '700' },
+  muted: { color: '#94a3b8', fontSize: 10, lineHeight: 15 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  chip: { backgroundColor: '#1e293b', borderColor: '#475569', borderWidth: 1, borderRadius: 7, paddingHorizontal: 9, paddingVertical: 7 },
+  chipActive: { backgroundColor: '#1d4ed8', borderColor: '#60a5fa' },
+  chipText: { color: '#f8fafc', fontSize: 10, fontWeight: '600' },
+  fileRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 7, borderBottomWidth: 1, borderBottomColor: '#1e293b' },
+  fileSelected: { backgroundColor: '#172554', borderRadius: 5 },
+  fileName: { color: '#cbd5e1', fontSize: 10, flex: 1 },
+  fileAction: { color: '#60a5fa', fontSize: 10, fontWeight: '700' },
+  preview: { backgroundColor: '#020617', borderRadius: 8, marginTop: 10, overflow: 'hidden' },
+  previewHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 8 },
+  previewPath: { color: '#94a3b8', fontSize: 9, flex: 1 },
+  copySmall: { backgroundColor: '#1e40af', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 5 },
+  copySmallText: { color: '#fff', fontSize: 9, fontWeight: '700' },
+  codeScroll: { maxHeight: 240, padding: 10 },
+  code: { color: '#7dd3fc', fontSize: 10, fontFamily: 'monospace' },
+  success: { color: '#86efac', fontSize: 11 },
+  diagnostic: { paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#1e293b' },
+  error: { color: '#fca5a5', fontSize: 10, fontWeight: '800' },
+  warning: { color: '#fcd34d', fontSize: 10, fontWeight: '800' },
+  diagnosticMessage: { color: '#cbd5e1', fontSize: 10, marginTop: 3, lineHeight: 15 },
+  note: { color: '#94a3b8', fontSize: 10, lineHeight: 15, marginTop: 10 },
+  exportButton: { backgroundColor: '#2563eb', borderRadius: 8, padding: 12, alignItems: 'center', marginTop: 10 },
+  exportDisabled: { opacity: 0.4 },
+  exportText: { color: '#fff', fontSize: 11, fontWeight: '800' },
 });
