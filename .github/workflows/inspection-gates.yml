@@ -66,6 +66,10 @@ jobs:
         working-directory: app
         run: npm run test:validation
 
+      - name: Run Android project generation inspection gate
+        working-directory: app
+        run: npm run test:android-generation
+
       - name: Validate Expo configuration
         working-directory: app
         run: npx expo config --type public
