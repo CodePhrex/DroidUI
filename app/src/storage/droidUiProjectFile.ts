@@ -18,7 +18,8 @@ export interface DroidUiProjectPackage {
     name: string;
     nodeCount: number;
   };
-  assets: AssetManifest;
+  /** Optional for source compatibility with schema-29/legacy in-memory packages. */
+  assets?: AssetManifest;
   workspaceState: {
     currentTheme: ThemeMode;
     activeLocale: SupportedLocale;
@@ -78,7 +79,7 @@ export const parseDroidUiFile = (
     const recognizedSignature = raw.signature === DROID_UI_SIGNATURE ||
       (typeof raw.fileFormat === 'string' && raw.fileFormat.startsWith('DROID_STUDIO'));
     if (!recognizedSignature) {
-      return { success: false, error: `Unrecognized project signature. Expected "${DROID_UI_SIGNATURE}" or a supported legacy Droid Studio header.` };
+      return { success: false, error: `Unrecognized project signature. Expected \"${DROID_UI_SIGNATURE}\" or a supported legacy Droid Studio header.` };
     }
     if (raw.schemaVersion !== 29 && raw.schemaVersion !== 30) {
       return { success: false, error: `Unsupported .dui schema version: ${String(raw.schemaVersion)}.` };
@@ -96,7 +97,8 @@ export const parseDroidUiFile = (
     }
 
     const treeAssets = buildAssetManifestFromTree(state.rootNode as ComponentNode);
-    const assets = normalizeAssetManifest(raw.assets).length ? normalizeAssetManifest(raw.assets) : treeAssets;
+    const rawAssets = normalizeAssetManifest(raw.assets);
+    const assets = rawAssets.length ? rawAssets : treeAssets;
     const normalized: DroidUiProjectPackage = {
       signature: DROID_UI_SIGNATURE,
       extension: DROID_UI_FILE_EXTENSION,
