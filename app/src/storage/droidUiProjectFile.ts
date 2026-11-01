@@ -2,6 +2,7 @@ import { ComponentNode, SplashScreenConfig } from '../types/schema';
 import { ThemeMode } from '../theme/themeConfig';
 import { SupportedLocale, I18nDictionary } from '../types/localization';
 import { isRecord, isThemeMode, isSupportedLocale, validateComponentTree, validateSplashConfig, validateI18nDictionary } from './projectValidation';
+import { AssetManifest, buildAssetManifestFromTree, normalizeAssetManifest } from './assetManagement';
 
 export const DROID_UI_FILE_EXTENSION = '.dui';
 export const DROID_UI_SIGNATURE = 'DROID_STUDIO_PROJECT_V30';
@@ -17,6 +18,8 @@ export interface DroidUiProjectPackage {
     name: string;
     nodeCount: number;
   };
+  /** Optional for source compatibility with schema-29/legacy in-memory packages. */
+  assets?: AssetManifest;
   workspaceState: {
     currentTheme: ThemeMode;
     activeLocale: SupportedLocale;
@@ -28,11 +31,7 @@ export interface DroidUiProjectPackage {
 
 export const countNodes = (node: ComponentNode): number => {
   let count = 1;
-  if (node.children) {
-    node.children.forEach((c) => {
-      count += countNodes(c);
-    });
-  }
+  if (node.children) node.children.forEach((c) => { count += countNodes(c); });
   return count;
 };
 
@@ -47,7 +46,6 @@ export const exportProjectToDroidUiFile = (
 ): { filename: string; content: string } => {
   const sanitizedName = projectName.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_');
   const filename = `${sanitizedName || 'droid_project'}${DROID_UI_FILE_EXTENSION}`;
-
   const pkg: DroidUiProjectPackage = {
     signature: DROID_UI_SIGNATURE,
     extension: DROID_UI_FILE_EXTENSION,
@@ -59,6 +57,7 @@ export const exportProjectToDroidUiFile = (
       name: projectName,
       nodeCount: countNodes(rootNode),
     },
+    assets: buildAssetManifestFromTree(rootNode),
     workspaceState: {
       currentTheme,
       activeLocale,
@@ -67,11 +66,7 @@ export const exportProjectToDroidUiFile = (
       rootNode,
     },
   };
-
-  return {
-    filename,
-    content: JSON.stringify(pkg, null, 2),
-  };
+  return { filename, content: JSON.stringify(pkg, null, 2) };
 };
 
 export const parseDroidUiFile = (
@@ -79,44 +74,31 @@ export const parseDroidUiFile = (
 ): { success: boolean; data?: DroidUiProjectPackage; error?: string } => {
   try {
     const raw: unknown = JSON.parse(fileContent);
-
-    if (!isRecord(raw)) {
-      return { success: false, error: 'Invalid file format: content is not a valid JSON object.' };
-    }
+    if (!isRecord(raw)) return { success: false, error: 'Invalid file format: content is not a valid JSON object.' };
 
     const recognizedSignature = raw.signature === DROID_UI_SIGNATURE ||
       (typeof raw.fileFormat === 'string' && raw.fileFormat.startsWith('DROID_STUDIO'));
     if (!recognizedSignature) {
-      return {
-        success: false,
-        error: `Unrecognized project signature. Expected "${DROID_UI_SIGNATURE}" or a supported legacy Droid Studio header.`,
-      };
+      return { success: false, error: `Unrecognized project signature. Expected \"${DROID_UI_SIGNATURE}\" or a supported legacy Droid Studio header.` };
     }
-
-    // Schema 29 is the legacy package version already emitted by earlier DroidUI builds.
     if (raw.schemaVersion !== 29 && raw.schemaVersion !== 30) {
       return { success: false, error: `Unsupported .dui schema version: ${String(raw.schemaVersion)}.` };
     }
-
-    if (!isRecord(raw.projectMeta) ||
-        typeof raw.projectMeta.name !== 'string' ||
-        typeof raw.projectMeta.id !== 'string') {
+    if (!isRecord(raw.projectMeta) || typeof raw.projectMeta.name !== 'string' || typeof raw.projectMeta.id !== 'string') {
       return { success: false, error: 'Malformed .dui file: project metadata is missing or invalid.' };
     }
-
-    if (!isRecord(raw.workspaceState)) {
-      return { success: false, error: 'Malformed .dui file: workspace state is missing or invalid.' };
-    }
+    if (!isRecord(raw.workspaceState)) return { success: false, error: 'Malformed .dui file: workspace state is missing or invalid.' };
 
     const state = raw.workspaceState;
     const tree = validateComponentTree(state.rootNode);
-    if (!tree.valid) {
-      return { success: false, error: `Malformed .dui component tree: ${tree.error}` };
-    }
+    if (!tree.valid) return { success: false, error: `Malformed .dui component tree: ${tree.error}` };
     if (!validateSplashConfig(state.splashConfig) || !validateI18nDictionary(state.i18nDict)) {
       return { success: false, error: 'Malformed .dui file: splash configuration or translation dictionary is invalid.' };
     }
 
+    const treeAssets = buildAssetManifestFromTree(state.rootNode as ComponentNode);
+    const rawAssets = normalizeAssetManifest(raw.assets);
+    const assets = rawAssets.length ? rawAssets : treeAssets;
     const normalized: DroidUiProjectPackage = {
       signature: DROID_UI_SIGNATURE,
       extension: DROID_UI_FILE_EXTENSION,
@@ -128,21 +110,18 @@ export const parseDroidUiFile = (
         name: raw.projectMeta.name,
         nodeCount: tree.nodeCount,
       },
+      assets,
       workspaceState: {
         currentTheme: isThemeMode(state.currentTheme) ? state.currentTheme : 'dark',
         activeLocale: isSupportedLocale(state.activeLocale) ? state.activeLocale : 'en',
         splashConfig: state.splashConfig as SplashScreenConfig,
         i18nDict: state.i18nDict as I18nDictionary,
-        rootNode: state.rootNode,
+        rootNode: state.rootNode as ComponentNode,
       },
     };
-
     return { success: true, data: normalized };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    return {
-      success: false,
-      error: `Failed to parse .dui file payload: ${message}`,
-    };
+    return { success: false, error: `Failed to parse .dui file payload: ${message}` };
   }
 };
