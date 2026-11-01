@@ -55,6 +55,6 @@ const unsupportedNode = { ...tree, children: [...tree.children, { id: 'chart', t
 const rejected = generateAndroidProjectBundle(unsupportedNode, defaultConfig);
 check(rejected.files.length === 0, 'unsupported components block incomplete project generation');
 check(rejected.diagnostics.some((item) => item.code === 'UNSUPPORTED_COMPONENT'), 'unsupported component is identified');
-check(generateAndroidProjectBundle(tree, { ...defaultConfig, minSdk: 35 }).diagnostics.some((item) => item.code === 'SDK_RANGE_INVALID'), 'invalid SDK range is rejected');
+check(generateAndroidProjectBundle(tree, { ...defaultConfig, targetSdk: 33, minSdk: 35 }).diagnostics.some((item) => item.code === 'SDK_RANGE_INVALID'), 'invalid SDK range is rejected');
 
 console.log(`Phase 2E Android project generation gate: ${count} assertions passed.`);
