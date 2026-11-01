@@ -49,8 +49,8 @@ export const SvgImporterStudio = () => {
     const newId = findLastAdded(updatedRoot);
     if (!newId) return;
     const assetId = createAssetId();
-    const metadata = validation.metadata || {};
-    store.updateProps(newId, { assetId, assetName: vectorName.trim() || metadata.name || 'Imported SVG', mimeType: 'image/svg+xml', svgXml: validation.svgXml, imageUri: svgToDataUri(validation.svgXml), svgViewBox: metadata.viewBox, assetWidth: metadata.width, assetHeight: metadata.height, assetCreatedAt: new Date().toISOString() });
+    const metadata = validation.metadata;
+    store.updateProps(newId, { assetId, assetName: vectorName.trim() || metadata?.name || 'Imported SVG', mimeType: 'image/svg+xml', svgXml: validation.svgXml, imageUri: svgToDataUri(validation.svgXml), svgViewBox: metadata?.viewBox, assetWidth: metadata?.width, assetHeight: metadata?.height, assetCreatedAt: new Date().toISOString() });
     store.updateStyle(newId, { width: vectorSize, height: vectorSize, color: vectorColor });
   };
 
