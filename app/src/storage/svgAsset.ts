@@ -13,9 +13,9 @@ export interface SvgValidationResult {
 }
 
 const SVG_ROOT_RE = /<svg\b[\s\S]*?<\/svg>/i;
-const BLOCKED_TAG_RE = /<\/?(?:script|foreignObject|iframe|object|embed)\b[^>]*>/gi;
+const BLOCKED_TAG_RE = /<\/?(?:script|foreignObject|iframe|object|embed)\b[^>]*>/i;
 const EVENT_HANDLER_RE = /\s+on[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi;
-const JAVASCRIPT_URL_RE = /(?:javascript|vbscript)\s*:/gi;
+const JAVASCRIPT_URL_RE = /(?:javascript|vbscript)\s*:/i;
 
 const readNumericAttribute = (xml: string, name: string): number | undefined => {
   const match = xml.match(new RegExp(`\\b${name}\\s*=\\s*[\"']([0-9]+(?:\\.[0-9]+)?)`, 'i'));
