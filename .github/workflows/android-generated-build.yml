@@ -1,0 +1,112 @@
+name: DroidUI Generated Android Build
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-generated-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generated-project-build:
+    name: Generate and build native Android fixture
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Bootstrap lockfile for diagnostics when absent
+        working-directory: app
+        shell: bash
+        run: |
+          if [[ ! -f package-lock.json ]]; then
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          fi
+
+      - name: Install JavaScript dependencies
+        working-directory: app
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: TypeScript check
+        working-directory: app
+        run: npm run typecheck
+
+      - name: Run project generation inspection gate
+        working-directory: app
+        run: npm run test:android-generation
+
+      - name: Generate Android build fixture
+        working-directory: app
+        env:
+          DROIDUI_ANDROID_OUTPUT_DIR: ${{ runner.temp }}/droidui-generated-android
+        run: npm run build:android-fixture
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.0'
+
+      - name: Set up Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build generated debug and release APKs
+        working-directory: ${{ runner.temp }}/droidui-generated-android
+        run: gradle --no-daemon assembleDebug assembleRelease
+
+      - name: Upload generated APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: droidui-generated-android-apks
+          path: |
+            ${{ runner.temp }}/droidui-generated-android/app/build/outputs/apk/debug/*.apk
+            ${{ runner.temp }}/droidui-generated-android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+  version-tag:
+    name: Tag verified main build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: generated-project-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out verified commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create immutable build tag
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./app/package.json').version")
+          SHORT_SHA="${GITHUB_SHA:0:12}"
+          TAG="droidui-v${VERSION}-${SHORT_SHA}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag already exists: $TAG"
+            exit 1
+          fi
+          git tag -a "$TAG" "$GITHUB_SHA" -m "Verified generated Android build for DroidUI $VERSION"
+          git push origin "$TAG"
+          echo "Created verified build tag: $TAG"
