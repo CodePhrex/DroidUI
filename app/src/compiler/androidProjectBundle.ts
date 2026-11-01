@@ -97,7 +97,7 @@ ${pad}}`;
   if (node.type === 'Slider') {
     const initial = Math.max(0, Math.min(100, Number(node.props?.value ?? 50))) / 100;
     const stateName = safeIdentifier(node.id);
-    return `${pad}var ${stateName}Value by remember { mutableFloatStateOf(${initial}f) }\n${pad}Column(modifier = ${modifier}) {\n${pad}    Text("${escapeKotlin(node.props?.label || 'Slider')}: ${(stateName)}Value")\n${pad}    Slider(value = ${stateName}Value, onValueChange = { ${stateName}Value = it })\n${pad}}`;
+    return `${pad}var ${stateName}Value by remember { mutableFloatStateOf(${initial}f) }\n${pad}Column(modifier = ${modifier}) {\n${pad}    Text("${escapeKotlin(node.props?.label || 'Slider')}: \${(${stateName}Value * 100).toInt()}%")\n${pad}    Slider(value = ${stateName}Value, onValueChange = { ${stateName}Value = it })\n${pad}}`;
   }
   if (node.type === 'Checkbox') {
     const initial = node.props?.checked === false ? 'false' : 'true';
