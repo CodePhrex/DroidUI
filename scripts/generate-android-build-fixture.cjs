@@ -39,7 +39,7 @@ const rootNode = {
     { id: 'toggle', type: 'Switch', props: { label: 'Enable sample setting', value: true }, style: {} },
     { id: 'slider', type: 'Slider', props: { label: 'Sample level', value: 40 }, style: {} },
     { id: 'checkbox', type: 'Checkbox', props: { label: 'Accept sample option', checked: false }, style: {} },
-    { id: 'button', type: 'Button', props: { label: 'Continue' }, style: {} },
+    { id: 'button', type: 'Button', props: { label: 'Continue', action: { type: 'change_label', successLabel: 'Continued!' } }, style: {} },
   ],
 };
 const config = {
@@ -70,4 +70,4 @@ console.log('Generated ' + bundle.files.length + ' project files.');
 for (const diagnostic of bundle.diagnostics) {
   console.log('[' + diagnostic.severity.toUpperCase() + '] ' + diagnostic.code + ': ' + diagnostic.message);
 }
-console.log('A button action warning is expected because the editor schema does not yet bind actions.');
+console.log('Fixture button action: change_label -> Continued!');
