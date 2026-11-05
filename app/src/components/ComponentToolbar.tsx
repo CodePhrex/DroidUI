@@ -29,13 +29,31 @@ const TOOLBAR_ITEMS: ToolItem[] = [
 
 export const ComponentToolbar = () => {
   const { selectedNodeId, rootNode, addChildNode } = useEditorStore();
-  const targetParentId = selectedNodeId || rootNode.id;
+
+  // New elements must be inserted into a renderable parent. If a text/button/etc.
+  // is selected, use its nearest Container/Card ancestor instead of nesting
+  // children inside a leaf component where they would never appear on canvas.
+  const findTargetContainer = (node: import('../types/schema').ComponentNode, targetId: string, currentContainerId: string): string => {
+    if (node.id === targetId) {
+      return node.type === 'Container' || node.type === 'Card' ? node.id : currentContainerId;
+    }
+    const nextContainerId = node.type === 'Container' || node.type === 'Card' ? node.id : currentContainerId;
+    for (const child of node.children || []) {
+      const found = findTargetContainer(child, targetId, nextContainerId);
+      if (found !== currentContainerId || child.id === targetId) return found;
+    }
+    return currentContainerId;
+  };
+
+  const targetParentId = selectedNodeId
+    ? findTargetContainer(rootNode, selectedNodeId, rootNode.id)
+    : rootNode.id;
 
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>Quick Component Toolbar</Text>
-        <Text style={styles.targetLabel}>Target: [{targetParentId}]</Text>
+        <Text style={styles.targetLabel}>Adding to: [{targetParentId}]</Text>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.toolbarScroll}>
         {TOOLBAR_ITEMS.map((item) => (
