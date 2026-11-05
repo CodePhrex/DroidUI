@@ -6,11 +6,13 @@ on:
     branches: [main, overhaul]
     paths:
       - 'app/**'
+      - 'scripts/**'
       - '.github/workflows/droidui-dev-apk.yml'
   pull_request:
     branches: [main]
     paths:
       - 'app/**'
+      - 'scripts/**'
       - '.github/workflows/droidui-dev-apk.yml'
 
 permissions:
