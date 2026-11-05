@@ -71,15 +71,15 @@ jobs:
           from pathlib import Path
           path = Path('android/app/build.gradle')
           source = path.read_text()
-          marker = 'project.ext.react = ['
-          if 'bundleInDebug:' not in source:
+          marker = 'react {'
+          if 'debuggableVariants = []' not in source:
               if marker not in source:
-                  print('Could not locate React Native project.ext.react block in generated app/build.gradle')
+                  print('Could not locate the React Native react {} configuration block')
                   print('\n'.join(line for line in source.splitlines() if 'react' in line.lower() or 'bundle' in line.lower()))
                   raise SystemExit(1)
-              source = source.replace(marker, marker + '\n    bundleInDebug: true,', 1)
+              source = source.replace(marker, marker + '\n    // Force JS bundle generation for debug APKs so the app runs without Metro.\n    debuggableVariants = []', 1)
               path.write_text(source)
-          print('Enabled bundleInDebug so the APK includes its JavaScript bundle and does not require Metro.')
+          print('Configured React Native Gradle Plugin to bundle JavaScript in debug APKs.')
           PY
 
       - name: Set up JDK 17
