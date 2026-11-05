@@ -1,5 +1,5 @@
 import { Dimensions, PixelRatio, Platform } from 'react-native';
-import * as Device from 'expo-device';
+
 import type { ViewportSpec } from '../components/ViewportSelector';
 
 export interface DetectedDeviceProfile {
@@ -15,7 +15,7 @@ export interface DetectedDeviceProfile {
   widthPx: number;
   heightPx: number;
   deviceType: string;
-  source: 'expo-device-and-window-metrics';
+  source: 'react-native-platform-constants-and-window-metrics';
   detectedAt: string;
 }
 
@@ -27,7 +27,7 @@ export function detectCurrentDeviceProfile(): DetectedDeviceProfile {
   const heightDp = Math.round(window.height);
   const widthPx = Math.round(screen.width * pixelRatio);
   const heightPx = Math.round(screen.height * pixelRatio);
-  const modelName = Device.modelName || Device.deviceName || 'Android device';
+  const native = Platform.constants as unknown as { Model?: string; Brand?: string; Manufacturer?: string; Release?: string; Fingerprint?: string };\n  const modelName = native.Model || 'Android device';
   const viewport: ViewportSpec = {
     id: 'detected_device' as any,
     name: 'My Device',
@@ -39,18 +39,18 @@ export function detectCurrentDeviceProfile(): DetectedDeviceProfile {
   };
   return {
     viewport,
-    brand: Device.brand || 'Unknown',
-    manufacturer: Device.manufacturer || 'Unknown',
+    brand: native.Brand || 'Unknown',
+    manufacturer: native.Manufacturer || 'Unknown',
     modelName,
-    modelId: Device.modelId || 'Unavailable',
-    osVersion: Device.osVersion || Platform.Version.toString(),
+    modelId: native.Fingerprint || native.Model || 'Unavailable',
+    osVersion: native.Release || Platform.Version.toString(),
     pixelRatio,
     widthDp,
     heightDp,
     widthPx,
     heightPx,
-    deviceType: String(Device.deviceType ?? 'Unknown'),
-    source: 'expo-device-and-window-metrics',
+    deviceType: Platform.OS,
+    source: 'react-native-platform-constants-and-window-metrics',
     detectedAt: new Date().toISOString(),
   };
 }
