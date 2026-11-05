@@ -13,7 +13,13 @@
     },
     "android": {
       "package": "com.codephrex.droidstudio"
-    }
+    },
+    "splash": {
+      "backgroundColor": "#0B1020"
+    },
+    "plugins": [
+      "./plugins/withAndroidSplashBackground"
+    ]
   },
   "splash": {
     "backgroundColor": "#0B1020"
