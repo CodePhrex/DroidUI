@@ -33,6 +33,11 @@ export const BrandSplash: React.FC<{ onFinish?: () => void }> = ({ onFinish }) =
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.82)).current;
   const glow = useRef(new Animated.Value(0.35)).current;
+  const onFinishRef = useRef(onFinish);
+
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
 
   useEffect(() => {
     Animated.parallel([
@@ -46,8 +51,8 @@ export const BrandSplash: React.FC<{ onFinish?: () => void }> = ({ onFinish }) =
         Animated.timing(glow, { toValue: 1, duration: 650, useNativeDriver: true }),
         Animated.timing(glow, { toValue: 0.45, duration: 700, useNativeDriver: true })
       ])
-    ]).start(({ finished }) => { if (finished) onFinish?.(); });
-  }, [opacity, scale, glow, onFinish]);
+    ]).start(({ finished }) => { if (finished) onFinishRef.current?.(); });
+  }, [opacity, scale, glow]);
 
   return (
     <Animated.View pointerEvents="none" style={[styles.splash, { opacity }]}>
