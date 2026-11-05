@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Droid Studio UI/UX",
-    "slug": "droid-studio-ui-ux",
+    "name": "DroidUI",
+    "slug": "droidui",
     "version": "7.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -15,7 +15,7 @@
       "package": "com.codephrex.droidstudio"
     },
     "splash": {
-      "backgroundColor": "#0B1020"
+      "backgroundColor": "#080D1F"
     },
     "plugins": [
       "./plugins/withAndroidSplashBackground"
