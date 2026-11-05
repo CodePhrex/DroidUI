@@ -30,16 +30,19 @@ export function IconGalleryStudio() {
     setSelected(name);
     const props = { iconName: name, iconLibrary: family, iconSymbol: name };
     const style = { color: iconColor, fontSize: Math.max(8, Math.min(128, Number(iconSize) || 28)) };
-    if (selectedNodeId) {
-      updateProps(selectedNodeId, props);
-      useEditorStore.getState().updateStyle(selectedNodeId, style);
-    } else {
-      addChildNode(rootNode.id, 'Icon');
-      const id = useEditorStore.getState().selectedNodeId;
-      if (id) {
-        useEditorStore.getState().updateProps(id, props);
-        useEditorStore.getState().updateStyle(id, style);
-      }
+    const findNode = (node: any, id: string): any => node.id === id ? node : (node.children || []).map((child: any) => findNode(child, id)).find(Boolean);
+    const selectedNode = selectedNodeId ? findNode(rootNode, selectedNodeId) : null;
+    const parentId = selectedNode && selectedNode.type !== 'Icon' ? selectedNode.id : rootNode.id;
+    if (selectedNode?.type === 'Icon') {
+      updateProps(selectedNode.id, props);
+      useEditorStore.getState().updateStyle(selectedNode.id, style);
+      return;
+    }
+    addChildNode(parentId, 'Icon');
+    const id = useEditorStore.getState().selectedNodeId;
+    if (id) {
+      useEditorStore.getState().updateProps(id, props);
+      useEditorStore.getState().updateStyle(id, style);
     }
   };
   return <ScrollView style={s.root} contentContainerStyle={s.content}>
