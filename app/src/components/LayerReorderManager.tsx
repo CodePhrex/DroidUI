@@ -29,6 +29,6 @@ export const LayerReorderManager = () => {
 };
 
 const styles = StyleSheet.create({
-  row: { padding: 8, backgroundColor: '#1e293b', borderRadius: 6 },
-  selectedRow: { borderColor: '#3b82f6', borderWidth: 1 },
+  row: { padding: 8, backgroundColor: '#111B35', borderRadius: 6 },
+  selectedRow: { borderColor: '#398BFF', borderWidth: 1 },
 });
