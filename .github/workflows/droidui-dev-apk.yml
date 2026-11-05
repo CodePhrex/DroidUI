@@ -95,15 +95,15 @@ jobs:
           print(path.read_text())
           PY
 
-      - name: Build real DroidUI debug APK
+      - name: Build installable DroidUI release APK
         working-directory: app/android
-        run: gradle --no-daemon assembleDebug
+        run: gradle --no-daemon assembleRelease
 
       - name: Verify real APK output
         working-directory: app
         shell: bash
         run: |
-          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          APK="android/app/build/outputs/apk/release/app-release.apk"
           test -s "$APK"
           echo "REAL_DROIDUI_APK=$APK"
           ls -lh "$APK"
@@ -113,7 +113,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          APK="android/app/build/outputs/apk/release/app-release.apk"
           AAPT="$ANDROID_HOME/build-tools/34.0.0/aapt"
           BADGING="$("$AAPT" dump badging "$APK")"
           grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
@@ -125,6 +125,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: droidui-real-dev-apk-${{ github.sha }}
-          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          path: app/android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
           retention-days: 14
