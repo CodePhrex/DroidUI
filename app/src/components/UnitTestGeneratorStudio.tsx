@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#f8fafc',
+    color: '#F4F7FF',
   },
   subtitle: {
     fontSize: 10,
-    color: '#38bdf8',
+    color: '#38E8F2',
   },
   copyBtn: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#398BFF',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 6,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   toggleChip: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
     borderWidth: 1,
     borderColor: '#475569',
     paddingHorizontal: 8,
@@ -132,18 +132,18 @@ const styles = StyleSheet.create({
   },
   activeChip: {
     backgroundColor: '#0284c7',
-    borderColor: '#38bdf8',
+    borderColor: '#38E8F2',
   },
   chipText: {
-    color: '#f8fafc',
+    color: '#F4F7FF',
     fontSize: 10,
     fontWeight: 'bold',
   },
   codeBox: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#080D1F',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     flex: 1,
   },
   verticalScroll: {
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   lineNumbers: {
     marginRight: 12,
     borderRightWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     paddingRight: 8,
   },
   lineNumberText: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   codeLines: {},
   codeLineText: {
-    color: '#38bdf8',
+    color: '#38E8F2',
     fontFamily: 'monospace',
     fontSize: 11,
   },
