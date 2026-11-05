@@ -126,5 +126,3 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-          echo "Verified actual DroidUI application APK:"
-          ls -lh "$APK"
