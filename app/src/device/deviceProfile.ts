@@ -1,6 +1,6 @@
 import { Dimensions, PixelRatio, Platform } from 'react-native';
 import * as Device from 'expo-device';
-import { ViewportSpec } from '../components/ViewportSelector';
+import type { ViewportSpec } from '../components/ViewportSelector';
 
 export interface DetectedDeviceProfile {
   viewport: ViewportSpec;
