@@ -14,6 +14,7 @@ import { generateJestTestSpec } from './src/compiler/jestTestGenerator';
 import React, { useState } from 'react';
 import { IconGalleryStudio } from './src/components/IconGalleryStudio';
 import { DeviceDetectionStudio } from './src/components/DeviceDetectionStudio';
+import { detectCurrentDeviceProfile } from './src/device/deviceProfile';
 import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useEditorStore } from './src/store/useEditorStore';
 import { CanvasRenderer } from './src/components/CanvasRenderer';
@@ -64,7 +65,7 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
 
-  const currentVP = activeViewport === 'detected_device' ? require('./src/device/deviceProfile').detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
+  const currentVP = activeViewport === 'detected_device' ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
   const handleSaveProject = async () => {
     try {
