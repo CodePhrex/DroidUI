@@ -90,7 +90,7 @@ jobs:
           AAPT="$ANDROID_HOME/build-tools/34.0.0/aapt"
           BADGING="$("$AAPT" dump badging "$APK")"
           grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
-          grep -F "application-label:'Droid Studio UI/UX'" <<< "$BADGING"
+          grep -F "application-label:'DroidUI'" <<< "$BADGING"
           unzip -l "$APK" | grep -q 'assets/index.android.bundle'
           echo "Verified: this artifact is the DroidUI application, not the generated test fixture."
 
