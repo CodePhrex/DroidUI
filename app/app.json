@@ -20,11 +20,5 @@
     "plugins": [
       "./plugins/withAndroidSplashBackground"
     ]
-  },
-  "splash": {
-    "backgroundColor": "#0B1020"
-  },
-  "plugins": [
-    "./plugins/withAndroidSplashBackground"
-  ]
+  }
 }
