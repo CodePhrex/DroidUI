@@ -1,7 +1,9 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { ComponentNode } from '../types/schema';
+import { DESIGN_PRESETS, DESIGN_PRESET_CATEGORIES } from './designPresets';
+import { SavedDesignPreset, listCustomDesignPresets, saveCustomDesignPreset, deleteCustomDesignPreset } from './customPresetStorage';
 
 export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; description: string; icon: string; node: ComponentNode }[] = [
   {
@@ -146,35 +148,76 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
   },
 ];
 
+type CatalogItem = { id: string; name: string; deviceTag?: string; description: string; icon?: string; category: string; node: ComponentNode };
+
 export const TemplateLibrary = () => {
-  const { selectedNodeId, rootNode, insertTemplate } = useEditorStore();
+  const { selectedNodeId, rootNode, insertTemplate, applyTemplateAsProject } = useEditorStore();
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [search, setSearch] = useState('');
+  const [customPresets, setCustomPresets] = useState<SavedDesignPreset[]>([]);
+  const [presetName, setPresetName] = useState('');
+  useEffect(() => { listCustomDesignPresets().then(setCustomPresets).catch(() => Alert.alert('Preset library', 'Could not load saved presets.')); }, []);
+  const findNode = (node: ComponentNode, id: string): ComponentNode | null => { if (node.id === id) return node; for (const child of node.children || []) { const found = findNode(child, id); if (found) return found; } return null; };
+  const selectedNode = selectedNodeId ? findNode(rootNode, selectedNodeId) : rootNode;
+  const saveCurrentPreset = async () => { if (!presetName.trim()) { Alert.alert('Name your preset', 'Enter a name before saving.'); return; } if (!selectedNode) { Alert.alert('Nothing selected', 'Select a component or use the full screen to save a preset.'); return; } try { const saved = await saveCustomDesignPreset(presetName, selectedNode); setCustomPresets(current => [saved, ...current]); setPresetName(''); Alert.alert('Preset saved', 'Available in My Presets on this device.'); } catch (error) { Alert.alert('Could not save preset', error instanceof Error ? error.message : 'Please try again.'); } };
   const targetParentId = selectedNodeId || rootNode.id;
+  const catalog: CatalogItem[] = useMemo(() => [
+    ...PREBUILT_TEMPLATES.map((item, index) => ({
+      ...item,
+      category: index < 2 ? 'Component Kits' : 'Complete Screens',
+    })),
+    ...DESIGN_PRESETS.map((item) => ({ ...item, icon: '✦', deviceTag: item.styleName })),
+    ...customPresets.map(item => ({ ...item, icon: '★', deviceTag: 'Saved on this device' })),
+  ], [customPresets]);
+  const categories = ['All', ...DESIGN_PRESET_CATEGORIES, ...(customPresets.length ? ['My Presets'] : [])];
+  const filtered = catalog.filter((item) =>
+    (activeCategory === 'All' || item.category === activeCategory) &&
+    (item.name + ' ' + item.description + ' ' + item.category).toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Device-Tailored Component Templates</Text>
-      <Text style={styles.subtitle}>Target Container: [{targetParentId}]</Text>
-
-      <ScrollView style={{ marginTop: 8 }}>
-        {PREBUILT_TEMPLATES.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.card}
-            onPress={() => insertTemplate(targetParentId, item.node)}
-          >
+      <Text style={styles.title}>Design Presets & UI Kits</Text>
+      <Text style={styles.subtitle}>Start a complete design or insert a reusable component kit into [{targetParentId}]</Text>
+      <TextInput
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Search screens, headers, forms, cards..."
+        placeholderTextColor="#94a3b8"
+        style={styles.search}
+      />
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
+        {categories.map((category) => (
+          <TouchableOpacity key={category} onPress={() => setActiveCategory(category)} style={[styles.categoryChip, activeCategory === category && styles.categoryActive]}>
+            <Text style={[styles.categoryText, activeCategory === category && styles.categoryTextActive]}>{category}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <View style={styles.savePanel}><Text style={styles.saveTitle}>Save your own variation</Text><TextInput value={presetName} onChangeText={setPresetName} placeholder={selectedNodeId ? 'Name selected component preset' : 'Name current screen preset'} placeholderTextColor="#94a3b8" style={styles.search} /><TouchableOpacity style={styles.saveBtn} onPress={saveCurrentPreset}><Text style={styles.insertBtnText}>☆ Save selection as preset</Text></TouchableOpacity></View>
+      <Text style={styles.resultCount}>{filtered.length} DESIGNS & COMPONENT KITS</Text>
+      <ScrollView style={{ marginTop: 8 }} contentContainerStyle={{ paddingBottom: 24 }}>
+        {filtered.map((item) => (
+          <View key={item.id} style={styles.card}><View style={styles.previewFrame}><PresetMiniPreview node={item.node} /></View>
             <View style={styles.cardHeader}>
-              <Text style={styles.cardIcon}>{item.icon}</Text>
+              <Text style={styles.cardIcon}>{item.icon || '✦'}</Text>
               <View style={styles.cardMeta}>
                 <Text style={styles.cardTitle}>{item.name}</Text>
-                <Text style={styles.deviceTag}>Tag: {item.deviceTag}</Text>
+                <Text style={styles.deviceTag}>{item.category} · {item.deviceTag || 'Universal'}</Text>
               </View>
             </View>
             <Text style={styles.cardDesc}>{item.description}</Text>
-            <View style={styles.insertBtn}>
-              <Text style={styles.insertBtnText}>+ Insert Template</Text>
+            <View style={styles.actionRow}>
+              <TouchableOpacity style={styles.insertBtn} onPress={() => insertTemplate(targetParentId, item.node)}>
+                <Text style={styles.insertBtnText}>＋ Insert into canvas</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.startBtn} onPress={() => applyTemplateAsProject(item.node, item.name)}>
+                <Text style={styles.startBtnText}>Use as starting design</Text>
+              </TouchableOpacity>
+              {item.category === 'My Presets' && <TouchableOpacity style={styles.deleteBtn} onPress={() => Alert.alert('Delete preset?', item.name, [{ text: 'Cancel', style: 'cancel' }, { text: 'Delete', style: 'destructive', onPress: () => deleteCustomDesignPreset(item.id).then(() => setCustomPresets(items => items.filter(p => p.id !== item.id))) }])}><Text style={styles.deleteText}>Delete saved preset</Text></TouchableOpacity>}
             </View>
-          </TouchableOpacity>
+          </View>
         ))}
+        {filtered.length === 0 && <Text style={styles.empty}>No matching presets. Try another search or category.</Text>}
       </ScrollView>
     </View>
   );
@@ -182,22 +225,43 @@ export const TemplateLibrary = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 12 },
-  title: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc' },
-  subtitle: { fontSize: 11, color: '#38bdf8', marginBottom: 6 },
-  card: {
-    backgroundColor: '#1e293b',
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 },
-  cardIcon: { fontSize: 20 },
+  savePanel: { backgroundColor: '#0f172a', borderColor: '#334155', borderWidth: 1, borderRadius: 12, padding: 10, gap: 7, marginTop: 8 },
+  saveTitle: { color: '#e2e8f0', fontSize: 11, fontWeight: '800' },
+  saveBtn: { backgroundColor: '#0f766e', padding: 10, borderRadius: 8, alignItems: 'center' },
+  previewFrame: { height: 112, overflow: 'hidden', backgroundColor: '#f8fafc', borderRadius: 8, padding: 7, marginBottom: 9 },
+  deleteBtn: { padding: 7 },
+  deleteText: { color: '#fca5a5', fontSize: 10, fontWeight: '700' },
+  title: { fontSize: 17, fontWeight: '900', color: '#f8fafc', letterSpacing: 0.2 },
+  subtitle: { fontSize: 11, color: '#94a3b8', marginTop: 4, marginBottom: 8, lineHeight: 16 },
+  search: { backgroundColor: '#0f172a', color: '#f8fafc', borderWidth: 1, borderColor: '#334155', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 12 },
+  categoryRow: { flexDirection: 'row', gap: 7, paddingVertical: 10 },
+  categoryChip: { borderWidth: 1, borderColor: '#475569', borderRadius: 18, paddingHorizontal: 11, paddingVertical: 7, backgroundColor: '#1e293b' },
+  categoryActive: { backgroundColor: '#2563eb', borderColor: '#60a5fa' },
+  categoryText: { color: '#cbd5e1', fontSize: 10, fontWeight: '600' },
+  categoryTextActive: { color: '#ffffff' },
+  resultCount: { color: '#38bdf8', fontSize: 9, fontWeight: '800', letterSpacing: 0.8, marginTop: 2 },
+  card: { backgroundColor: '#1e293b', padding: 13, borderRadius: 13, marginBottom: 10, borderWidth: 1, borderColor: '#334155' },
+  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 9, marginBottom: 5 },
+  cardIcon: { fontSize: 23, width: 30, textAlign: 'center' },
   cardMeta: { flex: 1 },
-  cardTitle: { fontSize: 13, fontWeight: 'bold', color: '#ffffff' },
-  deviceTag: { fontSize: 10, color: '#38bdf8', fontWeight: '600' },
-  cardDesc: { fontSize: 11, color: '#94a3b8', marginBottom: 8 },
-  insertBtn: { backgroundColor: '#2563eb', paddingVertical: 6, paddingHorizontal: 10, borderRadius: 6, alignSelf: 'flex-start' },
-  insertBtnText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
+  cardTitle: { fontSize: 13, fontWeight: '800', color: '#ffffff' },
+  deviceTag: { fontSize: 9, color: '#38bdf8', fontWeight: '700', marginTop: 3 },
+  cardDesc: { fontSize: 11, color: '#cbd5e1', marginBottom: 10, lineHeight: 16 },
+  actionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
+  insertBtn: { backgroundColor: '#2563eb', paddingVertical: 9, paddingHorizontal: 11, borderRadius: 8, flexGrow: 1, alignItems: 'center' },
+  insertBtnText: { color: '#ffffff', fontSize: 10, fontWeight: '800' },
+  startBtn: { backgroundColor: '#334155', paddingVertical: 9, paddingHorizontal: 11, borderRadius: 8, flexGrow: 1, alignItems: 'center', borderWidth: 1, borderColor: '#64748b' },
+  startBtnText: { color: '#e2e8f0', fontSize: 10, fontWeight: '800' },
+  empty: { color: '#94a3b8', textAlign: 'center', padding: 24, fontSize: 12 },
 });
+
+
+const PresetMiniPreview: React.FC<{ node: ComponentNode }> = ({ node }) => {
+  const children = node.children || []; const style: any = node.style || {};
+  const simple = node.type === 'Text' || node.type === 'Button' || children.length === 0;
+  const label = node.props?.text || node.props?.label || node.props?.placeholder || node.type;
+  return <View style={{ flexDirection: style.flexDirection === 'row' ? 'row' : 'column', backgroundColor: style.backgroundColor || 'transparent', borderRadius: Math.min(Number(style.borderRadius || 8), 12), borderWidth: style.borderWidth ? 1 : 0, borderColor: style.borderColor || '#e2e8f0', padding: Math.min(Number(style.padding || 4), 8), marginBottom: 2, maxWidth: '100%' }}>
+    {simple && <Text numberOfLines={1} style={{ color: style.color || (node.type === 'Button' ? '#fff' : '#334155'), backgroundColor: node.type === 'Button' ? (style.backgroundColor || '#2563eb') : 'transparent', fontSize: Math.min(Number(style.fontSize || 9), 12), fontWeight: style.fontWeight || 'normal', padding: 2 }}>{String(label)}</Text>}
+    {children.slice(0, 5).map(child => <PresetMiniPreview key={child.id} node={child} />)}
+  </View>;
+};

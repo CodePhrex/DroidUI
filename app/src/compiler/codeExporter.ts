@@ -34,6 +34,13 @@ export const generateReactNativeTSX = (rootNode: ComponentNode): string => {
       return `${indent}<View style={${styleStr}}${accStr}>\n${childrenCode}\n${indent}</View>`;
     }
 
+    if (node.type === 'Icon') {
+      const family = ['MaterialCommunityIcons', 'MaterialIcons', 'Ionicons', 'Feather', 'FontAwesome5', 'AntDesign'].includes(node.props?.iconLibrary) ? node.props.iconLibrary : 'MaterialCommunityIcons';
+      const name = String(node.props?.iconName || 'help-circle').replace(/"/g, '&quot;');
+      const color = String(node.style?.color || '#3b82f6').replace(/"/g, '&quot;');
+      return indent + '<' + family + ' name="' + name + '" size={' + (node.style?.fontSize || 28) + '} color="' + color + '" style={' + styleStr + '}' + accStr + ' />';
+    }
+
     if (node.type === 'Text') {
       return `${indent}<Text style={${styleStr}}${accStr}>${node.props?.text || 'Text'}</Text>`;
     }
@@ -89,6 +96,7 @@ export const generateReactNativeTSX = (rootNode: ComponentNode): string => {
   return `import React from 'react';
 import { View, Text, TouchableOpacity, TextInput, Switch, StyleSheet } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import Animated, { FadeIn, SpringIn } from 'react-native-reanimated';
 
 export default function ExportedUI() {

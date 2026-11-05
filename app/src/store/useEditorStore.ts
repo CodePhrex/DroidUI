@@ -168,6 +168,7 @@ interface EditorState {
   updateTransition: (id: string, transition: TransitionSpec) => void;
   addChildNode: (parentId: string, type: ComponentNode['type']) => void;
   insertTemplate: (parentId: string, templateNode: ComponentNode) => void;
+  applyTemplateAsProject: (templateNode: ComponentNode, projectName: string) => void;
   moveChildNode: (parentId: string, fromIndex: number, toIndex: number) => void;
   deleteNode: (id: string) => void;
   undo: () => void;
@@ -455,6 +456,19 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       future: [],
       rootNode: addRecursive(rootNode),
       selectedNodeId: newNode.id,
+    });
+  },
+
+  applyTemplateAsProject: (templateNode, projectName) => {
+    const { rootNode, history } = get();
+    const clonedTemplate = randomizeIds(templateNode);
+    set({
+      rootNode: clonedTemplate,
+      selectedNodeId: clonedTemplate.id,
+      currentProjectId: null,
+      currentProjectName: projectName,
+      history: [...history, rootNode],
+      future: [],
     });
   },
 

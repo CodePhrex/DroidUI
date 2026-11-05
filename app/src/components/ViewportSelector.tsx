@@ -1,4 +1,5 @@
 import React from 'react';
+import { detectCurrentDeviceProfile } from '../device/deviceProfile';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 
 export type ViewportMode =
@@ -9,7 +10,8 @@ export type ViewportMode =
   | 'pixel_tablet'
   | 'compact_phone'
   | 'wear_os_watch'
-  | 'android_tv';
+  | 'android_tv'
+  | 'detected_device';
 
 export interface ViewportSpec {
   id: ViewportMode;
@@ -21,7 +23,7 @@ export interface ViewportSpec {
   icon: string;
 }
 
-export const VIEWPORTS: Record<ViewportMode, ViewportSpec> = {
+export const VIEWPORTS: Record<Exclude<ViewportMode, 'detected_device'>, ViewportSpec> = {
   galaxy_s24_ultra: {
     id: 'galaxy_s24_ultra',
     name: 'Galaxy S24 Ultra',
@@ -102,7 +104,8 @@ interface Props {
 }
 
 export const ViewportSelector: React.FC<Props> = ({ activeViewport, onSelectViewport }) => {
-  const activeVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
+  const detected = activeViewport === 'detected_device';
+  const activeVP = detected ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
   return (
     <View style={styles.container}>
@@ -113,7 +116,7 @@ export const ViewportSelector: React.FC<Props> = ({ activeViewport, onSelectView
         </Text>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
-        {(Object.keys(VIEWPORTS) as ViewportMode[]).map((mode) => {
+        <TouchableOpacity style={[styles.btn, detected && styles.activeBtn]} onPress={() => onSelectViewport('detected_device')}><Text style={styles.btnIcon}>📲</Text><Text style={[styles.btnText, detected && styles.activeBtnText]}>My Device</Text></TouchableOpacity>\n        {(Object.keys(VIEWPORTS) as Exclude<ViewportMode, 'detected_device'>[]).map((mode) => {
           const vp = VIEWPORTS[mode];
           const isActive = activeViewport === mode;
           return (

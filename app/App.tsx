@@ -12,13 +12,17 @@ import { generateGitHubActionsYAML } from './src/compiler/cicdPipelineGenerator'
 import { UnitTestGeneratorStudio } from './src/components/UnitTestGeneratorStudio';
 import { generateJestTestSpec } from './src/compiler/jestTestGenerator';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView } from 'react-native';
+import { IconGalleryStudio } from './src/components/IconGalleryStudio';
+import { DeviceDetectionStudio } from './src/components/DeviceDetectionStudio';
+import { detectCurrentDeviceProfile } from './src/device/deviceProfile';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useEditorStore } from './src/store/useEditorStore';
 import { CanvasRenderer } from './src/components/CanvasRenderer';
 import { PropertyInspector } from './src/components/PropertyInspector';
 import { LayerReorderManager } from './src/components/LayerReorderManager';
 import { TemplateLibrary } from './src/templates/TemplateLibrary';
 import { ThemeManager } from './src/components/ThemeManager';
+import { DesignSystemStudio } from './src/components/DesignSystemStudio';
 import { ProjectManager } from './src/components/ProjectManager';
 import { AssetPickerStudio } from './src/components/AssetPickerStudio';
 import { ViewportSelector, VIEWPORTS, ViewportMode } from './src/components/ViewportSelector';
@@ -49,6 +53,7 @@ export default function App() {
     i18nDict,
     currentProjectId,
     currentProjectName,
+    saveCurrentProject,
     undo,
     redo
   } = useEditorStore();
@@ -56,12 +61,22 @@ export default function App() {
   const theme = THEMES[currentTheme] || THEMES.dark;
   const isLightMode = currentTheme === 'light';
 
-  const [activeTab, setActiveTab] = useState<'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io'>('inspector');
+  const [activeTab, setActiveTab] = useState<'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io' | 'design_system' | 'icons' | 'device'>('inspector');
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
 
-  const currentVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
+  const currentVP = activeViewport === 'detected_device' ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
+
+  const handleSaveProject = async () => {
+    try {
+      await saveCurrentProject(currentProjectName);
+      Alert.alert('Project Saved', `\"${currentProjectName}\" was saved on this device.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      Alert.alert('Save Failed', message);
+    }
+  };
 
   const toggleThemeMode = () => {
     setTheme(isLightMode ? 'dark' : 'light');
@@ -85,13 +100,19 @@ export default function App() {
       {/* Studio Top Navigation Header Bar */}
       <View style={[styles.navbar, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
         <View style={styles.brandGroup}>
-          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>📱 Droid Mobile Studio</Text>
+          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>◈ DroidUI Studio</Text>
           <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]}>
             <Text style={[styles.projectBadgeText, { color: theme.textSecondary }]}>{currentProjectName}</Text>
           </View>
         </View>
 
         <View style={styles.navActions}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={() => setActiveTab('projects')}>
+            <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>📂 Open</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={handleSaveProject}>
+            <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>💾 Save</Text>
+          </TouchableOpacity>
           {/* Light / Dark UI Toggle Switch */}
           <TouchableOpacity
             style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#3b82f6' : '#334155', borderColor: theme.border }]}
@@ -136,6 +157,8 @@ export default function App() {
             <TouchableOpacity style={[styles.tab, activeTab === 'deeplink' && styles.activeTab]} onPress={() => setActiveTab('deeplink')}>
               <Text style={[styles.tabText, { color: activeTab === 'deeplink' ? theme.primary : theme.textSecondary }]}>🔗 Deep Links & Icons</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, activeTab === 'icons' && styles.activeTab]} onPress={() => setActiveTab('icons')}><Text style={[styles.tabText, { color: activeTab === 'icons' ? theme.primary : theme.textSecondary }]}>✣ Icon Gallery</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, activeTab === 'device' && styles.activeTab]} onPress={() => setActiveTab('device')}><Text style={[styles.tabText, { color: activeTab === 'device' ? theme.primary : theme.textSecondary }]}>▣ Detect Device</Text></TouchableOpacity>
             <TouchableOpacity style={[styles.tab, activeTab === 'inspector' && styles.activeTab]} onPress={() => setActiveTab('inspector')}>
               <Text style={[styles.tabText, { color: activeTab === 'inspector' ? theme.primary : theme.textSecondary }]}>🎨 Inspector</Text>
             </TouchableOpacity>
@@ -214,8 +237,13 @@ export default function App() {
             <TouchableOpacity style={[styles.tab, activeTab === 'theme' && styles.activeTab]} onPress={() => setActiveTab('theme')}>
               <Text style={[styles.tabText, { color: activeTab === 'theme' ? theme.primary : theme.textSecondary }]}>⚙️ Theme</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, activeTab === 'design_system' && styles.activeTab]} onPress={() => setActiveTab('design_system')}>
+              <Text style={[styles.tabText, { color: activeTab === 'design_system' ? theme.primary : theme.textSecondary }]}>🎨 Design System</Text>
+            </TouchableOpacity>
           </ScrollView>
 
+          {activeTab === 'icons' && <IconGalleryStudio />}
+          {activeTab === 'device' && <DeviceDetectionStudio onDetected={() => setActiveViewport('detected_device')} />}
           {activeTab === 'inspector' && <PropertyInspector />}
           {activeTab === 'deeplink' && <DeepLinkAndIconStudio />}
           {activeTab === 'release' && <ReleaseVersionStudio />}
@@ -243,6 +271,7 @@ export default function App() {
           {activeTab === 'projects' && <ProjectManager />}
           {activeTab === 'layers' && <LayerReorderManager />}
           {activeTab === 'theme' && <ThemeManager />}
+          {activeTab === 'design_system' && <DesignSystemStudio />}
         </View>
       </View>
 
@@ -277,12 +306,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  navbar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, borderBottomWidth: 1 },
-  brandGroup: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logoTitle: { fontSize: 15, fontWeight: 'bold' },
+  navbar: { flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: 1, gap: 8 },
+  brandGroup: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' },
+  logoTitle: { fontSize: 17, fontWeight: '900', letterSpacing: 0.3 },
   projectBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12 },
   projectBadgeText: { fontSize: 10, fontWeight: 'bold' },
-  navActions: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  navActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 6, width: '100%' },
   themeToggleBtn: { borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
   themeToggleText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
   navBtn: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },

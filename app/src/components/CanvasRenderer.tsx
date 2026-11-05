@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { ComponentNode } from '../types/schema';
 import { useEditorStore } from '../store/useEditorStore';
 import { playSoundEffect } from '../audio/soundSynthesizer';
@@ -67,7 +68,16 @@ export const CanvasRenderer: React.FC<Props> = ({ node }) => {
 
   if (node.type === 'Image') return wrap(node.props?.imageUri ? <Image source={{ uri: node.props.imageUri }} style={[{ width: '100%', height: node.style.height || 140 }, node.style]} resizeMode="cover" /> : <View style={[styles.imagePlaceholder, node.style]}><Text style={styles.muted}>📷 Image Placeholder</Text></View>, { borderRadius: node.style.borderRadius || 8, overflow: 'hidden', marginVertical: 4 });
 
-  if (node.type === 'Icon') return wrap(<Text style={{ fontSize: node.style.fontSize || 28, color: node.style.color || '#3b82f6' }}>{node.props?.iconSymbol || '❖'}</Text>, { padding: 4, borderRadius: 6, marginVertical: 2 });
+  if (node.type === 'Icon') {
+    const iconLibraries: Record<string, any> = { MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome5, AntDesign };
+    const IconSet = iconLibraries[node.props?.iconLibrary || 'MaterialCommunityIcons'] || MaterialCommunityIcons;
+    return wrap(
+      node.props?.iconName
+        ? <IconSet name={node.props.iconName} size={node.style.fontSize || 28} color={node.style.color || '#3b82f6'} />
+        : <Text style={{ fontSize: node.style.fontSize || 28, color: node.style.color || '#3b82f6' }}>{node.props?.iconSymbol || '❖'}</Text>,
+      { padding: 4, borderRadius: 6, marginVertical: 2 }
+    );
+  }
 
   if (node.type === 'Button') return wrap(<Text style={{ color: (activeSimMode === 'pressed' && node.pressState?.pressedTextColor) || node.style.color || '#fff', fontWeight: node.style.fontWeight || 'bold', fontSize: node.style.fontSize || 14, fontFamily: node.style.fontFamily }}>{text(node.props?.label || 'Button', node.props?.i18nKey)}</Text>, styles.button);
 
