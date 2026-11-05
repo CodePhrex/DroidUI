@@ -35,10 +35,10 @@ export const ThemeManager = () => {
 
 const styles = StyleSheet.create({
   container: { padding: 12 },
-  title: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc', marginBottom: 8 },
+  title: { fontSize: 14, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 8 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  themeCard: { backgroundColor: '#1e293b', padding: 10, borderRadius: 8, width: '48%', borderWidth: 1, borderColor: '#334155' },
-  selectedCard: { borderColor: '#3b82f6' },
+  themeCard: { backgroundColor: '#111B35', padding: 10, borderRadius: 8, width: '48%', borderWidth: 1, borderColor: '#263B68' },
+  selectedCard: { borderColor: '#398BFF' },
   swatchRow: { flexDirection: 'row', gap: 4, marginTop: 6 },
   swatch: { width: 14, height: 14, borderRadius: 7 },
 });
