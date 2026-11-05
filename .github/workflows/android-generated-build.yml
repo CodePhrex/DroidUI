@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, feat/phase-2h-editor-workspace-controls]
   push:
-    branches: [main]
+    branches: [main, feat/phase-2h-editor-workspace-controls]
   workflow_dispatch:
 
 permissions:
