@@ -12,7 +12,7 @@ import { generateGitHubActionsYAML } from './src/compiler/cicdPipelineGenerator'
 import { UnitTestGeneratorStudio } from './src/components/UnitTestGeneratorStudio';
 import { generateJestTestSpec } from './src/compiler/jestTestGenerator';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useEditorStore } from './src/store/useEditorStore';
 import { CanvasRenderer } from './src/components/CanvasRenderer';
 import { PropertyInspector } from './src/components/PropertyInspector';
@@ -49,6 +49,7 @@ export default function App() {
     i18nDict,
     currentProjectId,
     currentProjectName,
+    saveCurrentProject,
     undo,
     redo
   } = useEditorStore();
@@ -62,6 +63,16 @@ export default function App() {
   const [codeOutput, setCodeOutput] = useState('');
 
   const currentVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
+
+  const handleSaveProject = async () => {
+    try {
+      await saveCurrentProject(currentProjectName);
+      Alert.alert('Project Saved', `\"${currentProjectName}\" was saved on this device.`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      Alert.alert('Save Failed', message);
+    }
+  };
 
   const toggleThemeMode = () => {
     setTheme(isLightMode ? 'dark' : 'light');
@@ -92,6 +103,12 @@ export default function App() {
         </View>
 
         <View style={styles.navActions}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={() => setActiveTab('projects')}>
+            <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>📂 Open</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={handleSaveProject}>
+            <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>💾 Save</Text>
+          </TouchableOpacity>
           {/* Light / Dark UI Toggle Switch */}
           <TouchableOpacity
             style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#3b82f6' : '#334155', borderColor: theme.border }]}
