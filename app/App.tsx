@@ -12,6 +12,8 @@ import { generateGitHubActionsYAML } from './src/compiler/cicdPipelineGenerator'
 import { UnitTestGeneratorStudio } from './src/components/UnitTestGeneratorStudio';
 import { generateJestTestSpec } from './src/compiler/jestTestGenerator';
 import React, { useState } from 'react';
+import { IconGalleryStudio } from './src/components/IconGalleryStudio';
+import { DeviceDetectionStudio } from './src/components/DeviceDetectionStudio';
 import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useEditorStore } from './src/store/useEditorStore';
 import { CanvasRenderer } from './src/components/CanvasRenderer';
@@ -57,7 +59,7 @@ export default function App() {
   const theme = THEMES[currentTheme] || THEMES.dark;
   const isLightMode = currentTheme === 'light';
 
-  const [activeTab, setActiveTab] = useState<'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io'>('inspector');
+  const [activeTab, setActiveTab] = useState<'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io' | 'icons' | 'device'>('inspector');
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
@@ -96,7 +98,7 @@ export default function App() {
       {/* Studio Top Navigation Header Bar */}
       <View style={[styles.navbar, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
         <View style={styles.brandGroup}>
-          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>📱 Droid Mobile Studio</Text>
+          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>◈ DroidUI Studio</Text>
           <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]}>
             <Text style={[styles.projectBadgeText, { color: theme.textSecondary }]}>{currentProjectName}</Text>
           </View>
@@ -153,6 +155,8 @@ export default function App() {
             <TouchableOpacity style={[styles.tab, activeTab === 'deeplink' && styles.activeTab]} onPress={() => setActiveTab('deeplink')}>
               <Text style={[styles.tabText, { color: activeTab === 'deeplink' ? theme.primary : theme.textSecondary }]}>🔗 Deep Links & Icons</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, activeTab === 'icons' && styles.activeTab]} onPress={() => setActiveTab('icons')}><Text style={[styles.tabText, { color: activeTab === 'icons' ? theme.primary : theme.textSecondary }]}>✣ Icon Gallery</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, activeTab === 'device' && styles.activeTab]} onPress={() => setActiveTab('device')}><Text style={[styles.tabText, { color: activeTab === 'device' ? theme.primary : theme.textSecondary }]}>▣ Detect Device</Text></TouchableOpacity>
             <TouchableOpacity style={[styles.tab, activeTab === 'inspector' && styles.activeTab]} onPress={() => setActiveTab('inspector')}>
               <Text style={[styles.tabText, { color: activeTab === 'inspector' ? theme.primary : theme.textSecondary }]}>🎨 Inspector</Text>
             </TouchableOpacity>
@@ -233,6 +237,8 @@ export default function App() {
             </TouchableOpacity>
           </ScrollView>
 
+          {activeTab === 'icons' && <IconGalleryStudio />}
+          {activeTab === 'device' && <DeviceDetectionStudio />}
           {activeTab === 'inspector' && <PropertyInspector />}
           {activeTab === 'deeplink' && <DeepLinkAndIconStudio />}
           {activeTab === 'release' && <ReleaseVersionStudio />}
