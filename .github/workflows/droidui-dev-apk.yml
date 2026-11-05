@@ -79,10 +79,10 @@ jobs:
           path = Path("gradle.properties")
           content = path.read_text() if path.exists() else ""
           heap = "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
-          if re.search(r"(?m)^org\\.gradle\\.jvmargs=.*$", content):
-              content = re.sub(r"(?m)^org\\.gradle\\.jvmargs=.*$", heap, content)
+          if re.search(r"(?m)^org\.gradle\.jvmargs=.*$", content):
+              content = re.sub(r"(?m)^org\.gradle\.jvmargs=.*$", heap, content)
           else:
-              content = content.rstrip() + "\\n" + heap + "\\n"
+              content = content.rstrip() + "\n" + heap + "\n"
           settings = {
               "org.gradle.parallel": "false",
               "org.gradle.workers.max": "2",
@@ -90,7 +90,7 @@ jobs:
           for key, value in settings.items():
               content = re.sub(rf"(?m)^{re.escape(key)}=.*$", f"{key}={value}", content)
               if not re.search(rf"(?m)^{re.escape(key)}=", content):
-                  content = content.rstrip() + f"\\n{key}={value}\\n"
+                  content = content.rstrip() + f"\n{key}={value}\n"
           path.write_text(content)
           print(path.read_text())
           PY
