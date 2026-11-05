@@ -3,7 +3,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { detectCurrentDeviceProfile, DetectedDeviceProfile } from '../device/deviceProfile';
 import { useEditorStore } from '../store/useEditorStore';
 
-export function DeviceDetectionStudio() {
+export function DeviceDetectionStudio({ onDetected }: { onDetected?: () => void }) {
   const [profile, setProfile] = useState<DetectedDeviceProfile | null>(null);
   const [status, setStatus] = useState('Not detected yet');
   const createTemplate = () => {
@@ -35,7 +35,7 @@ export function DeviceDetectionStudio() {
   const detect = () => {
     const next = detectCurrentDeviceProfile();
     setProfile(next);
-    setStatus('Device profile detected');
+    setStatus('Device profile detected');\n    onDetected?.();
   };
   return <View style={s.root}>
     <View style={s.hero}><Text style={s.kicker}>DEVICE INTELLIGENCE</Text><Text style={s.title}>Detect & Design</Text><Text style={s.copy}>Read the current Android device identity and live display metrics, then create a project canvas sized to its available screen in dp.</Text>
