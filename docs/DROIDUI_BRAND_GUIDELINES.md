@@ -54,3 +54,9 @@ The DroidUI Midnight palette is the default dark identity. Light, Material You, 
 
 ## Maintenance rule
 When adding a new studio or editor panel, use this palette and component treatment from the start. Do not introduce unrelated one-off navy/blue hex values unless a state has a clear semantic reason (for example, warning, success, or destructive feedback).
+
+
+## Specialist studio coverage
+The same palette is applied across the specialist editor studios, including accessibility, native Android export, CI/CD generation, deep links and app icons, device detection, typography, icon gallery, localization, performance profiling, press states, project file I/O, project management, property presets, release/versioning, sound effects, spacing/alignment, splash screen design, store metadata, SVG importing, theme import/export, transitions, unit-test generation, and viewport selection.
+
+These are presentation-only color-token updates. They must not change the underlying editor store actions, generated source output, export formats, or platform behavior. Preserve semantic warning, error, and success colors where they communicate status. New controls should maintain readable contrast and visible selected/focused states.
