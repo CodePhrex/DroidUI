@@ -114,7 +114,7 @@ jobs:
           grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
           grep -F "application-label:'Droid Studio UI/UX'" <<< "$BADGING"
           echo "APK JavaScript bundle entries:"
-          unzip -Z1 "$APK" | grep -E '(^|/)index\.android\.bundle(\.hbc)?
+          unzip -Z1 "$APK" | grep -E '(^|/)index[.]android[.]bundle([.]hbc)?$'
           echo "Verified actual DroidUI application APK:"
           ls -lh "$APK"
 
@@ -128,11 +128,3 @@ jobs:
 
           echo "Verified actual DroidUI application APK:"
           ls -lh "$APK"
-
-      - name: Upload actual DroidUI APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: droidui-overhaul-debug-apk-${{ github.sha }}
-          path: app/android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 14
