@@ -100,7 +100,7 @@ jobs:
 
       - name: Assemble actual DroidUI debug APK
         working-directory: app/android
-        run: gradle --no-daemon assembleDebug
+        run: gradle --no-daemon --max-workers=2 -Dorg.gradle.jvmargs='-Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8' assembleDebug
 
       - name: Verify APK package, app label, and React Native bundle
         working-directory: app
@@ -112,7 +112,7 @@ jobs:
           test -s "$APK"
           BADGING="$("$AAPT" dump badging "$APK")"
           grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
-          grep -F "application-label:'Droid Studio UI/UX'" <<< "$BADGING"
+          grep -F "application-label:'DroidUI'" <<< "$BADGING"
           echo "APK JavaScript bundle entries:"
           unzip -Z1 "$APK" | grep -E '(^|/)index[.]android[.]bundle([.]hbc)?$'
           echo "Verified actual DroidUI application APK:"
