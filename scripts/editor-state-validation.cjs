@@ -11,9 +11,9 @@ const compiled = ts.transpileModule(source, {
     target: ts.ScriptTarget.ES2020,
   },
 }).outputText;
-const module = { exports: {} };
-new Function('require', 'module', 'exports', compiled)(require, module, module.exports);
-const api = module.exports;
+const sandboxModule = { exports: {} };
+new Function('require', 'module', 'exports', compiled)(require, sandboxModule, sandboxModule.exports);
+const api = sandboxModule.exports;
 
 const makeTree = () => ({
   id: 'root',
