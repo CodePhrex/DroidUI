@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import * as Clipboard from 'expo-clipboard';
+import { Alert } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { generateReactNativeTSX, generateJetpackComposeKotlin } from '../compiler/codeExporter';
@@ -29,9 +31,14 @@ export const LiveCodePreview = () => {
   const codeString = getCode();
   const lines = codeString.split('\n');
 
-  const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(codeString);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      Alert.alert('Copy failed', error instanceof Error ? error.message : 'Unable to copy generated code.');
+    }
   };
 
   return (
