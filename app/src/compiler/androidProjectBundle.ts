@@ -72,7 +72,12 @@ const renderNode = (node: ComponentNode, indent: string, diagnostics: AndroidGen
   }
   if (node.type === 'Button') {
     const label = escapeKotlin(node.props?.label || 'Button');
-    diagnostics.push({ severity: 'warning', code: 'BUTTON_ACTION_UNBOUND', nodeId: node.id, message: 'Button has no action binding in the current component schema; generated button is visual-only.' });
+    const action = node.props?.action;
+    if (action?.type === 'change_label' && typeof action.successLabel === 'string' && action.successLabel.trim()) {
+      const stateName = safeIdentifier(node.id) + 'Clicked';
+      return `${pad}var ${stateName} by remember { mutableStateOf(false) }\n${pad}Button(onClick = { ${stateName} = true }, modifier = ${modifier}) {\n${pad}    Text(if (${stateName}) "${escapeKotlin(action.successLabel)}" else "${label}")\n${pad}}`;
+    }
+    diagnostics.push({ severity: 'warning', code: 'BUTTON_ACTION_UNBOUND', nodeId: node.id, message: 'Button has no supported action. Supported action: { type: "change_label", successLabel: "..." }.' });
     return `${pad}Button(onClick = { }, modifier = ${modifier}) { Text("${label}") }`;
   }
   if (node.type === 'Badge') {
@@ -89,7 +94,7 @@ const renderNode = (node: ComponentNode, indent: string, diagnostics: AndroidGen
   if (node.type === 'Slider') {
     const initial = Math.max(0, Math.min(100, Number(node.props?.value ?? 50))) / 100;
     const stateName = safeIdentifier(node.id);
-    return `${pad}var ${stateName}Value by remember { mutableFloatStateOf(${initial}f) }\n${pad}Column(modifier = ${modifier}) {\n${pad}    Text("${escapeKotlin(node.props?.label || 'Slider')}: ${'$'}{${stateName}Value.toInt()}%")\n${pad}    Slider(value = ${stateName}Value, onValueChange = { ${stateName}Value = it })\n${pad}}`;
+    return `${pad}var ${stateName}Value by remember { mutableFloatStateOf(${initial}f) }\n${pad}Column(modifier = ${modifier}) {\n${pad}    Text("${escapeKotlin(node.props?.label || 'Slider')}: \${(${stateName}Value * 100).toInt()}%")\n${pad}    Slider(value = ${stateName}Value, onValueChange = { ${stateName}Value = it })\n${pad}}`;
   }
   if (node.type === 'Checkbox') {
     const initial = node.props?.checked === false ? 'false' : 'true';
@@ -218,7 +223,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
+                Surface(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
                     ${appClass}Screen()
                 }
             }

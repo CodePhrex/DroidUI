@@ -29,7 +29,7 @@ const tree = {
     { id: 'toggle', type: 'Switch', props: { label: 'Enable', value: true }, style: {} },
     { id: 'slider', type: 'Slider', props: { label: 'Volume', value: 40 }, style: {} },
     { id: 'agree', type: 'Checkbox', props: { label: 'Agree', checked: false }, style: {} },
-    { id: 'submit', type: 'Button', props: { label: 'Continue' }, style: {} },
+    { id: 'submit', type: 'Button', props: { label: 'Continue', action: { type: 'change_label', successLabel: 'Continued!' } }, style: {} },
   ],
 };
 let count = 0;
@@ -44,7 +44,9 @@ check(main.includes('Hello DroidUI'), 'text component content is generated');
 check(main.includes('mutableStateOf(true)'), 'switch state is generated');
 check(main.includes('mutableFloatStateOf(0.4f)'), 'slider state is generated');
 check(main.includes('mutableStateOf(false)'), 'checkbox state is generated');
-check(bundle.diagnostics.some((item) => item.code === 'BUTTON_ACTION_UNBOUND'), 'unbound button action is disclosed');
+check(main.includes('(sliderValue * 100).toInt()'), 'slider displays normalized value as percentage');
+check(main.includes('submitClicked = true'), 'button click updates generated Compose state');
+check(main.includes('Continued!'), 'button action produces visible feedback');
 check(serializeAndroidProjectBundle(bundle).includes('droidui-android-project'), 'bundle serialization includes format marker');
 
 const badPackage = { ...defaultConfig, packageName: 'not a package' };
