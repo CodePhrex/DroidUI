@@ -2,7 +2,7 @@ name: DroidUI Generated Android Build
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, feat/phase-2h-editor-workspace-controls]
   push:
     branches: [main]
   workflow_dispatch:
