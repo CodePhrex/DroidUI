@@ -62,6 +62,26 @@ jobs:
         working-directory: app
         run: npx expo prebuild --platform android --non-interactive --no-install
 
+      - name: Enable a self-contained debug APK
+        working-directory: app
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('android/app/build.gradle')
+          source = path.read_text()
+          marker = 'project.ext.react = ['
+          if 'bundleInDebug:' not in source:
+              if marker not in source:
+                  print('Could not locate React Native project.ext.react block in generated app/build.gradle')
+                  print('\n'.join(line for line in source.splitlines() if 'react' in line.lower() or 'bundle' in line.lower()))
+                  raise SystemExit(1)
+              source = source.replace(marker, marker + '\n    bundleInDebug: true,', 1)
+              path.write_text(source)
+          print('Enabled bundleInDebug so the APK includes its JavaScript bundle and does not require Metro.')
+          PY
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -93,7 +113,19 @@ jobs:
           BADGING="$("$AAPT" dump badging "$APK")"
           grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
           grep -F "application-label:'Droid Studio UI/UX'" <<< "$BADGING"
-          unzip -l "$APK" | grep -E 'assets/index.android.bundle$'
+          echo "APK JavaScript bundle entries:"
+          unzip -Z1 "$APK" | grep -E '(^|/)index\.android\.bundle(\.hbc)?
+          echo "Verified actual DroidUI application APK:"
+          ls -lh "$APK"
+
+      - name: Upload actual DroidUI APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: droidui-overhaul-debug-apk-${{ github.sha }}
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
           echo "Verified actual DroidUI application APK:"
           ls -lh "$APK"
 
