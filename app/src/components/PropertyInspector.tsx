@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
+import { VISUAL_STYLE_PRESETS } from '../templates/visualStylePresets';
 
 export const PropertyInspector = () => {
   const { rootNode, selectedNodeId, updateStyle, updateProps, addChildNode } = useEditorStore();
@@ -219,6 +220,18 @@ export const PropertyInspector = () => {
         </View>
       )}
 
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Quick Visual Styles</Text>
+        <Text style={styles.helperText}>Apply a coordinated surface treatment, then customize individual properties below.</Text>
+        <View style={styles.chipRow}>
+          {VISUAL_STYLE_PRESETS.map((preset) => (
+            <TouchableOpacity key={preset.id} style={styles.chip} onPress={() => updateStyle(selectedNode.id, preset.style)}>
+              <Text style={styles.chipText}>{preset.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
       {/* Style Editors */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Spacing & Padding</Text>
@@ -245,7 +258,7 @@ const styles = StyleSheet.create({
   header: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc' },
   typeTag: { fontSize: 11, color: '#3b82f6', marginBottom: 12 },
   section: { marginBottom: 16 },
-  sectionTitle: { fontSize: 12, fontWeight: '600', color: '#cbd5e1', marginBottom: 8 },
+  sectionTitle: { fontSize: 12, fontWeight: '600', color: '#cbd5e1', marginBottom: 8 },\n  helperText: { fontSize: 10, color: '#94a3b8', marginBottom: 8, lineHeight: 14 },
   addBtnGrid: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
   addBtn: { backgroundColor: '#334155', padding: 8, borderRadius: 6, flex: 1, minWidth: '45%', alignItems: 'center' },
   addBtnText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
