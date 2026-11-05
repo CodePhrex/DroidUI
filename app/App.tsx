@@ -34,6 +34,7 @@ import { AccessibilityStudio } from './src/components/AccessibilityStudio';
 import { LocalizationStudio } from './src/components/LocalizationStudio';
 import { PerformanceProfilerStudio } from './src/components/PerformanceProfilerStudio';
 import { THEMES } from './src/theme/themeConfig';
+import { BrandMark, BrandSplash } from './src/components/DroidUIBrand';
 import { generateReactNativeTSX, generateJetpackComposeKotlin } from './src/compiler/codeExporter';
 import { generateSVGVector, generateCSSinJS, generateJSONSchema } from './src/compiler/exportPresets';
 import { generateStoreListingText } from './src/compiler/storeMetadataGenerator';
@@ -62,6 +63,7 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [showBrandSplash, setShowBrandSplash] = useState(true);
 
   const currentVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
 
@@ -100,19 +102,19 @@ export default function App() {
       {/* Studio Top Navigation Header Bar */}
       <View style={[styles.navbar, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
         <View style={styles.brandGroup}>
-          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>📱 Droid Mobile Studio</Text>
-          <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]}>
+          <BrandMark size={34} compact />
+          <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]}>
             <Text style={[styles.projectBadgeText, { color: theme.textSecondary }]}>{currentProjectName}</Text>
           </View>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.navActions}>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={handleQuickSave} disabled={isSaving}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={handleQuickSave} disabled={isSaving}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>{isSaving ? 'Saving…' : '💾 Save'}</Text>
           </TouchableOpacity>
           {/* Light / Dark UI Toggle Switch */}
           <TouchableOpacity
-            style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#3b82f6' : '#334155', borderColor: theme.border }]}
+            style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#398BFF' : '#111B35', borderColor: theme.border }]}
             onPress={toggleThemeMode}
           >
             <Text style={styles.themeToggleText}>
@@ -120,10 +122,10 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={undo}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={undo}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>↩ Undo</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={redo}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={redo}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>↪ Redo</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.exportBtn, { backgroundColor: theme.primary }]} onPress={() => handleExport('tsx')}>
@@ -141,8 +143,8 @@ export default function App() {
         <View style={styles.canvasArea}>
           <ViewportSelector activeViewport={activeViewport} onSelectViewport={setActiveViewport} />
           <ScrollView horizontal contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-            <View style={[styles.deviceFrame, { width: currentVP.width, minHeight: currentVP.height, borderColor: theme.border, backgroundColor: isLightMode ? '#f1f5f9' : 'rgba(0,0,0,0.3)' }]}>
-              <View style={[styles.deviceNotch, { backgroundColor: isLightMode ? '#cbd5e1' : '#334155' }]} />
+            <View style={[styles.deviceFrame, { width: currentVP.width, minHeight: currentVP.height, borderColor: theme.border, backgroundColor: isLightMode ? '#101A36' : 'rgba(0,0,0,0.3)' }]}>
+              <View style={[styles.deviceNotch, { backgroundColor: isLightMode ? '#cbd5e1' : '#111B35' }]} />
               <CanvasRenderer node={rootNode} />
             </View>
           </ScrollView>
@@ -280,8 +282,8 @@ export default function App() {
               <TouchableOpacity style={styles.presetBtn} onPress={() => handleExport('store')}><Text style={styles.presetBtnText}>Play Store Spec</Text></TouchableOpacity>
               <TouchableOpacity style={styles.presetBtn} onPress={() => handleExport('droidui')}><Text style={styles.presetBtnText}>.dui Package</Text></TouchableOpacity>
             </View>
-            <ScrollView style={[styles.codeScroll, { backgroundColor: isLightMode ? '#f1f5f9' : '#1e293b' }]}>
-              <Text style={[styles.codeText, { color: isLightMode ? '#0284c7' : '#38bdf8' }]}>{codeOutput}</Text>
+            <ScrollView style={[styles.codeScroll, { backgroundColor: isLightMode ? '#101A36' : '#1e293b' }]}>
+              <Text style={[styles.codeText, { color: isLightMode ? '#0284c7' : '#38E8F2' }]}>{codeOutput}</Text>
             </ScrollView>
             <TouchableOpacity style={[styles.closeBtn, { backgroundColor: theme.primary }]} onPress={() => setModalVisible(false)}>
               <Text style={styles.closeBtnText}>Close Modal</Text>
@@ -289,6 +291,7 @@ export default function App() {
           </View>
         </View>
       </Modal>
+      {showBrandSplash && <BrandSplash onFinish={() => setShowBrandSplash(false)} />}
     </SafeAreaView>
   );
 }
@@ -314,7 +317,7 @@ const styles = StyleSheet.create({
   panelArea: { flex: 1, borderTopWidth: 1 },
   tabScroll: { borderBottomWidth: 1, maxHeight: 42 },
   tab: { paddingHorizontal: 16, paddingVertical: 10, alignItems: 'center' },
-  activeTab: { borderBottomWidth: 2, borderBottomColor: '#2563eb' },
+  activeTab: { borderBottomWidth: 2, borderBottomColor: '#398BFF' },
   tabText: { fontSize: 11, fontWeight: 'bold' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', padding: 20 },
   modalContent: { padding: 16, borderRadius: 12, maxHeight: '80%' },
@@ -323,6 +326,6 @@ const styles = StyleSheet.create({
   codeText: { fontFamily: 'monospace', fontSize: 12 },
   closeBtn: { marginTop: 12, padding: 10, borderRadius: 6, alignItems: 'center' },
   closeBtnText: { color: '#ffffff', fontWeight: 'bold' },
-  presetBtn: { backgroundColor: '#334155', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 4 },
-  presetBtnText: { color: '#38bdf8', fontSize: 10, fontWeight: 'bold' },
+  presetBtn: { backgroundColor: '#111B35', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 4 },
+  presetBtnText: { color: '#38E8F2', fontSize: 10, fontWeight: 'bold' },
 });
