@@ -10,7 +10,8 @@ export type ViewportMode =
   | 'pixel_tablet'
   | 'compact_phone'
   | 'wear_os_watch'
-  | 'android_tv'\n  | 'detected_device';
+  | 'android_tv'
+  | 'detected_device';
 
 export interface ViewportSpec {
   id: ViewportMode;
