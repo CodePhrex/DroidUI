@@ -1,31 +1,32 @@
-name: DroidUI Real Android Dev APK
+name: DroidUI Android Application APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main, overhaul]
+    paths:
+      - 'app/**'
+      - '.github/workflows/droidui-dev-apk.yml'
   pull_request:
     branches: [main]
     paths:
       - 'app/**'
       - '.github/workflows/droidui-dev-apk.yml'
-  push:
-    branches:
-      - 'feat/phase-2g-release-integrity'
 
 permissions:
   contents: read
 
 concurrency:
-  group: droidui-dev-apk-${{ github.workflow }}-${{ github.ref }}
+  group: droidui-android-apk-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build real DroidUI Android development APK
+    name: Build and verify the actual DroidUI app
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-
+    timeout-minutes: 50
     steps:
-      - name: Check out source
+      - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -42,6 +43,14 @@ jobs:
       - name: TypeScript check
         working-directory: app
         run: npm run typecheck
+
+      - name: Run editor and project regression tests
+        working-directory: app
+        run: |
+          npm run test:validation
+          npm run test:editor-state
+          npm run test:android-generation
+          npm run release:integrity
 
       - name: Validate Expo configuration
         working-directory: app
@@ -62,47 +71,34 @@ jobs:
         with:
           packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
 
-      - name: Set up Gradle 8.6
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.6'
 
-      - name: Build real DroidUI debug APK
+      - name: Assemble actual DroidUI debug APK
         working-directory: app/android
         run: gradle --no-daemon assembleDebug
 
-      - name: Verify real APK output
-        working-directory: app
-        shell: bash
-        run: |
-          APK="android/app/build/outputs/apk/debug/app-debug.apk"
-          test -s "$APK"
-          echo "REAL_DROIDUI_APK=$APK"
-          ls -lh "$APK"
-
-      - name: Verify APK identity and embedded DroidUI application bundle
+      - name: Verify APK package, app label, and React Native bundle
         working-directory: app
         shell: bash
         run: |
           set -euo pipefail
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
           AAPT="$ANDROID_HOME/build-tools/34.0.0/aapt"
+          test -s "$APK"
           BADGING="$("$AAPT" dump badging "$APK")"
           grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
           grep -F "application-label:'Droid Studio UI/UX'" <<< "$BADGING"
-          unzip -l "$APK" | grep -E 'assets/index.android.bundle        uses: actions/upload-artifact@v4
-        with:
-          name: droidui-real-dev-apk-${{ github.sha }}
-          path: app/android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 14
+          unzip -l "$APK" | grep -E 'assets/index.android.bundle$'
+          echo "Verified actual DroidUI application APK:"
+          ls -lh "$APK"
 
-          echo "Verified: this artifact is the DroidUI application, not the generated test fixture."
-
-      - name: Upload real DroidUI development APK
+      - name: Upload actual DroidUI APK
         uses: actions/upload-artifact@v4
         with:
-          name: droidui-real-dev-apk-${{ github.sha }}
+          name: droidui-overhaul-debug-apk-${{ github.sha }}
           path: app/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
