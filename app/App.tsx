@@ -22,6 +22,7 @@ import { PropertyInspector } from './src/components/PropertyInspector';
 import { LayerReorderManager } from './src/components/LayerReorderManager';
 import { TemplateLibrary } from './src/templates/TemplateLibrary';
 import { ThemeManager } from './src/components/ThemeManager';
+import { DesignSystemStudio } from './src/components/DesignSystemStudio';
 import { ProjectManager } from './src/components/ProjectManager';
 import { AssetPickerStudio } from './src/components/AssetPickerStudio';
 import { ViewportSelector, VIEWPORTS, ViewportMode } from './src/components/ViewportSelector';
@@ -60,7 +61,7 @@ export default function App() {
   const theme = THEMES[currentTheme] || THEMES.dark;
   const isLightMode = currentTheme === 'light';
 
-  const [activeTab, setActiveTab] = useState<'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io' | 'icons' | 'device'>('inspector');
+  const [activeTab, setActiveTab] = useState<'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io' | 'design_system' | 'icons' | 'device'>('inspector');
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
@@ -236,6 +237,9 @@ export default function App() {
             <TouchableOpacity style={[styles.tab, activeTab === 'theme' && styles.activeTab]} onPress={() => setActiveTab('theme')}>
               <Text style={[styles.tabText, { color: activeTab === 'theme' ? theme.primary : theme.textSecondary }]}>⚙️ Theme</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.tab, activeTab === 'design_system' && styles.activeTab]} onPress={() => setActiveTab('design_system')}>
+              <Text style={[styles.tabText, { color: activeTab === 'design_system' ? theme.primary : theme.textSecondary }]}>🎨 Design System</Text>
+            </TouchableOpacity>
           </ScrollView>
 
           {activeTab === 'icons' && <IconGalleryStudio />}
@@ -267,6 +271,7 @@ export default function App() {
           {activeTab === 'projects' && <ProjectManager />}
           {activeTab === 'layers' && <LayerReorderManager />}
           {activeTab === 'theme' && <ThemeManager />}
+          {activeTab === 'design_system' && <DesignSystemStudio />}
         </View>
       </View>
 
