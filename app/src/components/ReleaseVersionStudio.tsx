@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import * as Clipboard from 'expo-clipboard';
+import { Alert } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { exportProjectToDroidUiFile, parseDroidUiFile } from '../storage/droidUiProjectFile';
@@ -61,9 +63,14 @@ export const ReleaseVersionStudio = () => {
   const markdownContent = generateReleaseNotesMarkdown(pkg, codeConfig);
   const bashScriptContent = generateReleaseScriptBash(pkg, codeConfig);
 
-  const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(viewMode === 'markdown' ? markdownContent : bashScriptContent);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      Alert.alert('Copy failed', error instanceof Error ? error.message : 'Unable to copy release output.');
+    }
   };
 
   return (
