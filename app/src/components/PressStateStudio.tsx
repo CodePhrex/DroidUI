@@ -105,7 +105,7 @@ export const PressStateStudio = () => {
             { label: 'Danger Red', color: '#b91c1c' },
             { label: 'Success Green', color: '#15803d' },
             { label: 'Amber Accent', color: '#b45309' },
-            { label: 'Dark Charcoal', color: '#0f172a' },
+            { label: 'Dark Charcoal', color: '#080D1F' },
           ].map((item) => (
             <TouchableOpacity
               key={item.label}
@@ -130,7 +130,7 @@ export const PressStateStudio = () => {
         <View style={styles.chipRow}>
           {[
             { label: 'Cyan Ring', color: '#00f0ff' },
-            { label: 'Blue Highlight', color: '#3b82f6' },
+            { label: 'Blue Highlight', color: '#398BFF' },
             { label: 'Purple Glow', color: '#a855f7' },
             { label: 'Gold Ring', color: '#eab308' },
           ].map((item) => (
@@ -151,16 +151,16 @@ export const PressStateStudio = () => {
 const styles = StyleSheet.create({
   container: { padding: 12 },
   header: { marginBottom: 12 },
-  title: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc' },
-  targetBadge: { fontSize: 10, color: '#38bdf8', marginTop: 2 },
+  title: { fontSize: 14, fontWeight: 'bold', color: '#F4F7FF' },
+  targetBadge: { fontSize: 10, color: '#38E8F2', marginTop: 2 },
   section: { marginBottom: 16 },
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#cbd5e1', marginBottom: 8 },
+  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#C7D5F1', marginBottom: 8 },
   simRow: { flexDirection: 'row', gap: 6 },
-  simBtn: { backgroundColor: '#1e293b', borderWidth: 1, borderColor: '#334155', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 6, flex: 1, alignItems: 'center' },
-  activeSimBtn: { backgroundColor: '#3b82f6', borderColor: '#60a5fa' },
-  simBtnText: { color: '#f8fafc', fontSize: 11, fontWeight: 'bold' },
+  simBtn: { backgroundColor: '#111B35', borderWidth: 1, borderColor: '#263B68', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 6, flex: 1, alignItems: 'center' },
+  activeSimBtn: { backgroundColor: '#398BFF', borderColor: '#60a5fa' },
+  simBtnText: { color: '#F4F7FF', fontSize: 11, fontWeight: 'bold' },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  chip: { backgroundColor: '#1e293b', borderWidth: 1, borderColor: '#334155', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
-  activeChip: { borderColor: '#3b82f6', backgroundColor: '#334155' },
-  chipText: { color: '#f8fafc', fontSize: 11 },
+  chip: { backgroundColor: '#111B35', borderWidth: 1, borderColor: '#263B68', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
+  activeChip: { borderColor: '#398BFF', backgroundColor: '#263B68' },
+  chipText: { color: '#F4F7FF', fontSize: 11 },
 });

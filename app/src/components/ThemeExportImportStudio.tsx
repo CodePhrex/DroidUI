@@ -53,8 +53,8 @@ export const ThemeExportImportStudio = () => {
   };
 
   const presetPalettes: Array<{ id: ThemeMode; name: string; primary: string; bg: string }> = [
-    { id: 'dark', name: 'Dark Studio', primary: '#3b82f6', bg: '#0f172a' },
-    { id: 'light', name: 'Clean Light', primary: '#2563eb', bg: '#f8fafc' },
+    { id: 'dark', name: 'Dark Studio', primary: '#398BFF', bg: '#080D1F' },
+    { id: 'light', name: 'Clean Light', primary: '#398BFF', bg: '#F4F7FF' },
     { id: 'material_you', name: 'Material You', primary: '#d0bcff', bg: '#1c1b1f' },
     { id: 'cyberpunk', name: 'Cyberpunk Neon', primary: '#ff0055', bg: '#05050d' },
   ];
@@ -92,7 +92,7 @@ export const ThemeExportImportStudio = () => {
             style={styles.hexInput}
             value={customPrimary}
             onChangeText={setCustomPrimary}
-            placeholder="#3b82f6"
+            placeholder="#398BFF"
           />
           <View style={[styles.previewSwatch, { backgroundColor: customPrimary || activePalette.primary }]} />
         </View>
@@ -134,24 +134,24 @@ export const ThemeExportImportStudio = () => {
 
 const styles = StyleSheet.create({
   container: { padding: 12 },
-  title: { fontSize: 15, fontWeight: 'bold', color: '#f8fafc' },
-  subtitle: { fontSize: 11, color: '#94a3b8', marginBottom: 12 },
-  section: { marginBottom: 16, backgroundColor: '#0f172a', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#334155' },
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#38bdf8', marginBottom: 8 },
+  title: { fontSize: 15, fontWeight: 'bold', color: '#F4F7FF' },
+  subtitle: { fontSize: 11, color: '#9AADD6', marginBottom: 12 },
+  section: { marginBottom: 16, backgroundColor: '#080D1F', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#263B68' },
+  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#38E8F2', marginBottom: 8 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   presetGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  presetCard: { backgroundColor: '#1e293b', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', width: '48%' },
-  activePresetCard: { borderColor: '#3b82f6', borderWidth: 2 },
+  presetCard: { backgroundColor: '#111B35', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', width: '48%' },
+  activePresetCard: { borderColor: '#398BFF', borderWidth: 2 },
   colorDotRow: { flexDirection: 'row', gap: 4, marginBottom: 4 },
   colorDot: { width: 14, height: 14, borderRadius: 7, borderWidth: 1, borderColor: '#fff' },
-  presetName: { color: '#f8fafc', fontSize: 11, fontWeight: 'bold' },
+  presetName: { color: '#F4F7FF', fontSize: 11, fontWeight: 'bold' },
   colorRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  hexInput: { flex: 1, backgroundColor: '#1e293b', color: '#fff', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontFamily: 'monospace' },
+  hexInput: { flex: 1, backgroundColor: '#111B35', color: '#fff', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontFamily: 'monospace' },
   previewSwatch: { width: 36, height: 36, borderRadius: 6, borderWidth: 1, borderColor: '#fff' },
-  copyBtn: { backgroundColor: '#3b82f6', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+  copyBtn: { backgroundColor: '#398BFF', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
   copyBtnText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
-  jsonBox: { backgroundColor: '#1e293b', color: '#38bdf8', padding: 8, borderRadius: 6, fontFamily: 'monospace', fontSize: 10, height: 100 },
-  importInput: { backgroundColor: '#1e293b', color: '#fff', padding: 8, borderRadius: 6, fontFamily: 'monospace', fontSize: 10, height: 80, marginBottom: 8 },
+  jsonBox: { backgroundColor: '#111B35', color: '#38E8F2', padding: 8, borderRadius: 6, fontFamily: 'monospace', fontSize: 10, height: 100 },
+  importInput: { backgroundColor: '#111B35', color: '#fff', padding: 8, borderRadius: 6, fontFamily: 'monospace', fontSize: 10, height: 80, marginBottom: 8 },
   applyBtn: { backgroundColor: '#10b981', padding: 10, borderRadius: 6, alignItems: 'center' },
   applyBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 11 },
 });

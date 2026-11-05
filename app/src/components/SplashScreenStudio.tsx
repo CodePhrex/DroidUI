@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 
 import { useEditorStore } from '../store/useEditorStore';
 
 const LOGO_PRESETS = ['🚀', '📱', '⚡', '❖', '🔥', '🛡️', '💎', '🎨', '🌟', '⚙️'];
-const BG_COLOR_PRESETS = ['#0f172a', '#1e1b4b', '#18181b', '#022c22', '#2a0a18', '#111827'];
+const BG_COLOR_PRESETS = ['#080D1F', '#1e1b4b', '#18181b', '#022c22', '#2a0a18', '#111827'];
 
 export const SplashScreenStudio = () => {
   const { splashConfig, updateSplashConfig, triggerSplashPreview } = useEditorStore();
@@ -128,22 +128,22 @@ export const SplashScreenStudio = () => {
 const styles = StyleSheet.create({
   container: { padding: 12 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  title: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc' },
-  previewBtn: { backgroundColor: '#3b82f6', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
+  title: { fontSize: 14, fontWeight: 'bold', color: '#F4F7FF' },
+  previewBtn: { backgroundColor: '#398BFF', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
   previewBtnText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
   section: { marginBottom: 16 },
-  sectionTitle: { fontSize: 12, fontWeight: '600', color: '#cbd5e1', marginBottom: 8 },
-  inputLabel: { fontSize: 10, color: '#94a3b8', marginBottom: 4 },
-  input: { backgroundColor: '#0f172a', color: '#fff', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155', marginBottom: 8, fontSize: 12 },
+  sectionTitle: { fontSize: 12, fontWeight: '600', color: '#C7D5F1', marginBottom: 8 },
+  inputLabel: { fontSize: 10, color: '#9AADD6', marginBottom: 4 },
+  input: { backgroundColor: '#080D1F', color: '#fff', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#263B68', marginBottom: 8, fontSize: 12 },
   iconRow: { flexDirection: 'row', gap: 8 },
-  iconChip: { backgroundColor: '#1e293b', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#334155' },
-  activeChip: { borderColor: '#3b82f6', backgroundColor: '#1e3a8a' },
+  iconChip: { backgroundColor: '#111B35', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#263B68' },
+  activeChip: { borderColor: '#398BFF', backgroundColor: '#1e3a8a' },
   colorRow: { flexDirection: 'row', gap: 8 },
-  colorSwatch: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, borderColor: '#334155' },
-  activeSwatch: { borderWidth: 3, borderColor: '#38bdf8' },
+  colorSwatch: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, borderColor: '#263B68' },
+  activeSwatch: { borderWidth: 3, borderColor: '#38E8F2' },
   chipRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
-  chip: { backgroundColor: '#1e293b', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, borderWidth: 1, borderColor: '#334155' },
-  chipText: { color: '#94a3b8', fontSize: 11, fontWeight: '600' },
-  codeBlock: { backgroundColor: '#0f172a', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#334155' },
-  codeText: { color: '#38bdf8', fontFamily: 'monospace', fontSize: 10 },
+  chip: { backgroundColor: '#111B35', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, borderWidth: 1, borderColor: '#263B68' },
+  chipText: { color: '#9AADD6', fontSize: 11, fontWeight: '600' },
+  codeBlock: { backgroundColor: '#080D1F', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#263B68' },
+  codeText: { color: '#38E8F2', fontFamily: 'monospace', fontSize: 10 },
 });

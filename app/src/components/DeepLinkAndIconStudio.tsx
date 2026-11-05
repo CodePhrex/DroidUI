@@ -42,7 +42,7 @@ export const DeepLinkAndIconStudio = () => {
               value={scheme}
               onChangeText={setScheme}
               placeholder="e.g. droidui"
-              placeholderTextColor="#64748b"
+              placeholderTextColor="#7186B4"
             />
           </View>
           <View style={styles.inputGroup}>
@@ -52,7 +52,7 @@ export const DeepLinkAndIconStudio = () => {
               value={host}
               onChangeText={setHost}
               placeholder="e.g. app.example.com"
-              placeholderTextColor="#64748b"
+              placeholderTextColor="#7186B4"
             />
           </View>
         </View>
@@ -114,28 +114,28 @@ export const DeepLinkAndIconStudio = () => {
 
 const styles = StyleSheet.create({
   container: { padding: 14, flex: 1 },
-  title: { fontSize: 15, fontWeight: 'bold', color: '#f8fafc', marginBottom: 2 },
-  subtitle: { fontSize: 11, color: '#94a3b8', marginBottom: 12 },
-  card: { backgroundColor: '#1e293b', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#334155', marginBottom: 12 },
-  cardTitle: { fontSize: 13, fontWeight: 'bold', color: '#f8fafc', marginBottom: 8 },
+  title: { fontSize: 15, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 2 },
+  subtitle: { fontSize: 11, color: '#9AADD6', marginBottom: 12 },
+  card: { backgroundColor: '#111B35', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#263B68', marginBottom: 12 },
+  cardTitle: { fontSize: 13, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 8 },
   inputRow: { flexDirection: 'row', gap: 10 },
   inputGroup: { flex: 1 },
-  label: { fontSize: 11, color: '#cbd5e1', marginBottom: 4 },
-  input: { backgroundColor: '#0f172a', color: '#38bdf8', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontSize: 12 },
-  routeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#0f172a', padding: 8, borderRadius: 6, marginBottom: 6 },
+  label: { fontSize: 11, color: '#C7D5F1', marginBottom: 4 },
+  input: { backgroundColor: '#080D1F', color: '#38E8F2', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontSize: 12 },
+  routeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#080D1F', padding: 8, borderRadius: 6, marginBottom: 6 },
   routeInfo: { flex: 1 },
-  routeUrl: { fontSize: 12, fontWeight: 'bold', color: '#38bdf8', fontFamily: 'monospace' },
-  routeDesc: { fontSize: 10, color: '#94a3b8', marginTop: 2 },
-  screenTag: { backgroundColor: '#3b82f6', color: '#ffffff', fontSize: 10, fontWeight: 'bold', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+  routeUrl: { fontSize: 12, fontWeight: 'bold', color: '#38E8F2', fontFamily: 'monospace' },
+  routeDesc: { fontSize: 10, color: '#9AADD6', marginTop: 2 },
+  screenTag: { backgroundColor: '#398BFF', color: '#ffffff', fontSize: 10, fontWeight: 'bold', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
   tabRow: { flexDirection: 'row', gap: 6, marginBottom: 10 },
-  tabBtn: { flex: 1, paddingVertical: 6, backgroundColor: '#0f172a', borderRadius: 6, alignItems: 'center', borderWidth: 1, borderColor: '#334155' },
-  activeTabBtn: { backgroundColor: '#2563eb', borderColor: '#3b82f6' },
-  tabBtnText: { fontSize: 10, color: '#94a3b8', fontWeight: 'bold' },
+  tabBtn: { flex: 1, paddingVertical: 6, backgroundColor: '#080D1F', borderRadius: 6, alignItems: 'center', borderWidth: 1, borderColor: '#263B68' },
+  activeTabBtn: { backgroundColor: '#398BFF', borderColor: '#398BFF' },
+  tabBtnText: { fontSize: 10, color: '#9AADD6', fontWeight: 'bold' },
   activeTabBtnText: { color: '#ffffff' },
   codeHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  codeTitle: { fontSize: 11, color: '#cbd5e1', fontWeight: 'bold' },
-  copyBtn: { backgroundColor: '#334155', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
-  copyBtnText: { fontSize: 10, color: '#f8fafc', fontWeight: 'bold' },
-  codeScroll: { backgroundColor: '#0f172a', padding: 10, borderRadius: 6 },
-  codeText: { color: '#38bdf8', fontFamily: 'monospace', fontSize: 11 },
+  codeTitle: { fontSize: 11, color: '#C7D5F1', fontWeight: 'bold' },
+  copyBtn: { backgroundColor: '#263B68', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+  copyBtnText: { fontSize: 10, color: '#F4F7FF', fontWeight: 'bold' },
+  codeScroll: { backgroundColor: '#080D1F', padding: 10, borderRadius: 6 },
+  codeText: { color: '#38E8F2', fontFamily: 'monospace', fontSize: 11 },
 });

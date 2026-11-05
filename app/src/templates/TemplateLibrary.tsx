@@ -15,15 +15,15 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
     node: {
       id: 'login_card',
       type: 'Card',
-      style: { flexDirection: 'column', padding: 16, backgroundColor: '#1e293b', borderRadius: 12, marginVertical: 6 },
+      style: { flexDirection: 'column', padding: 16, backgroundColor: '#111B35', borderRadius: 12, marginVertical: 6 },
       animation: { preset: 'fadeIn', duration: 400, delay: 100 },
       children: [
         { id: 'lbl_title', type: 'Text', props: { text: 'Welcome Back' }, style: { fontSize: 18, color: '#ffffff', fontWeight: 'bold', marginBottom: 4 } },
-        { id: 'lbl_sub', type: 'Text', props: { text: 'Sign in to access your account' }, style: { fontSize: 12, color: '#94a3b8', marginBottom: 12 } },
+        { id: 'lbl_sub', type: 'Text', props: { text: 'Sign in to access your account' }, style: { fontSize: 12, color: '#9AADD6', marginBottom: 12 } },
         { id: 'inp_email', type: 'Input', props: { placeholder: 'user@domain.com' }, style: { marginBottom: 8 } },
         { id: 'inp_pass', type: 'Input', props: { placeholder: '••••••••' }, style: { marginBottom: 12 } },
         { id: 'chk_remember', type: 'Checkbox', props: { label: 'Remember login session', checked: true }, style: { marginBottom: 14 } },
-        { id: 'btn_login', type: 'Button', props: { label: 'Sign In' }, style: { backgroundColor: '#2563eb', padding: 12, borderRadius: 8, alignItems: 'center' } },
+        { id: 'btn_login', type: 'Button', props: { label: 'Sign In' }, style: { backgroundColor: '#398BFF', padding: 12, borderRadius: 8, alignItems: 'center' } },
       ],
     },
   },
@@ -36,19 +36,19 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
     node: {
       id: 'kpi_card',
       type: 'Card',
-      style: { flexDirection: 'column', padding: 16, backgroundColor: '#0f172a', borderRadius: 12, borderWidth: 1, borderColor: '#334155', marginVertical: 6 },
+      style: { flexDirection: 'column', padding: 16, backgroundColor: '#080D1F', borderRadius: 12, borderWidth: 1, borderColor: '#263B68', marginVertical: 6 },
       children: [
         {
           id: 'kpi_header',
           type: 'Container',
           style: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
           children: [
-            { id: 'kpi_title', type: 'Text', props: { text: 'Monthly Revenue' }, style: { fontSize: 12, color: '#94a3b8', fontWeight: 'bold' } },
+            { id: 'kpi_title', type: 'Text', props: { text: 'Monthly Revenue' }, style: { fontSize: 12, color: '#9AADD6', fontWeight: 'bold' } },
             { id: 'kpi_badge', type: 'Badge', props: { text: '+24.8% Growth' }, style: { backgroundColor: '#10b981', padding: 4, borderRadius: 12 } },
           ],
         },
-        { id: 'kpi_val', type: 'Text', props: { text: '$128,450.00' }, style: { fontSize: 24, color: '#38bdf8', fontWeight: 'bold', marginBottom: 10 } },
-        { id: 'kpi_prog', type: 'ProgressBar', style: {}, props: { label: 'Target Completion', progress: 82, barColor: '#38bdf8' } },
+        { id: 'kpi_val', type: 'Text', props: { text: '$128,450.00' }, style: { fontSize: 24, color: '#38E8F2', fontWeight: 'bold', marginBottom: 10 } },
+        { id: 'kpi_prog', type: 'ProgressBar', style: {}, props: { label: 'Target Completion', progress: 82, barColor: '#38E8F2' } },
         { id: 'kpi_chart', type: 'Graph', style: {}, props: { title: 'Q3 Growth Trend', values: [45, 60, 55, 80, 75, 95] } },
       ],
     },
@@ -62,15 +62,15 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
     node: {
       id: 's24_hero',
       type: 'Card',
-      style: { flexDirection: 'column', padding: 16, backgroundColor: 'rgba(30, 41, 59, 0.9)', borderRadius: 16, borderWidth: 1, borderColor: '#38bdf8', marginVertical: 6 },
+      style: { flexDirection: 'column', padding: 16, backgroundColor: 'rgba(30, 41, 59, 0.9)', borderRadius: 16, borderWidth: 1, borderColor: '#38E8F2', marginVertical: 6 },
       children: [
         {
           id: 's24_row1',
           type: 'Container',
           style: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
           children: [
-            { id: 's24_dev', type: 'Text', props: { text: 'Galaxy S24 Ultra' }, style: { fontSize: 14, color: '#f8fafc', fontWeight: 'bold' } },
-            { id: 's24_bat', type: 'Badge', props: { text: '🔋 98% Super Fast' }, style: { backgroundColor: '#3b82f6' } },
+            { id: 's24_dev', type: 'Text', props: { text: 'Galaxy S24 Ultra' }, style: { fontSize: 14, color: '#F4F7FF', fontWeight: 'bold' } },
+            { id: 's24_bat', type: 'Badge', props: { text: '🔋 98% Super Fast' }, style: { backgroundColor: '#398BFF' } },
           ],
         },
         { id: 's24_sw1', type: 'Switch', style: {}, props: { label: 'Adaptive 120Hz Refresh', value: true } },
@@ -87,24 +87,24 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
     node: {
       id: 'fold_container',
       type: 'Container',
-      style: { flexDirection: 'row', padding: 12, backgroundColor: '#0f172a', borderRadius: 12, gap: 10, marginVertical: 6 },
+      style: { flexDirection: 'row', padding: 12, backgroundColor: '#080D1F', borderRadius: 12, gap: 10, marginVertical: 6 },
       children: [
         {
           id: 'fold_pane_left',
           type: 'Card',
-          style: { flex: 1, padding: 12, backgroundColor: '#1e293b', borderRadius: 10 },
+          style: { flex: 1, padding: 12, backgroundColor: '#111B35', borderRadius: 10 },
           children: [
-            { id: 'p1_title', type: 'Text', props: { text: 'System Status' }, style: { fontSize: 14, color: '#38bdf8', fontWeight: 'bold', marginBottom: 8 } },
+            { id: 'p1_title', type: 'Text', props: { text: 'System Status' }, style: { fontSize: 14, color: '#38E8F2', fontWeight: 'bold', marginBottom: 8 } },
             { id: 'p1_prog', type: 'ProgressBar', style: {}, props: { label: 'CPU Load', progress: 42, barColor: '#10b981' } },
           ],
         },
         {
           id: 'fold_pane_right',
           type: 'Card',
-          style: { flex: 1, padding: 12, backgroundColor: '#1e293b', borderRadius: 10 },
+          style: { flex: 1, padding: 12, backgroundColor: '#111B35', borderRadius: 10 },
           children: [
-            { id: 'p2_title', type: 'Text', props: { text: 'Quick Controls' }, style: { fontSize: 14, color: '#f8fafc', fontWeight: 'bold', marginBottom: 8 } },
-            { id: 'p2_btn', type: 'Button', props: { label: 'Sync Workspace' }, style: { backgroundColor: '#3b82f6', padding: 8, borderRadius: 6, alignItems: 'center' } },
+            { id: 'p2_title', type: 'Text', props: { text: 'Quick Controls' }, style: { fontSize: 14, color: '#F4F7FF', fontWeight: 'bold', marginBottom: 8 } },
+            { id: 'p2_btn', type: 'Button', props: { label: 'Sync Workspace' }, style: { backgroundColor: '#398BFF', padding: 8, borderRadius: 6, alignItems: 'center' } },
           ],
         },
       ],
@@ -119,7 +119,7 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
     node: {
       id: 'watch_tile',
       type: 'Card',
-      style: { flexDirection: 'column', padding: 12, backgroundColor: '#000000', borderRadius: 24, borderWidth: 2, borderColor: '#3b82f6', alignItems: 'center', marginVertical: 6 },
+      style: { flexDirection: 'column', padding: 12, backgroundColor: '#000000', borderRadius: 24, borderWidth: 2, borderColor: '#398BFF', alignItems: 'center', marginVertical: 6 },
       children: [
         { id: 'w_icon', type: 'Icon', props: { iconSymbol: '❤️' }, style: { fontSize: 24, color: '#ef4444' } },
         { id: 'w_hr', type: 'Text', props: { text: '138 BPM' }, style: { fontSize: 18, color: '#ffffff', fontWeight: 'bold', marginVertical: 2 } },
@@ -137,11 +137,11 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
     node: {
       id: 'tv_banner',
       type: 'Card',
-      style: { flexDirection: 'column', padding: 16, backgroundColor: '#0f172a', borderRadius: 12, borderWidth: 2, borderColor: '#3b82f6', marginVertical: 6 },
+      style: { flexDirection: 'column', padding: 16, backgroundColor: '#080D1F', borderRadius: 12, borderWidth: 2, borderColor: '#398BFF', marginVertical: 6 },
       children: [
         { id: 'tv_badge', type: 'Badge', props: { text: '⭐ 4.9 | 4K Ultra HD' }, style: { backgroundColor: '#f59e0b', marginBottom: 6 } },
         { id: 'tv_title', type: 'Text', props: { text: 'Cyberpunk Mobile Warfare' }, style: { fontSize: 20, color: '#ffffff', fontWeight: 'bold', marginBottom: 4 } },
-        { id: 'tv_desc', type: 'Text', props: { text: 'Stream the ultimate high-framerate action series natively on Android TV.' }, style: { fontSize: 12, color: '#cbd5e1', marginBottom: 12 } },
+        { id: 'tv_desc', type: 'Text', props: { text: 'Stream the ultimate high-framerate action series natively on Android TV.' }, style: { fontSize: 12, color: '#C7D5F1', marginBottom: 12 } },
         { id: 'tv_btn', type: 'Button', props: { label: '▶ Play Feature' }, style: { backgroundColor: '#ef4444', padding: 10, borderRadius: 8, alignItems: 'center' } },
       ],
     },
@@ -183,7 +183,7 @@ export const TemplateLibrary = () => {
         value={search}
         onChangeText={setSearch}
         placeholder="Search screens, headers, forms, cards..."
-        placeholderTextColor="#94a3b8"
+        placeholderTextColor="#9AADD6"
         style={styles.search}
       />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
@@ -193,7 +193,7 @@ export const TemplateLibrary = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={styles.savePanel}><Text style={styles.saveTitle}>Save your own variation</Text><TextInput value={presetName} onChangeText={setPresetName} placeholder={selectedNodeId ? 'Name selected component preset' : 'Name current screen preset'} placeholderTextColor="#94a3b8" style={styles.search} /><TouchableOpacity style={styles.saveBtn} onPress={saveCurrentPreset}><Text style={styles.insertBtnText}>☆ Save selection as preset</Text></TouchableOpacity></View>
+      <View style={styles.savePanel}><Text style={styles.saveTitle}>Save your own variation</Text><TextInput value={presetName} onChangeText={setPresetName} placeholder={selectedNodeId ? 'Name selected component preset' : 'Name current screen preset'} placeholderTextColor="#9AADD6" style={styles.search} /><TouchableOpacity style={styles.saveBtn} onPress={saveCurrentPreset}><Text style={styles.insertBtnText}>☆ Save selection as preset</Text></TouchableOpacity></View>
       <Text style={styles.resultCount}>{filtered.length} DESIGNS & COMPONENT KITS</Text>
       <ScrollView style={{ marginTop: 8 }} contentContainerStyle={{ paddingBottom: 24 }}>
         {filtered.map((item) => (
@@ -225,34 +225,34 @@ export const TemplateLibrary = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 12 },
-  savePanel: { backgroundColor: '#0f172a', borderColor: '#334155', borderWidth: 1, borderRadius: 12, padding: 10, gap: 7, marginTop: 8 },
-  saveTitle: { color: '#e2e8f0', fontSize: 11, fontWeight: '800' },
+  savePanel: { backgroundColor: '#080D1F', borderColor: '#263B68', borderWidth: 1, borderRadius: 12, padding: 10, gap: 7, marginTop: 8 },
+  saveTitle: { color: '#E5EDFF', fontSize: 11, fontWeight: '800' },
   saveBtn: { backgroundColor: '#0f766e', padding: 10, borderRadius: 8, alignItems: 'center' },
-  previewFrame: { height: 112, overflow: 'hidden', backgroundColor: '#f8fafc', borderRadius: 8, padding: 7, marginBottom: 9 },
+  previewFrame: { height: 112, overflow: 'hidden', backgroundColor: '#F4F7FF', borderRadius: 8, padding: 7, marginBottom: 9 },
   deleteBtn: { padding: 7 },
   deleteText: { color: '#fca5a5', fontSize: 10, fontWeight: '700' },
-  title: { fontSize: 17, fontWeight: '900', color: '#f8fafc', letterSpacing: 0.2 },
-  subtitle: { fontSize: 11, color: '#94a3b8', marginTop: 4, marginBottom: 8, lineHeight: 16 },
-  search: { backgroundColor: '#0f172a', color: '#f8fafc', borderWidth: 1, borderColor: '#334155', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 12 },
+  title: { fontSize: 17, fontWeight: '900', color: '#F4F7FF', letterSpacing: 0.2 },
+  subtitle: { fontSize: 11, color: '#9AADD6', marginTop: 4, marginBottom: 8, lineHeight: 16 },
+  search: { backgroundColor: '#080D1F', color: '#F4F7FF', borderWidth: 1, borderColor: '#263B68', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 12 },
   categoryRow: { flexDirection: 'row', gap: 7, paddingVertical: 10 },
-  categoryChip: { borderWidth: 1, borderColor: '#475569', borderRadius: 18, paddingHorizontal: 11, paddingVertical: 7, backgroundColor: '#1e293b' },
-  categoryActive: { backgroundColor: '#2563eb', borderColor: '#60a5fa' },
-  categoryText: { color: '#cbd5e1', fontSize: 10, fontWeight: '600' },
+  categoryChip: { borderWidth: 1, borderColor: '#344A76', borderRadius: 18, paddingHorizontal: 11, paddingVertical: 7, backgroundColor: '#111B35' },
+  categoryActive: { backgroundColor: '#398BFF', borderColor: '#60a5fa' },
+  categoryText: { color: '#C7D5F1', fontSize: 10, fontWeight: '600' },
   categoryTextActive: { color: '#ffffff' },
-  resultCount: { color: '#38bdf8', fontSize: 9, fontWeight: '800', letterSpacing: 0.8, marginTop: 2 },
-  card: { backgroundColor: '#1e293b', padding: 13, borderRadius: 13, marginBottom: 10, borderWidth: 1, borderColor: '#334155' },
+  resultCount: { color: '#38E8F2', fontSize: 9, fontWeight: '800', letterSpacing: 0.8, marginTop: 2 },
+  card: { backgroundColor: '#111B35', padding: 13, borderRadius: 13, marginBottom: 10, borderWidth: 1, borderColor: '#263B68' },
   cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 9, marginBottom: 5 },
   cardIcon: { fontSize: 23, width: 30, textAlign: 'center' },
   cardMeta: { flex: 1 },
   cardTitle: { fontSize: 13, fontWeight: '800', color: '#ffffff' },
-  deviceTag: { fontSize: 9, color: '#38bdf8', fontWeight: '700', marginTop: 3 },
-  cardDesc: { fontSize: 11, color: '#cbd5e1', marginBottom: 10, lineHeight: 16 },
+  deviceTag: { fontSize: 9, color: '#38E8F2', fontWeight: '700', marginTop: 3 },
+  cardDesc: { fontSize: 11, color: '#C7D5F1', marginBottom: 10, lineHeight: 16 },
   actionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
-  insertBtn: { backgroundColor: '#2563eb', paddingVertical: 9, paddingHorizontal: 11, borderRadius: 8, flexGrow: 1, alignItems: 'center' },
+  insertBtn: { backgroundColor: '#398BFF', paddingVertical: 9, paddingHorizontal: 11, borderRadius: 8, flexGrow: 1, alignItems: 'center' },
   insertBtnText: { color: '#ffffff', fontSize: 10, fontWeight: '800' },
-  startBtn: { backgroundColor: '#334155', paddingVertical: 9, paddingHorizontal: 11, borderRadius: 8, flexGrow: 1, alignItems: 'center', borderWidth: 1, borderColor: '#64748b' },
-  startBtnText: { color: '#e2e8f0', fontSize: 10, fontWeight: '800' },
-  empty: { color: '#94a3b8', textAlign: 'center', padding: 24, fontSize: 12 },
+  startBtn: { backgroundColor: '#263B68', paddingVertical: 9, paddingHorizontal: 11, borderRadius: 8, flexGrow: 1, alignItems: 'center', borderWidth: 1, borderColor: '#7186B4' },
+  startBtnText: { color: '#E5EDFF', fontSize: 10, fontWeight: '800' },
+  empty: { color: '#9AADD6', textAlign: 'center', padding: 24, fontSize: 12 },
 });
 
 
@@ -260,8 +260,8 @@ const PresetMiniPreview: React.FC<{ node: ComponentNode }> = ({ node }) => {
   const children = node.children || []; const style: any = node.style || {};
   const simple = node.type === 'Text' || node.type === 'Button' || children.length === 0;
   const label = node.props?.text || node.props?.label || node.props?.placeholder || node.type;
-  return <View style={{ flexDirection: style.flexDirection === 'row' ? 'row' : 'column', backgroundColor: style.backgroundColor || 'transparent', borderRadius: Math.min(Number(style.borderRadius || 8), 12), borderWidth: style.borderWidth ? 1 : 0, borderColor: style.borderColor || '#e2e8f0', padding: Math.min(Number(style.padding || 4), 8), marginBottom: 2, maxWidth: '100%' }}>
-    {simple && <Text numberOfLines={1} style={{ color: style.color || (node.type === 'Button' ? '#fff' : '#334155'), backgroundColor: node.type === 'Button' ? (style.backgroundColor || '#2563eb') : 'transparent', fontSize: Math.min(Number(style.fontSize || 9), 12), fontWeight: style.fontWeight || 'normal', padding: 2 }}>{String(label)}</Text>}
+  return <View style={{ flexDirection: style.flexDirection === 'row' ? 'row' : 'column', backgroundColor: style.backgroundColor || 'transparent', borderRadius: Math.min(Number(style.borderRadius || 8), 12), borderWidth: style.borderWidth ? 1 : 0, borderColor: style.borderColor || '#E5EDFF', padding: Math.min(Number(style.padding || 4), 8), marginBottom: 2, maxWidth: '100%' }}>
+    {simple && <Text numberOfLines={1} style={{ color: style.color || (node.type === 'Button' ? '#fff' : '#263B68'), backgroundColor: node.type === 'Button' ? (style.backgroundColor || '#398BFF') : 'transparent', fontSize: Math.min(Number(style.fontSize || 9), 12), fontWeight: style.fontWeight || 'normal', padding: 2 }}>{String(label)}</Text>}
     {children.slice(0, 5).map(child => <PresetMiniPreview key={child.id} node={child} />)}
   </View>;
 };

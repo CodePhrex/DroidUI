@@ -30,7 +30,7 @@ export const SAMPLE_DROID_PROJECTS: { name: string; filename: string; descriptio
           title: 'Storefront Mobile',
           subtitle: 'Seamless Checkout',
           logoIcon: '🛒',
-          backgroundColor: '#0f172a',
+          backgroundColor: '#080D1F',
           titleColor: '#ffffff',
           durationMs: 2000,
           showSpinner: true,
@@ -43,11 +43,11 @@ export const SAMPLE_DROID_PROJECTS: { name: string; filename: string; descriptio
         rootNode: {
           id: 'root_container',
           type: 'Container',
-          style: { flexDirection: 'column', padding: 16, backgroundColor: '#1e293b', borderRadius: 12 },
+          style: { flexDirection: 'column', padding: 16, backgroundColor: '#111B35', borderRadius: 12 },
           children: [
-            { id: 'cart_header', type: 'Text', props: { text: 'Order Summary', i18nKey: 'checkout_title' }, style: { fontSize: 20, color: '#f8fafc', fontWeight: 'bold', marginBottom: 12 } },
-            { id: 'item_card', type: 'Card', style: { padding: 12, backgroundColor: '#0f172a', borderRadius: 8, marginBottom: 12 }, children: [
-              { id: 'item_title', type: 'Text', props: { text: 'Wireless Noise-Canceling Headphones' }, style: { fontSize: 14, color: '#38bdf8', fontWeight: 'bold' } },
+            { id: 'cart_header', type: 'Text', props: { text: 'Order Summary', i18nKey: 'checkout_title' }, style: { fontSize: 20, color: '#F4F7FF', fontWeight: 'bold', marginBottom: 12 } },
+            { id: 'item_card', type: 'Card', style: { padding: 12, backgroundColor: '#080D1F', borderRadius: 8, marginBottom: 12 }, children: [
+              { id: 'item_title', type: 'Text', props: { text: 'Wireless Noise-Canceling Headphones' }, style: { fontSize: 14, color: '#38E8F2', fontWeight: 'bold' } },
               { id: 'item_price', type: 'Text', props: { text: '$129.99 • Qty 1' }, style: { fontSize: 12, color: '#10b981', marginTop: 4 } },
             ]},
             { id: 'btn_pay', type: 'Button', props: { label: 'Pay $129.99 Now', i18nKey: 'pay_btn' }, style: { backgroundColor: '#10b981', padding: 12, borderRadius: 8, alignItems: 'center' } },
@@ -201,7 +201,7 @@ export const ProjectFileIOStudio = () => {
           style={styles.importArea}
           multiline={true}
           placeholder="Paste .dui JSON project package here..."
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={importInput}
           onChangeText={setImportInput}
         />
@@ -256,24 +256,24 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#f8fafc',
+    color: '#F4F7FF',
     marginBottom: 2,
   },
   subtitle: {
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#9AADD6',
     marginBottom: 14,
   },
   highlightText: {
-    color: '#38bdf8',
+    color: '#38E8F2',
     fontWeight: 'bold',
   },
   card: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
     padding: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     marginBottom: 14,
   },
   cardHeaderRow: {
@@ -285,10 +285,10 @@ const styles = StyleSheet.create({
   cardHeaderTitle: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: '#f8fafc',
+    color: '#F4F7FF',
   },
   extBadge: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#398BFF',
     color: '#ffffff',
     fontSize: 10,
     fontWeight: 'bold',
@@ -298,28 +298,28 @@ const styles = StyleSheet.create({
   },
   cardDesc: {
     fontSize: 11,
-    color: '#cbd5e1',
+    color: '#C7D5F1',
     marginBottom: 10,
   },
   specBox: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#080D1F',
     padding: 10,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     marginBottom: 10,
   },
   specLabel: {
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#9AADD6',
     marginBottom: 3,
   },
   specVal: {
-    color: '#38bdf8',
+    color: '#38E8F2',
     fontWeight: 'bold',
   },
   copyBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#398BFF',
     padding: 10,
     borderRadius: 6,
     alignItems: 'center',
@@ -330,8 +330,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   importArea: {
-    backgroundColor: '#0f172a',
-    color: '#38bdf8',
+    backgroundColor: '#080D1F',
+    color: '#38E8F2',
     fontFamily: 'monospace',
     fontSize: 11,
     padding: 10,
@@ -366,11 +366,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   sampleCard: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#080D1F',
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     marginBottom: 8,
   },
   sampleHeaderRow: {
@@ -380,17 +380,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   sampleName: {
-    color: '#f8fafc',
+    color: '#F4F7FF',
     fontSize: 12,
     fontWeight: 'bold',
   },
   sampleFileTag: {
-    color: '#38bdf8',
+    color: '#38E8F2',
     fontSize: 10,
     fontFamily: 'monospace',
   },
   sampleDesc: {
-    color: '#94a3b8',
+    color: '#9AADD6',
     fontSize: 11,
   },
 });

@@ -15,7 +15,7 @@
       "package": "com.codephrex.droidstudio"
     },
     "splash": {
-      "backgroundColor": "#0B1020"
+      "backgroundColor": "#080D1F"
     },
     "plugins": [
       "./plugins/withAndroidSplashBackground"

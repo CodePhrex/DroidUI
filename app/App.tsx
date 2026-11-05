@@ -23,6 +23,7 @@ import { LayerReorderManager } from './src/components/LayerReorderManager';
 import { TemplateLibrary } from './src/templates/TemplateLibrary';
 import { ThemeManager } from './src/components/ThemeManager';
 import { DesignSystemStudio } from './src/components/DesignSystemStudio';
+import { BrandMark, BrandSplash } from './src/components/DroidUIBrand';
 import { ProjectManager } from './src/components/ProjectManager';
 import { AssetPickerStudio } from './src/components/AssetPickerStudio';
 import { ViewportSelector, VIEWPORTS, ViewportMode } from './src/components/ViewportSelector';
@@ -65,6 +66,7 @@ export default function App() {
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
+  const [showBrandSplash, setShowBrandSplash] = useState(true);
 
   const currentVP = activeViewport === 'detected_device' ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
@@ -100,22 +102,22 @@ export default function App() {
       {/* Studio Top Navigation Header Bar */}
       <View style={[styles.navbar, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
         <View style={styles.brandGroup}>
-          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>◈ DroidUI Studio</Text>
-          <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]}>
+          <BrandMark size={34} compact />
+          <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]}>
             <Text style={[styles.projectBadgeText, { color: theme.textSecondary }]}>{currentProjectName}</Text>
           </View>
         </View>
 
         <View style={styles.navActions}>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={() => setActiveTab('projects')}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={() => setActiveTab('projects')}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>📂 Open</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={handleSaveProject}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={handleSaveProject}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>💾 Save</Text>
           </TouchableOpacity>
           {/* Light / Dark UI Toggle Switch */}
           <TouchableOpacity
-            style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#3b82f6' : '#334155', borderColor: theme.border }]}
+            style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#398BFF' : '#111B35', borderColor: theme.border }]}
             onPress={toggleThemeMode}
           >
             <Text style={styles.themeToggleText}>
@@ -123,10 +125,10 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={undo}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={undo}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>↩ Undo</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={redo}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={redo}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>↪ Redo</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.exportBtn, { backgroundColor: theme.primary }]} onPress={() => handleExport('tsx')}>
@@ -144,8 +146,8 @@ export default function App() {
         <View style={styles.canvasArea}>
           <ViewportSelector activeViewport={activeViewport} onSelectViewport={setActiveViewport} />
           <ScrollView horizontal contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-            <View style={[styles.deviceFrame, { width: currentVP.width, minHeight: currentVP.height, borderColor: theme.border, backgroundColor: isLightMode ? '#f1f5f9' : 'rgba(0,0,0,0.3)' }]}>
-              <View style={[styles.deviceNotch, { backgroundColor: isLightMode ? '#cbd5e1' : '#334155' }]} />
+            <View style={[styles.deviceFrame, { width: currentVP.width, minHeight: currentVP.height, borderColor: theme.border, backgroundColor: isLightMode ? '#101A36' : 'rgba(0,0,0,0.3)' }]}>
+              <View style={[styles.deviceNotch, { backgroundColor: isLightMode ? '#cbd5e1' : '#111B35' }]} />
               <CanvasRenderer node={rootNode} />
             </View>
           </ScrollView>
@@ -291,8 +293,8 @@ export default function App() {
               <TouchableOpacity style={styles.presetBtn} onPress={() => handleExport('store')}><Text style={styles.presetBtnText}>Play Store Spec</Text></TouchableOpacity>
               <TouchableOpacity style={styles.presetBtn} onPress={() => handleExport('droidui')}><Text style={styles.presetBtnText}>.dui Package</Text></TouchableOpacity>
             </View>
-            <ScrollView style={[styles.codeScroll, { backgroundColor: isLightMode ? '#f1f5f9' : '#1e293b' }]}>
-              <Text style={[styles.codeText, { color: isLightMode ? '#0284c7' : '#38bdf8' }]}>{codeOutput}</Text>
+            <ScrollView style={[styles.codeScroll, { backgroundColor: isLightMode ? '#101A36' : '#1e293b' }]}>
+              <Text style={[styles.codeText, { color: isLightMode ? '#0284c7' : '#38E8F2' }]}>{codeOutput}</Text>
             </ScrollView>
             <TouchableOpacity style={[styles.closeBtn, { backgroundColor: theme.primary }]} onPress={() => setModalVisible(false)}>
               <Text style={styles.closeBtnText}>Close Modal</Text>
@@ -300,32 +302,33 @@ export default function App() {
           </View>
         </View>
       </Modal>
+      {showBrandSplash && <BrandSplash onFinish={() => setShowBrandSplash(false)} />}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  navbar: { flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: 1, gap: 8 },
+  navbar: { flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', paddingHorizontal: 14, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: '#263B68', gap: 9 },
   brandGroup: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' },
   logoTitle: { fontSize: 17, fontWeight: '900', letterSpacing: 0.3 },
-  projectBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12 },
+  projectBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, borderWidth: 1, borderColor: '#263B68' },
   projectBadgeText: { fontSize: 10, fontWeight: 'bold' },
   navActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 6, width: '100%' },
   themeToggleBtn: { borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
   themeToggleText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
-  navBtn: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
+  navBtn: { paddingHorizontal: 11, paddingVertical: 7, borderRadius: 9, borderWidth: 1, borderColor: '#263B68' },
   navBtnText: { fontSize: 11, fontWeight: 'bold' },
-  exportBtn: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 },
+  exportBtn: { paddingHorizontal: 13, paddingVertical: 7, borderRadius: 9, shadowColor: '#38E8F2', shadowOpacity: 0.18, shadowRadius: 8, elevation: 3 },
   exportBtnText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
   workspace: { flex: 1, flexDirection: 'column' },
   canvasArea: { flex: 1, padding: 12, alignItems: 'center' },
   deviceFrame: { borderWidth: 2, borderRadius: 24, padding: 12, alignSelf: 'center', shadowColor: '#000', shadowRadius: 10 },
   deviceNotch: { width: 60, height: 6, borderRadius: 3, alignSelf: 'center', marginBottom: 8 },
-  panelArea: { flex: 1, borderTopWidth: 1 },
+  panelArea: { flex: 1, borderTopWidth: 1, borderTopColor: '#263B68' },
   tabScroll: { borderBottomWidth: 1, maxHeight: 42 },
   tab: { paddingHorizontal: 16, paddingVertical: 10, alignItems: 'center' },
-  activeTab: { borderBottomWidth: 2, borderBottomColor: '#2563eb' },
+  activeTab: { borderBottomWidth: 2, borderBottomColor: '#38E8F2', backgroundColor: 'rgba(56,232,242,0.07)' },
   tabText: { fontSize: 11, fontWeight: 'bold' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', padding: 20 },
   modalContent: { padding: 16, borderRadius: 12, maxHeight: '80%' },
@@ -334,6 +337,6 @@ const styles = StyleSheet.create({
   codeText: { fontFamily: 'monospace', fontSize: 12 },
   closeBtn: { marginTop: 12, padding: 10, borderRadius: 6, alignItems: 'center' },
   closeBtnText: { color: '#ffffff', fontWeight: 'bold' },
-  presetBtn: { backgroundColor: '#334155', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 4 },
-  presetBtnText: { color: '#38bdf8', fontSize: 10, fontWeight: 'bold' },
+  presetBtn: { backgroundColor: '#111B35', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 4 },
+  presetBtnText: { color: '#38E8F2', fontSize: 10, fontWeight: 'bold' },
 });

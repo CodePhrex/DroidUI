@@ -50,7 +50,7 @@ export const ProjectManager = () => {
           value={projectNameInput}
           onChangeText={setProjectNameInput}
           placeholder="Project Name"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
         />
         <View style={styles.buttonRow}>
           <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={isSaving}>
@@ -103,31 +103,31 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#f8fafc',
+    color: '#F4F7FF',
     marginBottom: 2,
   },
   subtitle: {
     fontSize: 12,
-    color: '#94a3b8',
+    color: '#9AADD6',
     marginBottom: 16,
   },
   card: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
     padding: 14,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     marginBottom: 16,
   },
   cardHeader: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#cbd5e1',
+    color: '#C7D5F1',
     marginBottom: 8,
   },
   textInput: {
-    backgroundColor: '#0f172a',
-    color: '#f8fafc',
+    backgroundColor: '#080D1F',
+    color: '#F4F7FF',
     padding: 10,
     borderRadius: 6,
     borderWidth: 1,
@@ -140,13 +140,13 @@ const styles = StyleSheet.create({
   },
   saveBtn: {
     flex: 1,
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#398BFF',
     padding: 10,
     borderRadius: 6,
     alignItems: 'center',
   },
   newBtn: {
-    backgroundColor: '#334155',
+    backgroundColor: '#263B68',
     padding: 10,
     borderRadius: 6,
     alignItems: 'center',
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     maxHeight: 280,
   },
   emptyText: {
-    color: '#64748b',
+    color: '#7186B4',
     fontSize: 12,
     fontStyle: 'italic',
     textAlign: 'center',
@@ -176,16 +176,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
     padding: 12,
     borderRadius: 6,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
   },
   activeProjectRow: {
-    borderColor: '#3b82f6',
-    backgroundColor: '#1e293b',
+    borderColor: '#398BFF',
+    backgroundColor: '#111B35',
   },
   projectInfo: {
     flex: 1,
@@ -193,11 +193,11 @@ const styles = StyleSheet.create({
   projectName: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: '#f8fafc',
+    color: '#F4F7FF',
   },
   projectMeta: {
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#9AADD6',
     marginTop: 2,
   },
   projectActions: {
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   loadBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#398BFF',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 4,

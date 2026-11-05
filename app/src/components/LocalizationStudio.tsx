@@ -107,21 +107,21 @@ export const LocalizationStudio = () => {
         <TextInput
           style={styles.input}
           placeholder="Key Name (e.g. btn_submit_label)"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={newKey}
           onChangeText={setNewKey}
         />
         <TextInput
           style={styles.input}
           placeholder="English Text (e.g. Submit Application)"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={newValEn}
           onChangeText={setNewValEn}
         />
         <TextInput
           style={styles.input}
           placeholder="Spanish Text (e.g. Enviar Solicitud)"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={newValEs}
           onChangeText={setNewValEs}
         />
@@ -148,29 +148,29 @@ export const LocalizationStudio = () => {
 
 const styles = StyleSheet.create({
   container: { padding: 12 },
-  title: { fontSize: 15, fontWeight: 'bold', color: '#f8fafc', marginBottom: 12 },
+  title: { fontSize: 15, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 12 },
   section: { marginBottom: 16 },
-  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#cbd5e1', marginBottom: 8, textTransform: 'uppercase' },
+  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#C7D5F1', marginBottom: 8, textTransform: 'uppercase' },
   localeScroll: { flexDirection: 'row', gap: 6 },
-  localeChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1e293b', borderWidth: 1, borderColor: '#334155', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20, gap: 6, marginRight: 6 },
-  activeLocaleChip: { backgroundColor: '#3b82f6', borderColor: '#60a5fa' },
+  localeChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#111B35', borderWidth: 1, borderColor: '#263B68', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20, gap: 6, marginRight: 6 },
+  activeLocaleChip: { backgroundColor: '#398BFF', borderColor: '#60a5fa' },
   flagText: { fontSize: 14 },
-  localeText: { fontSize: 11, color: '#94a3b8', fontWeight: 'bold' },
+  localeText: { fontSize: 11, color: '#9AADD6', fontWeight: 'bold' },
   activeLocaleText: { color: '#ffffff' },
-  sectionCard: { backgroundColor: '#0f172a', padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#334155', marginBottom: 16 },
-  cardTitle: { fontSize: 13, fontWeight: 'bold', color: '#38bdf8', marginBottom: 6 },
-  nodeBadge: { fontSize: 11, color: '#94a3b8', marginBottom: 4 },
-  keyLabel: { fontSize: 11, color: '#cbd5e1', fontWeight: '600', marginBottom: 8 },
+  sectionCard: { backgroundColor: '#080D1F', padding: 12, borderRadius: 10, borderWidth: 1, borderColor: '#263B68', marginBottom: 16 },
+  cardTitle: { fontSize: 13, fontWeight: 'bold', color: '#38E8F2', marginBottom: 6 },
+  nodeBadge: { fontSize: 11, color: '#9AADD6', marginBottom: 4 },
+  keyLabel: { fontSize: 11, color: '#C7D5F1', fontWeight: '600', marginBottom: 8 },
   keyChipsRow: { flexDirection: 'row', gap: 6, marginVertical: 4 },
-  keyChip: { backgroundColor: '#1e293b', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6, borderWidth: 1, borderColor: '#475569', marginRight: 6 },
+  keyChip: { backgroundColor: '#111B35', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6, borderWidth: 1, borderColor: '#475569', marginRight: 6 },
   activeKeyChip: { backgroundColor: '#10b981', borderColor: '#34d399' },
   keyChipText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
-  presetBtn: { backgroundColor: 'rgba(59, 130, 246, 0.2)', borderWidth: 1, borderColor: '#3b82f6', padding: 10, borderRadius: 8, alignItems: 'center' },
-  presetBtnText: { color: '#38bdf8', fontSize: 11, fontWeight: 'bold' },
-  input: { backgroundColor: '#1e293b', color: '#ffffff', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155', marginBottom: 8, fontSize: 12 },
-  addKeyBtn: { backgroundColor: '#3b82f6', padding: 10, borderRadius: 6, alignItems: 'center', marginTop: 4 },
+  presetBtn: { backgroundColor: 'rgba(59, 130, 246, 0.2)', borderWidth: 1, borderColor: '#398BFF', padding: 10, borderRadius: 8, alignItems: 'center' },
+  presetBtnText: { color: '#38E8F2', fontSize: 11, fontWeight: 'bold' },
+  input: { backgroundColor: '#111B35', color: '#ffffff', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#263B68', marginBottom: 8, fontSize: 12 },
+  addKeyBtn: { backgroundColor: '#398BFF', padding: 10, borderRadius: 6, alignItems: 'center', marginTop: 4 },
   addKeyBtnText: { color: '#ffffff', fontSize: 12, fontWeight: 'bold' },
-  dictRow: { backgroundColor: '#1e293b', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#334155', marginBottom: 8 },
-  dictKey: { fontSize: 12, fontWeight: 'bold', color: '#38bdf8', marginBottom: 4 },
-  dictVal: { fontSize: 11, color: '#cbd5e1' },
+  dictRow: { backgroundColor: '#111B35', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#263B68', marginBottom: 8 },
+  dictKey: { fontSize: 12, fontWeight: 'bold', color: '#38E8F2', marginBottom: 4 },
+  dictVal: { fontSize: 11, color: '#C7D5F1' },
 });

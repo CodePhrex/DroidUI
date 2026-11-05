@@ -78,7 +78,7 @@ export const AccessibilityStudio = () => {
         <TextInput
           style={styles.textInput}
           placeholder="e.g., Submit Order Button"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={currentAcc.accessibilityLabel || ''}
           onChangeText={(txt) => handleUpdate({ accessibilityLabel: txt })}
         />
@@ -91,7 +91,7 @@ export const AccessibilityStudio = () => {
         <TextInput
           style={styles.textInput}
           placeholder="e.g., Double tap to finalize purchase"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={currentAcc.accessibilityHint || ''}
           onChangeText={(txt) => handleUpdate({ accessibilityHint: txt })}
         />
@@ -182,20 +182,20 @@ const styles = StyleSheet.create({
   container: { padding: 12 },
   header: { marginBottom: 14 },
   title: { fontSize: 13, fontWeight: 'bold', color: '#10b981', textTransform: 'uppercase' },
-  targetBadge: { fontSize: 10, color: '#94a3b8', marginTop: 2 },
+  targetBadge: { fontSize: 10, color: '#9AADD6', marginTop: 2 },
   section: { marginBottom: 16 },
-  sectionTitle: { fontSize: 11, fontWeight: 'bold', color: '#cbd5e1', marginBottom: 6 },
+  sectionTitle: { fontSize: 11, fontWeight: 'bold', color: '#C7D5F1', marginBottom: 6 },
   buttonRow: { flexDirection: 'row', gap: 6 },
-  toggleBtn: { flex: 1, backgroundColor: '#1e293b', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155', alignItems: 'center' },
+  toggleBtn: { flex: 1, backgroundColor: '#111B35', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#263B68', alignItems: 'center' },
   activeToggleBtn: { backgroundColor: '#059669', borderColor: '#10b981' },
-  btnText: { color: '#f8fafc', fontSize: 11, fontWeight: 'bold' },
-  textInput: { backgroundColor: '#0f172a', color: '#f8fafc', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155', fontSize: 12 },
-  helperText: { color: '#64748b', fontSize: 10, marginTop: 4 },
+  btnText: { color: '#F4F7FF', fontSize: 11, fontWeight: 'bold' },
+  textInput: { backgroundColor: '#080D1F', color: '#F4F7FF', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#263B68', fontSize: 12 },
+  helperText: { color: '#7186B4', fontSize: 10, marginTop: 4 },
   chipGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  chip: { backgroundColor: '#1e293b', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, borderWidth: 1, borderColor: '#334155' },
+  chip: { backgroundColor: '#111B35', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6, borderWidth: 1, borderColor: '#263B68' },
   activeChip: { backgroundColor: '#10b981', borderColor: '#059669' },
-  chipText: { color: '#f8fafc', fontSize: 11, fontWeight: 'bold' },
+  chipText: { color: '#F4F7FF', fontSize: 11, fontWeight: 'bold' },
   presetRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  presetBtn: { backgroundColor: '#1e293b', paddingHorizontal: 10, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: '#10b981' },
+  presetBtn: { backgroundColor: '#111B35', paddingHorizontal: 10, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: '#10b981' },
   presetBtnText: { color: '#34d399', fontSize: 11, fontWeight: 'bold' },
 });

@@ -55,11 +55,11 @@ export const ComponentToolbar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#080D1F',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderBottomWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     width: '100%',
   },
   headerRow: {
@@ -71,21 +71,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 11,
     fontWeight: 'bold',
-    color: '#38bdf8',
+    color: '#38E8F2',
     textTransform: 'uppercase',
   },
   targetLabel: {
     fontSize: 10,
-    color: '#94a3b8',
+    color: '#9AADD6',
   },
   toolbarScroll: {
     flexDirection: 'row',
     gap: 6,
   },
   toolBtn: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 6,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   toolLabel: {
-    color: '#f8fafc',
+    color: '#F4F7FF',
     fontSize: 11,
     fontWeight: 'bold',
   },

@@ -49,7 +49,7 @@ export const ComponentSearchFilter = () => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search components by ID, label, or type..."
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           value={query}
           onChangeText={setQuery}
         />
@@ -111,24 +111,24 @@ export const ComponentSearchFilter = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 12, backgroundColor: '#0f172a' },
-  headerTitle: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc', marginBottom: 8 },
-  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#1e293b', borderRadius: 8, paddingHorizontal: 10, borderWidth: 1, borderColor: '#334155', marginBottom: 8 },
-  searchInput: { flex: 1, color: '#f8fafc', paddingVertical: 8, fontSize: 12 },
+  container: { flex: 1, padding: 12, backgroundColor: '#080D1F' },
+  headerTitle: { fontSize: 14, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 8 },
+  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#111B35', borderRadius: 8, paddingHorizontal: 10, borderWidth: 1, borderColor: '#263B68', marginBottom: 8 },
+  searchInput: { flex: 1, color: '#F4F7FF', paddingVertical: 8, fontSize: 12 },
   clearBtn: { padding: 4 },
-  clearBtnText: { color: '#94a3b8', fontSize: 12, fontWeight: 'bold' },
+  clearBtnText: { color: '#9AADD6', fontSize: 12, fontWeight: 'bold' },
   filterRow: { flexDirection: 'row', gap: 6, marginBottom: 8, flexWrap: 'wrap' },
-  filterChip: { backgroundColor: '#1e293b', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, borderWidth: 1, borderColor: '#334155' },
-  activeChip: { backgroundColor: '#3b82f6', borderColor: '#3b82f6' },
-  filterChipText: { color: '#94a3b8', fontSize: 10, fontWeight: 'bold' },
+  filterChip: { backgroundColor: '#111B35', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, borderWidth: 1, borderColor: '#263B68' },
+  activeChip: { backgroundColor: '#398BFF', borderColor: '#398BFF' },
+  filterChipText: { color: '#9AADD6', fontSize: 10, fontWeight: 'bold' },
   activeChipText: { color: '#ffffff' },
-  resultsCount: { fontSize: 10, color: '#64748b', marginBottom: 8, fontWeight: '600' },
+  resultsCount: { fontSize: 10, color: '#7186B4', marginBottom: 8, fontWeight: '600' },
   resultsList: { flex: 1 },
-  resultItem: { backgroundColor: '#1e293b', padding: 10, borderRadius: 8, marginBottom: 6, borderWidth: 1, borderColor: '#334155' },
-  selectedResultItem: { borderColor: '#3b82f6', backgroundColor: '#1e3a8a' },
+  resultItem: { backgroundColor: '#111B35', padding: 10, borderRadius: 8, marginBottom: 6, borderWidth: 1, borderColor: '#263B68' },
+  selectedResultItem: { borderColor: '#398BFF', backgroundColor: '#1e3a8a' },
   resultHeader: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  resultTypeBadge: { color: '#38bdf8', fontSize: 10, fontWeight: 'bold' },
-  resultId: { color: '#f8fafc', fontSize: 12, fontWeight: 'bold' },
-  resultSnippet: { color: '#94a3b8', fontSize: 11, fontStyle: 'italic', marginTop: 2 },
-  resultPath: { color: '#64748b', fontSize: 9, marginTop: 4 },
+  resultTypeBadge: { color: '#38E8F2', fontSize: 10, fontWeight: 'bold' },
+  resultId: { color: '#F4F7FF', fontSize: 12, fontWeight: 'bold' },
+  resultSnippet: { color: '#9AADD6', fontSize: 11, fontStyle: 'italic', marginTop: 2 },
+  resultPath: { color: '#7186B4', fontSize: 9, marginTop: 4 },
 });

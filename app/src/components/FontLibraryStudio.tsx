@@ -100,7 +100,7 @@ export const FontLibraryStudio = () => {
           value={customText}
           onChangeText={setCustomText}
           placeholder="Test custom font preview..."
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
         />
       </View>
 
@@ -158,51 +158,51 @@ export const FontLibraryStudio = () => {
 
 const styles = StyleSheet.create({
   container: { padding: 12, flex: 1 },
-  title: { fontSize: 16, fontWeight: 'bold', color: '#f8fafc', marginBottom: 2 },
-  subtitle: { fontSize: 11, color: '#94a3b8', marginBottom: 12 },
+  title: { fontSize: 16, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 2 },
+  subtitle: { fontSize: 11, color: '#9AADD6', marginBottom: 12 },
   fontRow: { maxHeight: 90, marginBottom: 12 },
   fontCard: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     padding: 10,
     borderRadius: 8,
     marginRight: 8,
     width: 120,
     justifyContent: 'center',
   },
-  selectedFontCard: { borderColor: '#3b82f6', backgroundColor: '#0f172a' },
-  fontCategory: { fontSize: 9, color: '#38bdf8', fontWeight: 'bold', textTransform: 'uppercase' },
-  fontName: { fontSize: 13, fontWeight: 'bold', color: '#f8fafc', marginTop: 2 },
-  fontPreviewText: { fontSize: 11, color: '#94a3b8', marginTop: 4 },
+  selectedFontCard: { borderColor: '#398BFF', backgroundColor: '#080D1F' },
+  fontCategory: { fontSize: 9, color: '#38E8F2', fontWeight: 'bold', textTransform: 'uppercase' },
+  fontName: { fontSize: 13, fontWeight: 'bold', color: '#F4F7FF', marginTop: 2 },
+  fontPreviewText: { fontSize: 11, color: '#9AADD6', marginTop: 4 },
   sampleBox: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#080D1F',
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     marginBottom: 12,
   },
-  sampleLabel: { fontSize: 10, color: '#64748b', textTransform: 'uppercase', marginBottom: 6 },
+  sampleLabel: { fontSize: 10, color: '#7186B4', textTransform: 'uppercase', marginBottom: 6 },
   specimenText: { color: '#ffffff', marginBottom: 8, minHeight: 32 },
   specimenInput: {
-    backgroundColor: '#1e293b',
-    color: '#f8fafc',
+    backgroundColor: '#111B35',
+    color: '#F4F7FF',
     padding: 6,
     borderRadius: 4,
     fontSize: 11,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
   },
   controlsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12, gap: 8 },
   controlGroup: { flex: 1 },
-  controlLabel: { fontSize: 11, color: '#94a3b8', marginBottom: 4 },
+  controlLabel: { fontSize: 11, color: '#9AADD6', marginBottom: 4 },
   chipGroup: { flexDirection: 'row', gap: 4 },
-  chip: { backgroundColor: '#334155', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
-  activeChip: { backgroundColor: '#3b82f6' },
+  chip: { backgroundColor: '#263B68', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+  activeChip: { backgroundColor: '#398BFF' },
   chipText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
   actionRow: { flexDirection: 'row', gap: 8 },
-  applyBtn: { flex: 1, backgroundColor: '#3b82f6', padding: 10, borderRadius: 6, alignItems: 'center' },
+  applyBtn: { flex: 1, backgroundColor: '#398BFF', padding: 10, borderRadius: 6, alignItems: 'center' },
   globalBtn: { backgroundColor: '#8b5cf6', padding: 10, borderRadius: 6, alignItems: 'center' },
   disabledBtn: { backgroundColor: '#475569', opacity: 0.6 },
   btnText: { color: '#fff', fontSize: 11, fontWeight: 'bold' },
