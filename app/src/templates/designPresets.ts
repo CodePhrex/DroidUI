@@ -1,6 +1,6 @@
 import { ComponentNode } from '../types/schema';
 
-export type DesignPresetCategory = 'Complete Screens' | 'Component Kits' | 'Navigation' | 'Forms' | 'Cards & Content';
+export type DesignPresetCategory = 'Complete Screens' | 'Component Kits' | 'Navigation' | 'Forms' | 'Cards & Content' | 'Premium Components';
 export interface DesignPreset {
   id: string;
   name: string;
@@ -183,6 +183,101 @@ export const DESIGN_PRESETS: DesignPreset[] = [
     styleName: 'Glass Dark',
     node: card('kit_glass', [text('glass_tag', 'INSIGHT', 10, '#67e8f9', 'bold'), text('glass_title', 'Your next idea starts here.', 21, '#ffffff', 'bold'), text('glass_body', 'A reusable glass-style panel for modern interfaces.', 13, '#cbd5e1')], 'rgba(15, 23, 42, 0.92)', '#475569'),
   },
+
+  {
+    id: 'premium_creator_hero', name: 'Creator Spotlight Hero', category: 'Premium Components',
+    description: 'Editorial creator header with portrait placeholder, verification mark, stats and follow action.',
+    styleName: 'Creator Spotlight',
+    node: card('premium_creator_hero', [
+      { id: 'creator_cover', type: 'Container', style: { height: 74, backgroundColor: '#312e81', borderRadius: 14, justifyContent: 'center', alignItems: 'center' }, children: [text('creator_cover_mark', '✦  CREATOR SPOTLIGHT', 11, '#e0e7ff', 'bold')] },
+      { id: 'creator_identity', type: 'Container', style: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10 }, children: [
+        { id: 'creator_avatar', type: 'Icon', props: { iconSymbol: '◉' }, style: { fontSize: 42, color: '#818cf8' } },
+        { id: 'creator_name_group', type: 'Container', style: { flex: 1 }, children: [text('creator_name', 'Alex Morgan  ✓', 17, '#0f172a', 'bold'), text('creator_handle', '@alexcreates', 12, '#64748b')] },
+      ]},
+      text('creator_bio', 'Designer • storyteller • building what is next.', 13, '#475569'),
+      { id: 'creator_stats', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }, children: [text('creator_posts', '128 posts', 11, '#334155', 'bold'), text('creator_followers', '24.8K followers', 11, '#334155', 'bold'), text('creator_likes', '96K likes', 11, '#334155', 'bold')] },
+      button('creator_follow_action', '＋ Follow creator', '#4f46e5'),
+    ], '#ffffff', '#e0e7ff'),
+  },
+  {
+    id: 'premium_pricing', name: 'SaaS Pricing Selector', category: 'Premium Components',
+    description: 'Three-tier pricing presentation with a highlighted recommended plan.',
+    styleName: 'Product Pricing',
+    node: { id: 'premium_pricing', type: 'Container', style: { padding: 12, backgroundColor: '#f8fafc' }, children: [
+      text('pricing_heading', 'Choose your plan', 23, '#0f172a', 'bold'),
+      card('pricing_basic', [text('pricing_basic_name', 'STARTER', 11, '#64748b', 'bold'), text('pricing_basic_price', '$0 / month', 24, '#0f172a', 'bold'), text('pricing_basic_desc', 'Explore the essentials.', 12, '#64748b'), button('pricing_basic_cta', 'Get started', '#334155')]),
+      card('pricing_pro', [text('pricing_pro_badge', 'MOST POPULAR', 10, '#c4b5fd', 'bold'), text('pricing_pro_name', 'PRO', 12, '#ffffff', 'bold'), text('pricing_pro_price', '$19 / month', 26, '#ffffff', 'bold'), text('pricing_pro_desc', 'More power for growing teams.', 12, '#e0e7ff'), button('pricing_pro_cta', 'Start free trial', '#8b5cf6')], '#312e81', '#6366f1'),
+      card('pricing_team', [text('pricing_team_name', 'TEAM', 11, '#64748b', 'bold'), text('pricing_team_price', '$49 / month', 24, '#0f172a', 'bold'), text('pricing_team_desc', 'Collaboration at scale.', 12, '#64748b'), button('pricing_team_cta', 'Contact sales', '#0f766e')]),
+    ]},
+  },
+  {
+    id: 'premium_media_player', name: 'Media Player Card', category: 'Premium Components',
+    description: 'Compact audio/video player treatment with cover placeholder, timeline and playback controls.',
+    styleName: 'Media Studio',
+    node: card('premium_media_player', [
+      { id: 'media_cover', type: 'Container', style: { height: 110, backgroundColor: '#172554', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }, children: [text('media_cover_symbol', '♫', 42, '#bfdbfe', 'bold')] },
+      text('media_title', 'Midnight Sessions', 17, '#0f172a', 'bold'), text('media_artist', 'Original audio • 03:42', 11, '#64748b'),
+      { id: 'media_progress', type: 'ProgressBar', props: { label: '01:24 / 03:42', progress: 38, barColor: '#6366f1' }, style: { marginVertical: 8 } },
+      { id: 'media_controls', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }, children: [text('media_prev', '◀◀', 16, '#475569'), text('media_play', '▶', 25, '#4f46e5', 'bold'), text('media_next', '▶▶', 16, '#475569')] },
+    ]),
+  },
+  {
+    id: 'premium_stats_glass', name: 'Glass Analytics KPI', category: 'Premium Components',
+    description: 'Dark glass-inspired metric card with trend indicator, value and progress visualization.',
+    styleName: 'Glass Analytics',
+    node: card('premium_stats_glass', [
+      text('stats_label', 'TOTAL REVENUE', 10, '#a5b4fc', 'bold'), text('stats_value', '$128,450', 30, '#ffffff', 'bold'),
+      text('stats_trend', '↗  +18.6% vs last month', 12, '#6ee7b7', 'bold'),
+      { id: 'stats_chart', type: 'Graph', props: { title: 'Performance trend', values: [24, 32, 28, 45, 42, 61, 74] }, style: { height: 90 } },
+    ], '#111827', '#3730a3'),
+  },
+  {
+    id: 'premium_notification', name: 'Smart Notification Toast', category: 'Premium Components',
+    description: 'Compact notification with icon, message, timestamp and action affordance.',
+    styleName: 'Notification Surface',
+    node: card('premium_notification', [
+      { id: 'notification_row', type: 'Container', style: { flexDirection: 'row', alignItems: 'center', gap: 10 }, children: [
+        { id: 'notification_icon', type: 'Icon', props: { iconSymbol: '✦' }, style: { fontSize: 25, color: '#4f46e5' } },
+        { id: 'notification_copy', type: 'Container', style: { flex: 1 }, children: [text('notification_title', 'Your design is ready', 13, '#0f172a', 'bold'), text('notification_body', 'Your latest export finished successfully.', 11, '#64748b')] },
+        text('notification_time', 'now', 10, '#94a3b8'),
+      ]},
+      text('notification_action', 'View export  →', 11, '#4f46e5', 'bold'),
+    ]),
+  },
+  {
+    id: 'premium_profile_completion', name: 'Profile Completion Panel', category: 'Premium Components',
+    description: 'Onboarding progress card with completion meter and next-step action.',
+    styleName: 'Onboarding Pro',
+    node: card('premium_profile_completion', [
+      text('completion_label', 'YOUR WORKSPACE', 10, '#64748b', 'bold'), text('completion_title', 'Complete your profile', 19, '#0f172a', 'bold'),
+      { id: 'completion_progress', type: 'ProgressBar', props: { label: '3 of 5 steps completed', progress: 60, barColor: '#0d9488' }, style: { marginVertical: 8 } },
+      text('completion_tip', 'Add a profile image and connect your social accounts to finish setup.', 12, '#64748b'),
+      button('completion_action', 'Continue setup', '#0f766e'),
+    ]),
+  },
+  {
+    id: 'premium_social_post', name: 'Social Post Composer', category: 'Premium Components',
+    description: 'Social content composer with avatar, text entry placeholder, media action row and publish CTA.',
+    styleName: 'Social Creator',
+    node: card('premium_social_post', [
+      { id: 'social_author', type: 'Container', style: { flexDirection: 'row', alignItems: 'center', gap: 8 }, children: [{ id: 'social_avatar', type: 'Icon', props: { iconSymbol: '◉' }, style: { fontSize: 32, color: '#7c3aed' } }, text('social_author_name', 'Your creator profile', 13, '#0f172a', 'bold')] },
+      text('social_prompt', 'What would you like to share with your community?', 14, '#475569'),
+      { id: 'social_media_actions', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 8 }, children: [text('social_photo', '▧ Photo', 11, '#0d9488'), text('social_video', '▷ Video', 11, '#7c3aed'), text('social_tag', '@ Mention', 11, '#2563eb')] },
+      button('social_publish', 'Prepare post', '#7c3aed'),
+    ]),
+  },
+  {
+    id: 'premium_feature_comparison', name: 'Feature Comparison Table', category: 'Premium Components',
+    description: 'Plan comparison layout with feature rows and highlighted recommended tier.',
+    styleName: 'Comparison Grid',
+    node: card('premium_feature_comparison', [
+      text('compare_title', 'Compare plans', 20, '#0f172a', 'bold'),
+      { id: 'compare_header', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-between' }, children: [text('compare_feature', 'FEATURE', 10, '#64748b', 'bold'), text('compare_free', 'FREE', 10, '#64748b', 'bold'), text('compare_pro', 'PRO', 10, '#4f46e5', 'bold')] },
+      ...['Projects          3       Unlimited','Cloud assets      —       ✓','Premium kits      —       ✓','Priority export   —       ✓'].map((line,i)=>text('compare_row_'+i,line,11,'#334155')),
+      button('compare_action', 'Choose Pro', '#4f46e5'),
+    ]),
+  },
+
 ];
 
-export const DESIGN_PRESET_CATEGORIES: DesignPresetCategory[] = ['Complete Screens', 'Component Kits', 'Navigation', 'Forms', 'Cards & Content'];
+export const DESIGN_PRESET_CATEGORIES: DesignPresetCategory[] = ['Complete Screens', 'Component Kits', 'Navigation', 'Forms', 'Cards & Content', 'Premium Components'];
