@@ -112,7 +112,7 @@ export const ReleaseVersionStudio = () => {
               value={currentVersion}
               onChangeText={setCurrentVersion}
               placeholder="1.0.0"
-              placeholderTextColor="#64748b"
+              placeholderTextColor="#7186B4"
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -123,7 +123,7 @@ export const ReleaseVersionStudio = () => {
               onChangeText={setCurrentVersionCode}
               placeholder="10000"
               keyboardType="numeric"
-              placeholderTextColor="#64748b"
+              placeholderTextColor="#7186B4"
             />
           </View>
         </View>
@@ -134,7 +134,7 @@ export const ReleaseVersionStudio = () => {
           value={releaseTitle}
           onChangeText={setReleaseTitle}
           placeholder="Brief release summary..."
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
         />
 
         {/* Result Preview Box */}
@@ -188,32 +188,32 @@ export const ReleaseVersionStudio = () => {
 
 const styles = StyleSheet.create({
   container: { padding: 14, flex: 1 },
-  title: { fontSize: 15, fontWeight: 'bold', color: '#f8fafc', marginBottom: 2 },
-  subtitle: { fontSize: 11, color: '#94a3b8', marginBottom: 12 },
-  highlight: { color: '#38bdf8', fontWeight: 'bold' },
-  card: { backgroundColor: '#1e293b', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#334155', marginBottom: 12 },
-  cardHeader: { fontSize: 12, fontWeight: 'bold', color: '#cbd5e1', marginBottom: 8 },
+  title: { fontSize: 15, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 2 },
+  subtitle: { fontSize: 11, color: '#9AADD6', marginBottom: 12 },
+  highlight: { color: '#38E8F2', fontWeight: 'bold' },
+  card: { backgroundColor: '#111B35', padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#263B68', marginBottom: 12 },
+  cardHeader: { fontSize: 12, fontWeight: 'bold', color: '#C7D5F1', marginBottom: 8 },
   bumpRow: { flexDirection: 'row', gap: 6, marginBottom: 12 },
-  bumpBtn: { flex: 1, paddingVertical: 6, backgroundColor: '#0f172a', borderRadius: 6, alignItems: 'center', borderWidth: 1, borderColor: '#334155' },
-  activeBumpBtn: { backgroundColor: '#2563eb', borderColor: '#3b82f6' },
-  bumpBtnText: { fontSize: 11, fontWeight: 'bold', color: '#94a3b8' },
+  bumpBtn: { flex: 1, paddingVertical: 6, backgroundColor: '#080D1F', borderRadius: 6, alignItems: 'center', borderWidth: 1, borderColor: '#263B68' },
+  activeBumpBtn: { backgroundColor: '#398BFF', borderColor: '#398BFF' },
+  bumpBtnText: { fontSize: 11, fontWeight: 'bold', color: '#9AADD6' },
   activeBumpText: { color: '#ffffff' },
   inputGrid: { flexDirection: 'row', gap: 8, marginBottom: 8 },
-  inputLabel: { fontSize: 10, color: '#94a3b8', marginBottom: 4, fontWeight: 'bold' },
-  textInput: { backgroundColor: '#0f172a', color: '#f8fafc', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontSize: 11, marginBottom: 8 },
+  inputLabel: { fontSize: 10, color: '#9AADD6', marginBottom: 4, fontWeight: 'bold' },
+  textInput: { backgroundColor: '#080D1F', color: '#F4F7FF', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#475569', fontSize: 11, marginBottom: 8 },
   versionBadgeRow: { flexDirection: 'row', gap: 8, marginTop: 4 },
-  versionPill: { flex: 1, backgroundColor: '#0f172a', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155', alignItems: 'center' },
-  pillLabel: { fontSize: 10, color: '#94a3b8' },
+  versionPill: { flex: 1, backgroundColor: '#080D1F', padding: 8, borderRadius: 6, borderWidth: 1, borderColor: '#263B68', alignItems: 'center' },
+  pillLabel: { fontSize: 10, color: '#9AADD6' },
   pillValue: { fontSize: 14, fontWeight: 'bold', color: '#10b981', marginTop: 2 },
-  codeCard: { backgroundColor: '#0f172a', borderRadius: 8, borderWidth: 1, borderColor: '#334155', padding: 10, marginBottom: 16 },
+  codeCard: { backgroundColor: '#080D1F', borderRadius: 8, borderWidth: 1, borderColor: '#263B68', padding: 10, marginBottom: 16 },
   codeHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   tabToggleRow: { flexDirection: 'row', gap: 6 },
-  toggleTab: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, backgroundColor: '#1e293b' },
-  activeToggleTab: { backgroundColor: '#3b82f6' },
-  toggleTabText: { fontSize: 10, color: '#94a3b8', fontWeight: 'bold' },
+  toggleTab: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, backgroundColor: '#111B35' },
+  activeToggleTab: { backgroundColor: '#398BFF' },
+  toggleTabText: { fontSize: 10, color: '#9AADD6', fontWeight: 'bold' },
   activeToggleText: { color: '#ffffff' },
-  copyBtn: { backgroundColor: '#334155', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
-  copyBtnText: { fontSize: 10, color: '#f8fafc', fontWeight: 'bold' },
-  codeScroll: { backgroundColor: '#1e293b', padding: 10, borderRadius: 6 },
-  codeText: { color: '#f8fafc', fontFamily: 'monospace', fontSize: 11, lineHeight: 16 },
+  copyBtn: { backgroundColor: '#263B68', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+  copyBtnText: { fontSize: 10, color: '#F4F7FF', fontWeight: 'bold' },
+  codeScroll: { backgroundColor: '#111B35', padding: 10, borderRadius: 6 },
+  codeText: { color: '#F4F7FF', fontFamily: 'monospace', fontSize: 11, lineHeight: 16 },
 });
