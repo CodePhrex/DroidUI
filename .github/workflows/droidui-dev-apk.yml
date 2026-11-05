@@ -80,6 +80,25 @@ jobs:
           echo "REAL_DROIDUI_APK=$APK"
           ls -lh "$APK"
 
+      - name: Verify APK identity and embedded DroidUI application bundle
+        working-directory: app
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          AAPT="$ANDROID_HOME/build-tools/34.0.0/aapt"
+          BADGING="$("$AAPT" dump badging "$APK")"
+          grep -F "package: name='com.codephrex.droidstudio'" <<< "$BADGING"
+          grep -F "application-label:'Droid Studio UI/UX'" <<< "$BADGING"
+          unzip -l "$APK" | grep -E 'assets/index.android.bundle        uses: actions/upload-artifact@v4
+        with:
+          name: droidui-real-dev-apk-${{ github.sha }}
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+          echo "Verified: this artifact is the DroidUI application, not the generated test fixture."
+
       - name: Upload real DroidUI development APK
         uses: actions/upload-artifact@v4
         with:
