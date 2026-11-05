@@ -50,7 +50,7 @@ The icon fonts have distinct licenses and attribution requirements. Before distr
 ## Device Intelligence
 
 The Device Detection Studio uses:
-- `expo-device` for brand, manufacturer, model name/model identifier, and OS version.
+- React Native `Platform.constants` for Android brand, manufacturer, model, build fingerprint, and OS release where the OS exposes them.
 - React Native `Dimensions` for available window and screen dimensions.
 - `PixelRatio` to distinguish logical dp from physical pixels.
 
@@ -86,7 +86,7 @@ The template is a starting artboard and not a complete OEM skin or exact hardwar
 ## Dependencies
 
 - `@expo/vector-icons` for bundled vector icon families.
-- `expo-device` for device metadata.
+- React Native `Platform.constants` and window metrics; no additional device package required.
 
 Keep dependency versions aligned with the project's Expo SDK and regenerate/commit the package lockfile through the repository's normal dependency workflow.
 
