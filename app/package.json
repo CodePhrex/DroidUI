@@ -11,7 +11,8 @@
     "test:validation": "node ../scripts/project-validation-tests.cjs",
     "test:editor-state": "node ../scripts/editor-state-validation.cjs",
     "test:android-generation": "node ../scripts/android-project-generation-validation.cjs",
-    "build:android-fixture": "node ../scripts/generate-android-build-fixture.cjs"
+    "build:android-fixture": "node ../scripts/generate-android-build-fixture.cjs",
+    "release:integrity": "node ../scripts/release-integrity.cjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",

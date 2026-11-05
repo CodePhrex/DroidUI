@@ -5,8 +5,20 @@
     "version": "7.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "assetBundlePatterns": ["**/*"],
-    "ios": {"supportsTablet": true},
-    "android": {"package": "com.codephrex.droidstudio"}
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.codephrex.droidstudio"
+    },
+    "splash": {
+      "backgroundColor": "#0B1020"
+    },
+    "plugins": [
+      "./plugins/withAndroidSplashBackground"
+    ]
   }
 }

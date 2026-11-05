@@ -70,6 +70,9 @@ jobs:
         working-directory: app
         run: npm run test:android-generation
 
+      - name: Validate release version consistency
+        run: npm run release:integrity --prefix app
+
       - name: Validate Expo configuration
         working-directory: app
         run: npx expo config --type public
