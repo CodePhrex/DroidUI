@@ -160,7 +160,7 @@ export const AssetPickerStudio = () => {
         </View>
       )}
       <Text style={styles.sectionHeader}>Search Icon Library</Text>
-      <TextInput style={styles.searchInput} placeholder="Filter icons (e.g., home, play, battery, user)..." value={searchQuery} onChangeText={setSearchQuery} placeholderTextColor="#64748b" />
+      <TextInput style={styles.searchInput} placeholder="Filter icons (e.g., home, play, battery, user)..." value={searchQuery} onChangeText={setSearchQuery} placeholderTextColor="#7186B4" />
       <ScrollView style={styles.iconScroll}>
         {filteredCategories.map((cat) => (
           <View key={cat.category} style={styles.categoryBlock}>
@@ -179,18 +179,18 @@ export const AssetPickerStudio = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 12 },
-  title: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc', marginBottom: 10 },
-  galleryBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#2563eb', padding: 10, borderRadius: 8, gap: 8, marginBottom: 12 },
+  title: { fontSize: 14, fontWeight: 'bold', color: '#F4F7FF', marginBottom: 10 },
+  galleryBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#398BFF', padding: 10, borderRadius: 8, gap: 8, marginBottom: 12 },
   galleryBtnIcon: { fontSize: 16 }, galleryBtnText: { color: '#ffffff', fontWeight: 'bold', fontSize: 12 },
-  sectionHeader: { fontSize: 12, fontWeight: '600', color: '#38bdf8', marginBottom: 6, marginTop: 6 },
-  emptyText: { fontSize: 11, color: '#64748b', marginBottom: 8 }, assetList: { marginBottom: 8 },
-  assetRow: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#0f172a', borderWidth: 1, borderColor: '#334155', borderRadius: 7, padding: 6, marginBottom: 5 },
-  assetPreview: { width: 34, height: 34, borderRadius: 5, backgroundColor: '#1e293b' }, assetDetails: { flex: 1, minWidth: 80 }, assetName: { color: '#f8fafc', fontSize: 11, fontWeight: '600' },
-  assetMeta: { color: '#64748b', fontSize: 9, marginTop: 2 }, renameInput: { color: '#fff', fontSize: 11, borderBottomWidth: 1, borderBottomColor: '#38bdf8', paddingVertical: 2 },
-  smallBtn: { paddingHorizontal: 6, paddingVertical: 5, borderRadius: 5, backgroundColor: '#334155' }, deleteBtn: { paddingHorizontal: 6, paddingVertical: 5, borderRadius: 5, backgroundColor: '#7f1d1d' }, smallBtnText: { color: '#fff', fontSize: 9, fontWeight: '700' },
+  sectionHeader: { fontSize: 12, fontWeight: '600', color: '#38E8F2', marginBottom: 6, marginTop: 6 },
+  emptyText: { fontSize: 11, color: '#7186B4', marginBottom: 8 }, assetList: { marginBottom: 8 },
+  assetRow: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#080D1F', borderWidth: 1, borderColor: '#263B68', borderRadius: 7, padding: 6, marginBottom: 5 },
+  assetPreview: { width: 34, height: 34, borderRadius: 5, backgroundColor: '#111B35' }, assetDetails: { flex: 1, minWidth: 80 }, assetName: { color: '#F4F7FF', fontSize: 11, fontWeight: '600' },
+  assetMeta: { color: '#7186B4', fontSize: 9, marginTop: 2 }, renameInput: { color: '#fff', fontSize: 11, borderBottomWidth: 1, borderBottomColor: '#38E8F2', paddingVertical: 2 },
+  smallBtn: { paddingHorizontal: 6, paddingVertical: 5, borderRadius: 5, backgroundColor: '#263B68' }, deleteBtn: { paddingHorizontal: 6, paddingVertical: 5, borderRadius: 5, backgroundColor: '#7f1d1d' }, smallBtnText: { color: '#fff', fontSize: 9, fontWeight: '700' },
   missingRow: { backgroundColor: '#451a03', padding: 7, borderRadius: 6, marginBottom: 5 }, missingText: { color: '#fbbf24', fontSize: 10 },
-  searchInput: { backgroundColor: '#0f172a', color: '#ffffff', paddingHorizontal: 10, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: '#334155', fontSize: 12, marginBottom: 10 },
-  iconScroll: { flex: 1 }, categoryBlock: { marginBottom: 14 }, categoryTitle: { fontSize: 11, fontWeight: 'bold', color: '#cbd5e1', marginBottom: 6 },
-  iconGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, iconTile: { width: 68, height: 58, backgroundColor: '#1e293b', borderRadius: 8, borderWidth: 1, borderColor: '#334155', alignItems: 'center', justifyContent: 'center', padding: 4 },
-  iconSymbol: { fontSize: 20 }, iconName: { fontSize: 9, color: '#94a3b8', marginTop: 2, textAlign: 'center' },
+  searchInput: { backgroundColor: '#080D1F', color: '#ffffff', paddingHorizontal: 10, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: '#263B68', fontSize: 12, marginBottom: 10 },
+  iconScroll: { flex: 1 }, categoryBlock: { marginBottom: 14 }, categoryTitle: { fontSize: 11, fontWeight: 'bold', color: '#C7D5F1', marginBottom: 6 },
+  iconGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, iconTile: { width: 68, height: 58, backgroundColor: '#111B35', borderRadius: 8, borderWidth: 1, borderColor: '#263B68', alignItems: 'center', justifyContent: 'center', padding: 4 },
+  iconSymbol: { fontSize: 20 }, iconName: { fontSize: 9, color: '#9AADD6', marginTop: 2, textAlign: 'center' },
 });
