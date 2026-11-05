@@ -35,7 +35,8 @@ export function DeviceDetectionStudio({ onDetected }: { onDetected?: () => void 
   const detect = () => {
     const next = detectCurrentDeviceProfile();
     setProfile(next);
-    setStatus('Device profile detected');\n    onDetected?.();
+    setStatus('Device profile detected');
+    onDetected?.();
   };
   return <View style={s.root}>
     <View style={s.hero}><Text style={s.kicker}>DEVICE INTELLIGENCE</Text><Text style={s.title}>Detect & Design</Text><Text style={s.copy}>Read the current Android device identity and live display metrics, then create a project canvas sized to its available screen in dp.</Text>
