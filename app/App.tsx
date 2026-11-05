@@ -64,7 +64,7 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
 
-  const currentVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
+  const currentVP = activeViewport === 'detected_device' ? require('./src/device/deviceProfile').detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
   const handleSaveProject = async () => {
     try {
@@ -238,7 +238,7 @@ export default function App() {
           </ScrollView>
 
           {activeTab === 'icons' && <IconGalleryStudio />}
-          {activeTab === 'device' && <DeviceDetectionStudio />}
+          {activeTab === 'device' && <DeviceDetectionStudio onDetected={() => setActiveViewport('detected_device')} />}
           {activeTab === 'inspector' && <PropertyInspector />}
           {activeTab === 'deeplink' && <DeepLinkAndIconStudio />}
           {activeTab === 'release' && <ReleaseVersionStudio />}
