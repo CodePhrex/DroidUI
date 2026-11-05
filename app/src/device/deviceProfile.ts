@@ -27,7 +27,8 @@ export function detectCurrentDeviceProfile(): DetectedDeviceProfile {
   const heightDp = Math.round(window.height);
   const widthPx = Math.round(screen.width * pixelRatio);
   const heightPx = Math.round(screen.height * pixelRatio);
-  const native = Platform.constants as unknown as { Model?: string; Brand?: string; Manufacturer?: string; Release?: string; Fingerprint?: string };\n  const modelName = native.Model || 'Android device';
+  const native = Platform.constants as unknown as { Model?: string; Brand?: string; Manufacturer?: string; Release?: string; Fingerprint?: string };
+  const modelName = native.Model || 'Android device';
   const viewport: ViewportSpec = {
     id: 'detected_device' as any,
     name: 'My Device',
