@@ -23,6 +23,7 @@ import { LayerReorderManager } from './src/components/LayerReorderManager';
 import { TemplateLibrary } from './src/templates/TemplateLibrary';
 import { ThemeManager } from './src/components/ThemeManager';
 import { DesignSystemStudio } from './src/components/DesignSystemStudio';
+import { BrandMark, BrandSplash } from './src/components/DroidUIBrand';
 import { ProjectManager } from './src/components/ProjectManager';
 import { AssetPickerStudio } from './src/components/AssetPickerStudio';
 import { ViewportSelector, VIEWPORTS, ViewportMode } from './src/components/ViewportSelector';
@@ -65,6 +66,7 @@ export default function App() {
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
+  const [showBrandSplash, setShowBrandSplash] = useState(true);
 
   const currentVP = activeViewport === 'detected_device' ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
@@ -100,7 +102,7 @@ export default function App() {
       {/* Studio Top Navigation Header Bar */}
       <View style={[styles.navbar, { backgroundColor: theme.bgSurface, borderColor: theme.border }]}>
         <View style={styles.brandGroup}>
-          <Text style={[styles.logoTitle, { color: theme.textPrimary }]}>◈ DroidUI Studio</Text>
+          <BrandMark size={34} compact />
           <View style={[styles.projectBadge, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]}>
             <Text style={[styles.projectBadgeText, { color: theme.textSecondary }]}>{currentProjectName}</Text>
           </View>
@@ -300,13 +302,14 @@ export default function App() {
           </View>
         </View>
       </Modal>
+      {showBrandSplash && <BrandSplash onFinish={() => setShowBrandSplash(false)} />}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  navbar: { flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: 1, gap: 8 },
+  navbar: { flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', paddingHorizontal: 14, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: '#263B68', gap: 9 },
   brandGroup: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' },
   logoTitle: { fontSize: 17, fontWeight: '900', letterSpacing: 0.3 },
   projectBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12 },
@@ -325,7 +328,7 @@ const styles = StyleSheet.create({
   panelArea: { flex: 1, borderTopWidth: 1 },
   tabScroll: { borderBottomWidth: 1, maxHeight: 42 },
   tab: { paddingHorizontal: 16, paddingVertical: 10, alignItems: 'center' },
-  activeTab: { borderBottomWidth: 2, borderBottomColor: '#2563eb' },
+  activeTab: { borderBottomWidth: 2, borderBottomColor: '#38E8F2', backgroundColor: 'rgba(56,232,242,0.07)' },
   tabText: { fontSize: 11, fontWeight: 'bold' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', padding: 20 },
   modalContent: { padding: 16, borderRadius: 12, maxHeight: '80%' },
