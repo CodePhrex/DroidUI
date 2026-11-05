@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { ComponentNode } from '../types/schema';
 import { DESIGN_PRESETS, DESIGN_PRESET_CATEGORIES } from './designPresets';
