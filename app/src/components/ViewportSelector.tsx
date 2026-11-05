@@ -104,7 +104,8 @@ interface Props {
 }
 
 export const ViewportSelector: React.FC<Props> = ({ activeViewport, onSelectViewport }) => {
-  const detected = activeViewport === 'detected_device';\n  const activeVP = detected ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
+  const detected = activeViewport === 'detected_device';
+  const activeVP = detected ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
   return (
     <View style={styles.container}>
