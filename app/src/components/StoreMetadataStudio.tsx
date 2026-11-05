@@ -54,7 +54,7 @@ export const StoreMetadataStudio = () => {
           onChangeText={setAppName}
           style={styles.input}
           placeholder="My Android App"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           accessibilityLabel="App name"
         />
 
@@ -64,7 +64,7 @@ export const StoreMetadataStudio = () => {
           onChangeText={setShortDesc}
           style={[styles.input, styles.multiline]}
           placeholder="Describe the app"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           multiline
           accessibilityLabel="Short description"
         />
@@ -75,7 +75,7 @@ export const StoreMetadataStudio = () => {
           onChangeText={setCategory}
           style={styles.input}
           placeholder="Tools & Productivity"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           accessibilityLabel="App category"
         />
 
@@ -87,7 +87,7 @@ export const StoreMetadataStudio = () => {
           keyboardType="email-address"
           autoCapitalize="none"
           placeholder="support@example.com"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           accessibilityLabel="Support email"
         />
 
@@ -99,7 +99,7 @@ export const StoreMetadataStudio = () => {
           keyboardType="url"
           autoCapitalize="none"
           placeholder="https://example.com/privacy"
-          placeholderTextColor="#64748b"
+          placeholderTextColor="#7186B4"
           accessibilityLabel="Privacy policy URL"
         />
       </View>
@@ -134,22 +134,22 @@ export const StoreMetadataStudio = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0f172a' },
+  container: { flex: 1, backgroundColor: '#080D1F' },
   content: { padding: 16, paddingBottom: 40, gap: 16 },
   header: { gap: 6 },
-  title: { color: '#f8fafc', fontSize: 24, fontWeight: '700' },
-  subtitle: { color: '#94a3b8', fontSize: 14, lineHeight: 20 },
+  title: { color: '#F4F7FF', fontSize: 24, fontWeight: '700' },
+  subtitle: { color: '#9AADD6', fontSize: 14, lineHeight: 20 },
   card: { backgroundColor: '#111827', borderRadius: 12, padding: 16, gap: 8 },
-  sectionTitle: { color: '#f8fafc', fontSize: 17, fontWeight: '700', marginBottom: 4 },
-  label: { color: '#cbd5e1', fontSize: 13, fontWeight: '600', marginTop: 6 },
+  sectionTitle: { color: '#F4F7FF', fontSize: 17, fontWeight: '700', marginBottom: 4 },
+  label: { color: '#C7D5F1', fontSize: 13, fontWeight: '600', marginTop: 6 },
   input: {
     minHeight: 44,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#263B68',
     borderRadius: 8,
     paddingHorizontal: 12,
-    color: '#f8fafc',
-    backgroundColor: '#0f172a',
+    color: '#F4F7FF',
+    backgroundColor: '#080D1F',
   },
   multiline: { minHeight: 76, paddingTop: 10, textAlignVertical: 'top' },
   tabs: { flexDirection: 'row', gap: 8 },
@@ -159,10 +159,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1e293b',
+    backgroundColor: '#111B35',
   },
-  activeTab: { backgroundColor: '#334155' },
-  tabText: { color: '#f8fafc', fontWeight: '600' },
+  activeTab: { backgroundColor: '#263B68' },
+  tabText: { color: '#F4F7FF', fontWeight: '600' },
   outputCard: { backgroundColor: '#111827', borderRadius: 12, padding: 16 },
-  output: { color: '#cbd5e1', fontSize: 13, lineHeight: 20, fontFamily: 'monospace' },
+  output: { color: '#C7D5F1', fontSize: 13, lineHeight: 20, fontFamily: 'monospace' },
 });
