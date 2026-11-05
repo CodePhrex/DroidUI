@@ -12,7 +12,7 @@ import { generateGitHubActionsYAML } from './src/compiler/cicdPipelineGenerator'
 import { UnitTestGeneratorStudio } from './src/components/UnitTestGeneratorStudio';
 import { generateJestTestSpec } from './src/compiler/jestTestGenerator';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useEditorStore } from './src/store/useEditorStore';
 import { CanvasRenderer } from './src/components/CanvasRenderer';
 import { PropertyInspector } from './src/components/PropertyInspector';
@@ -50,7 +50,8 @@ export default function App() {
     currentProjectId,
     currentProjectName,
     undo,
-    redo
+    redo,
+    saveCurrentProject
   } = useEditorStore();
 
   const theme = THEMES[currentTheme] || THEMES.dark;
@@ -60,11 +61,25 @@ export default function App() {
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const currentVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
 
   const toggleThemeMode = () => {
     setTheme(isLightMode ? 'dark' : 'light');
+  };
+
+  const handleQuickSave = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    try {
+      await saveCurrentProject();
+      Alert.alert('Project saved', 'Your current DroidUI design is saved on this device.');
+    } catch (error) {
+      Alert.alert('Save failed', error instanceof Error ? error.message : 'Unable to save this project.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleExport = (format: 'tsx' | 'kotlin' | 'svg' | 'cssinjs' | 'json' | 'test' | 'cicd' | 'store' | 'droidui') => {
@@ -91,7 +106,10 @@ export default function App() {
           </View>
         </View>
 
-        <View style={styles.navActions}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navActions}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#e2e8f0' : '#334155' }]} onPress={handleQuickSave} disabled={isSaving}>
+            <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>{isSaving ? 'Saving…' : '💾 Save'}</Text>
+          </TouchableOpacity>
           {/* Light / Dark UI Toggle Switch */}
           <TouchableOpacity
             style={[styles.themeToggleBtn, { backgroundColor: isLightMode ? '#3b82f6' : '#334155', borderColor: theme.border }]}
@@ -111,7 +129,7 @@ export default function App() {
           <TouchableOpacity style={[styles.exportBtn, { backgroundColor: theme.primary }]} onPress={() => handleExport('tsx')}>
             <Text style={styles.exportBtnText}>🚀 Export App</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
 
       {/* Main Studio Workspace Area */}
@@ -277,12 +295,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  navbar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, borderBottomWidth: 1 },
+  navbar: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 8, borderBottomWidth: 1 },
   brandGroup: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   logoTitle: { fontSize: 15, fontWeight: 'bold' },
   projectBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12 },
   projectBadgeText: { fontSize: 10, fontWeight: 'bold' },
-  navActions: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  navActions: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingLeft: 8 },
   themeToggleBtn: { borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
   themeToggleText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
   navBtn: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
