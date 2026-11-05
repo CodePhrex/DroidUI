@@ -1,4 +1,5 @@
 import React from 'react';
+import { detectCurrentDeviceProfile } from '../device/deviceProfile';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 
 export type ViewportMode =
@@ -102,7 +103,7 @@ interface Props {
 }
 
 export const ViewportSelector: React.FC<Props> = ({ activeViewport, onSelectViewport }) => {
-  const detected = activeViewport === 'detected_device';\n  const activeVP = detected ? require('../device/deviceProfile').detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
+  const detected = activeViewport === 'detected_device';\n  const activeVP = detected ? detectCurrentDeviceProfile().viewport : (VIEWPORTS[activeViewport as Exclude<ViewportMode, 'detected_device'>] || VIEWPORTS.galaxy_s24_ultra);
 
   return (
     <View style={styles.container}>
