@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { ComponentNode } from '../types/schema';
 import { DESIGN_PRESETS, DESIGN_PRESET_CATEGORIES } from './designPresets';
+import { SavedDesignPreset, listCustomDesignPresets, saveCustomDesignPreset, deleteCustomDesignPreset } from './customPresetStorage';
 
 export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; description: string; icon: string; node: ComponentNode }[] = [
   {
@@ -153,6 +154,12 @@ export const TemplateLibrary = () => {
   const { selectedNodeId, rootNode, insertTemplate, applyTemplateAsProject } = useEditorStore();
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [search, setSearch] = useState('');
+  const [customPresets, setCustomPresets] = useState<SavedDesignPreset[]>([]);
+  const [presetName, setPresetName] = useState('');
+  useEffect(() => { listCustomDesignPresets().then(setCustomPresets).catch(() => Alert.alert('Preset library', 'Could not load saved presets.')); }, []);
+  const findNode = (node: ComponentNode, id: string): ComponentNode | null => { if (node.id === id) return node; for (const child of node.children || []) { const found = findNode(child, id); if (found) return found; } return null; };
+  const selectedNode = selectedNodeId ? findNode(rootNode, selectedNodeId) : rootNode;
+  const saveCurrentPreset = async () => { if (!presetName.trim()) { Alert.alert('Name your preset', 'Enter a name before saving.'); return; } if (!selectedNode) { Alert.alert('Nothing selected', 'Select a component or use the full screen to save a preset.'); return; } try { const saved = await saveCustomDesignPreset(presetName, selectedNode); setCustomPresets(current => [saved, ...current]); setPresetName(''); Alert.alert('Preset saved', 'Available in My Presets on this device.'); } catch (error) { Alert.alert('Could not save preset', error instanceof Error ? error.message : 'Please try again.'); } };
   const targetParentId = selectedNodeId || rootNode.id;
   const catalog: CatalogItem[] = useMemo(() => [
     ...PREBUILT_TEMPLATES.map((item, index) => ({
@@ -160,8 +167,9 @@ export const TemplateLibrary = () => {
       category: index < 2 ? 'Component Kits' : 'Complete Screens',
     })),
     ...DESIGN_PRESETS.map((item) => ({ ...item, icon: '✦', deviceTag: item.styleName })),
-  ], []);
-  const categories = ['All', ...DESIGN_PRESET_CATEGORIES];
+    ...customPresets.map(item => ({ ...item, icon: '★', deviceTag: 'Saved on this device' })),
+  ], [customPresets]);
+  const categories = ['All', ...DESIGN_PRESET_CATEGORIES, ...(customPresets.length ? ['My Presets'] : [])];
   const filtered = catalog.filter((item) =>
     (activeCategory === 'All' || item.category === activeCategory) &&
     (item.name + ' ' + item.description + ' ' + item.category).toLowerCase().includes(search.toLowerCase())
@@ -185,10 +193,11 @@ export const TemplateLibrary = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <Text style={styles.resultCount}>{filtered.length} PRELOADED DESIGNS & COMPONENT KITS</Text>
+      <View style={styles.savePanel}><Text style={styles.saveTitle}>Save your own variation</Text><TextInput value={presetName} onChangeText={setPresetName} placeholder={selectedNodeId ? 'Name selected component preset' : 'Name current screen preset'} placeholderTextColor="#94a3b8" style={styles.search} /><TouchableOpacity style={styles.saveBtn} onPress={saveCurrentPreset}><Text style={styles.insertBtnText}>☆ Save selection as preset</Text></TouchableOpacity></View>
+      <Text style={styles.resultCount}>{filtered.length} DESIGNS & COMPONENT KITS</Text>
       <ScrollView style={{ marginTop: 8 }} contentContainerStyle={{ paddingBottom: 24 }}>
         {filtered.map((item) => (
-          <View key={item.id} style={styles.card}>
+          <View key={item.id} style={styles.card}><View style={styles.previewFrame}><PresetMiniPreview node={item.node} /></View>
             <View style={styles.cardHeader}>
               <Text style={styles.cardIcon}>{item.icon || '✦'}</Text>
               <View style={styles.cardMeta}>
@@ -204,6 +213,7 @@ export const TemplateLibrary = () => {
               <TouchableOpacity style={styles.startBtn} onPress={() => applyTemplateAsProject(item.node, item.name)}>
                 <Text style={styles.startBtnText}>Use as starting design</Text>
               </TouchableOpacity>
+              {item.category === 'My Presets' && <TouchableOpacity style={styles.deleteBtn} onPress={() => Alert.alert('Delete preset?', item.name, [{ text: 'Cancel', style: 'cancel' }, { text: 'Delete', style: 'destructive', onPress: () => deleteCustomDesignPreset(item.id).then(() => setCustomPresets(items => items.filter(p => p.id !== item.id))) }])}><Text style={styles.deleteText}>Delete saved preset</Text></TouchableOpacity>}
             </View>
           </View>
         ))}
@@ -215,6 +225,12 @@ export const TemplateLibrary = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 12 },
+  savePanel: { backgroundColor: '#0f172a', borderColor: '#334155', borderWidth: 1, borderRadius: 12, padding: 10, gap: 7, marginTop: 8 },
+  saveTitle: { color: '#e2e8f0', fontSize: 11, fontWeight: '800' },
+  saveBtn: { backgroundColor: '#0f766e', padding: 10, borderRadius: 8, alignItems: 'center' },
+  previewFrame: { height: 112, overflow: 'hidden', backgroundColor: '#f8fafc', borderRadius: 8, padding: 7, marginBottom: 9 },
+  deleteBtn: { padding: 7 },
+  deleteText: { color: '#fca5a5', fontSize: 10, fontWeight: '700' },
   title: { fontSize: 17, fontWeight: '900', color: '#f8fafc', letterSpacing: 0.2 },
   subtitle: { fontSize: 11, color: '#94a3b8', marginTop: 4, marginBottom: 8, lineHeight: 16 },
   search: { backgroundColor: '#0f172a', color: '#f8fafc', borderWidth: 1, borderColor: '#334155', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10, fontSize: 12 },
@@ -238,3 +254,14 @@ const styles = StyleSheet.create({
   startBtnText: { color: '#e2e8f0', fontSize: 10, fontWeight: '800' },
   empty: { color: '#94a3b8', textAlign: 'center', padding: 24, fontSize: 12 },
 });
+
+
+const PresetMiniPreview: React.FC<{ node: ComponentNode }> = ({ node }) => {
+  const children = node.children || []; const style: any = node.style || {};
+  const simple = node.type === 'Text' || node.type === 'Button' || children.length === 0;
+  const label = node.props?.text || node.props?.label || node.props?.placeholder || node.type;
+  return <View style={{ flexDirection: style.flexDirection === 'row' ? 'row' : 'column', backgroundColor: style.backgroundColor || 'transparent', borderRadius: Math.min(Number(style.borderRadius || 8), 12), borderWidth: style.borderWidth ? 1 : 0, borderColor: style.borderColor || '#e2e8f0', padding: Math.min(Number(style.padding || 4), 8), marginBottom: 2, maxWidth: '100%' }}>
+    {simple && <Text numberOfLines={1} style={{ color: style.color || (node.type === 'Button' ? '#fff' : '#334155'), backgroundColor: node.type === 'Button' ? (style.backgroundColor || '#2563eb') : 'transparent', fontSize: Math.min(Number(style.fontSize || 9), 12), fontWeight: style.fontWeight || 'normal', padding: 2 }}>{String(label)}</Text>}
+    {children.slice(0, 5).map(child => <PresetMiniPreview key={child.id} node={child} />)}
+  </View>;
+};
