@@ -300,12 +300,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  navbar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, borderBottomWidth: 1 },
-  brandGroup: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logoTitle: { fontSize: 15, fontWeight: 'bold' },
+  navbar: { flexDirection: 'column', justifyContent: 'center', alignItems: 'stretch', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: 1, gap: 8 },
+  brandGroup: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' },
+  logoTitle: { fontSize: 17, fontWeight: '900', letterSpacing: 0.3 },
   projectBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12 },
   projectBadgeText: { fontSize: 10, fontWeight: 'bold' },
-  navActions: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  navActions: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 6, width: '100%' },
   themeToggleBtn: { borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 20 },
   themeToggleText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
   navBtn: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
