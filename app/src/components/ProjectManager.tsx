@@ -26,10 +26,16 @@ export const ProjectManager = () => {
   }, [currentProjectName]);
 
   const handleSave = async () => {
+    if (isSaving) return;
     setIsSaving(true);
-    await saveCurrentProject(projectNameInput);
-    setIsSaving(false);
-    Alert.alert('Project Saved', `"${projectNameInput}" was saved to local storage.`);
+    try {
+      await saveCurrentProject(projectNameInput);
+      Alert.alert('Project Saved', `"${projectNameInput}" was saved to local storage.`);
+    } catch (error) {
+      Alert.alert('Save Failed', error instanceof Error ? error.message : 'Unable to save this project.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCreateNew = () => {
