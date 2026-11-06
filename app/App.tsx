@@ -36,6 +36,7 @@ import { LocalizationStudio } from './src/components/LocalizationStudio';
 import { PerformanceProfilerStudio } from './src/components/PerformanceProfilerStudio';
 import { THEMES } from './src/theme/themeConfig';
 import { BrandMark, BrandSplash } from './src/components/DroidUIBrand';
+import { FloatingToolWindow } from './src/components/FloatingToolWindow';
 import { generateReactNativeTSX, generateJetpackComposeKotlin } from './src/compiler/codeExporter';
 import { generateSVGVector, generateCSSinJS, generateJSONSchema } from './src/compiler/exportPresets';
 import { generateStoreListingText } from './src/compiler/storeMetadataGenerator';
@@ -68,6 +69,7 @@ export default function App() {
   const [showBrandSplash, setShowBrandSplash] = useState(true);
   const [bootProgress, setBootProgress] = useState(8);
   const [bootStatus, setBootStatus] = useState('Starting DroidUI services');
+  const [floatingPanel, setFloatingPanel] = useState<'toolbox' | 'templates' | 'inspector' | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -150,6 +152,7 @@ export default function App() {
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.navActions}>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70', borderWidth: 1, borderColor: '#398BFF' }]} onPress={() => setFloatingPanel(activeTab === 'templates' ? 'templates' : activeTab === 'inspector' ? 'inspector' : 'toolbox')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>▣ Float window</Text></TouchableOpacity>
           <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={handleQuickSave} disabled={isSaving}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>{isSaving ? 'Saving…' : '💾 Save'}</Text>
           </TouchableOpacity>
@@ -264,6 +267,9 @@ export default function App() {
           </View>
         </View>
       </Modal>
+      <FloatingToolWindow visible={floatingPanel !== null} title={floatingPanel === 'templates' ? 'Template Library' : floatingPanel === 'inspector' ? 'Design Inspector' : 'Creative Toolbox'} subtitle="Drag this title bar to reposition the utility window" onClose={() => setFloatingPanel(null)}>
+        {floatingPanel === 'templates' ? <TemplateLibrary /> : floatingPanel === 'inspector' ? <PropertyInspector /> : <ComponentToolbar />}
+      </FloatingToolWindow>
       {showBrandSplash && <BrandSplash progress={bootProgress} status={bootStatus} onFinish={() => setShowBrandSplash(false)} />}
     </SafeAreaView>
   );
