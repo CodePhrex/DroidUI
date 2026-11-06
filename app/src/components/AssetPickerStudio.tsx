@@ -122,8 +122,13 @@ export const AssetPickerStudio = () => {
   };
 
   const handleSelectIcon = (symbol: string) => {
-    if (selectedNodeId) updateProps(selectedNodeId, { iconSymbol: symbol, name: symbol });
-    else addChildNode(targetParentId, 'Icon');
+    if (selectedNodeId) {
+      updateProps(selectedNodeId, { iconSymbol: symbol, name: symbol });
+      return;
+    }
+    addChildNode(targetParentId, 'Icon');
+    const createdId = useEditorStore.getState().selectedNodeId;
+    if (createdId) useEditorStore.getState().updateProps(createdId, { iconSymbol: symbol, name: symbol });
   };
 
   const filteredCategories = ICON_CATEGORIES.map((cat) => ({
