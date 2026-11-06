@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import React, { useMemo, useRef } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Alert, PanResponder } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { ComponentNode } from '../types/schema';
 import { useEditorStore } from '../store/useEditorStore';
@@ -9,7 +9,30 @@ import { validateAndNormalizeSvg } from '../storage/svgAsset';
 interface Props { node: ComponentNode; previewMode?: boolean; }
 
 export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) => {
-  const { selectedNodeId, selectNode, activeSimMode, activeLocale, i18nDict, activeSplashPreview, splashConfig, duplicateNode, deleteNode, moveChildNode, rootNode } = useEditorStore();
+  const { selectedNodeId, selectNode, activeSimMode, activeLocale, i18nDict, activeSplashPreview, splashConfig, duplicateNode, deleteNode, moveChildNode, rootNode, updateStyle } = useEditorStore();
+  const layoutOrigin = useRef({ x: 0, y: 0 });
+  const dragOrigin = useRef({ x: 0, y: 0 });
+  const panResponder = useMemo(() => PanResponder.create({
+    onStartShouldSetPanResponder: () => false,
+    onMoveShouldSetPanResponder: (_event, gesture) => !previewMode && node.id !== rootNode.id && (Math.abs(gesture.dx) > 6 || Math.abs(gesture.dy) > 6),
+    onPanResponderGrant: () => {
+      selectNode(node.id);
+      dragOrigin.current = node.style.position === 'absolute'
+        ? { x: Number(node.style.left || 0), y: Number(node.style.top || 0) }
+        : { ...layoutOrigin.current };
+    },
+    onPanResponderRelease: (_event, gesture) => {
+      if (node.id === rootNode.id) return;
+      updateStyle(node.id, {
+        position: 'absolute',
+        left: Math.max(0, dragOrigin.current.x + gesture.dx),
+        top: Math.max(0, dragOrigin.current.y + gesture.dy),
+      });
+    },
+  }), [node.id, node.style.position, node.style.left, node.style.top, previewMode, rootNode.id, selectNode, updateStyle]);
+  const trackLayout = (event: any) => {
+    layoutOrigin.current = { x: event.nativeEvent.layout.x, y: event.nativeEvent.layout.y };
+  };
   const isSelected = selectedNodeId === node.id;
   const outlineStyle = previewMode ? { borderWidth: 0, borderColor: 'transparent' } : isSelected ? { borderWidth: 2, borderColor: '#3b82f6' } : { borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' };
   const acc = node.accessibility;
@@ -76,7 +99,7 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
   const wrap = (children: React.ReactNode, style: any = {}) => previewMode ? (
     <View {...accProps} style={[style, node.style, transform, outlineStyle]}>{children}</View>
   ) : (
-    <TouchableOpacity {...accProps} activeOpacity={0.8} onPress={handleNodePress} onLongPress={handleNodeContextMenu} delayLongPress={450} style={[style, node.style, transform, outlineStyle]}>{children}</TouchableOpacity>
+    <TouchableOpacity {...accProps} {...panResponder.panHandlers} onLayout={trackLayout} activeOpacity={0.8} onPress={handleNodePress} onLongPress={handleNodeContextMenu} delayLongPress={450} style={[style, node.style, transform, outlineStyle]}>{children}</TouchableOpacity>
   );
 
   if (node.id === 'root_container' && activeSplashPreview) {
@@ -93,7 +116,7 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
     return previewMode ? (
       <View {...accProps} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</View>
     ) : (
-      <TouchableOpacity {...accProps} activeOpacity={0.9} onPress={handleNodePress} onLongPress={handleNodeContextMenu} delayLongPress={450} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</TouchableOpacity>
+      <TouchableOpacity {...accProps} {...panResponder.panHandlers} onLayout={trackLayout} activeOpacity={0.9} onPress={handleNodePress} onLongPress={handleNodeContextMenu} delayLongPress={450} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</TouchableOpacity>
     );
   }
 
