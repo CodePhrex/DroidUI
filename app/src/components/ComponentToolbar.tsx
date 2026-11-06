@@ -23,7 +23,15 @@ const TOOLBAR_ITEMS: ToolItem[] = [
   { type: 'Icon', label: 'Icon', icon: '✣', category: 'Decorative', description: 'Interface icon' },
   { type: 'Badge', label: 'Badge', icon: '⬡', category: 'Decorative', description: 'Status or label chip' },
 ];
-const CATEGORIES: ToolCategory[] = ['All', 'Layout', 'Text', 'Controls', 'Data', 'Media', 'Decorative'];
+const CATEGORIES: { label: ToolCategory; icon: string; accent: string }[] = [
+  { label: 'All', icon: '✦', accent: '#55DDEB' },
+  { label: 'Layout', icon: '▦', accent: '#65A8FF' },
+  { label: 'Text', icon: 'T', accent: '#B89AFF' },
+  { label: 'Controls', icon: '☷', accent: '#58D6B0' },
+  { label: 'Data', icon: '▥', accent: '#FFCA72' },
+  { label: 'Media', icon: '▧', accent: '#F58CCB' },
+  { label: 'Decorative', icon: '✧', accent: '#A9B5FF' },
+];
 
 export const ComponentToolbar = () => {
   const { selectedNodeId, rootNode, addChildNode } = useEditorStore();
@@ -51,7 +59,21 @@ export const ComponentToolbar = () => {
     </View>
     <TextInput value={query} onChangeText={setQuery} placeholder="Search tools and elements" placeholderTextColor="#8292B4" style={styles.search} returnKeyType="search" />
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryRow}>
-      {CATEGORIES.map(item => <TouchableOpacity key={item} onPress={() => setCategory(item)} style={[styles.categoryChip, category === item && styles.categoryActive]}><Text style={[styles.categoryText, category === item && styles.categoryActiveText]}>{item}</Text></TouchableOpacity>)}
+      {CATEGORIES.map(item => <TouchableOpacity
+        key={item.label}
+        onPress={() => setCategory(item.label)}
+        activeOpacity={0.78}
+        accessibilityRole="button"
+        accessibilityState={{ selected: category === item.label }}
+        accessibilityLabel={`${item.label} elements`}
+        style={[styles.categoryButton, category === item.label && styles.categoryButtonActive, category === item.label && { borderColor: item.accent }]}
+      >
+        <View style={[styles.categoryIconWrap, { backgroundColor: `${item.accent}20` }, category === item.label && { backgroundColor: item.accent }]}>
+          <Text style={[styles.categoryIcon, { color: item.accent }, category === item.label && styles.categoryIconActive]}>{item.icon}</Text>
+        </View>
+        <Text style={[styles.categoryText, category === item.label && styles.categoryActiveText]}>{item.label}</Text>
+        {category === item.label && <View style={[styles.categoryActiveDot, { backgroundColor: item.accent }]} />}
+      </TouchableOpacity>)}
     </ScrollView>
     <ScrollView style={styles.toolScroll} contentContainerStyle={styles.toolGrid}>
       {tools.map(item => <TouchableOpacity key={item.type} style={styles.toolCard} onPress={() => addChildNode(targetParentId, item.type)} activeOpacity={0.78}>
@@ -81,11 +103,15 @@ const styles = StyleSheet.create({
   targetPill: { backgroundColor: '#18294D', borderRadius: 20, paddingHorizontal: 9, paddingVertical: 6, borderWidth: 1, borderColor: '#2A4679' },
   targetText: { color: '#BBD0F5', fontSize: 9, fontWeight: '700' },
   search: { backgroundColor: '#111F3D', color: '#F4F7FF', borderColor: '#2A416C', borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 12, marginBottom: 9 },
-  categoryRow: { gap: 7, paddingBottom: 10 },
-  categoryChip: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 18, backgroundColor: '#152441', borderWidth: 1, borderColor: '#263B61' },
-  categoryActive: { backgroundColor: '#245EB7', borderColor: '#398BFF' },
-  categoryText: { color: '#A9B9D9', fontSize: 10, fontWeight: '700' },
+  categoryRow: { gap: 8, paddingBottom: 12, paddingTop: 2, paddingHorizontal: 1 },
+  categoryButton: { minWidth: 76, minHeight: 62, paddingHorizontal: 10, paddingVertical: 7, borderRadius: 13, backgroundColor: '#142342', borderWidth: 1, borderColor: '#2A416C', alignItems: 'center', justifyContent: 'center', gap: 5 },
+  categoryButtonActive: { backgroundColor: '#1C3157', borderWidth: 1.5, shadowColor: '#398BFF', shadowOpacity: 0.2, shadowRadius: 7, elevation: 3 },
+  categoryIconWrap: { width: 25, height: 25, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  categoryIcon: { fontSize: 15, fontWeight: '900' },
+  categoryIconActive: { color: '#081329' },
+  categoryText: { color: '#A9B9D9', fontSize: 9, fontWeight: '800', letterSpacing: 0.2 },
   categoryActiveText: { color: '#FFFFFF' },
+  categoryActiveDot: { position: 'absolute', top: 5, right: 6, width: 5, height: 5, borderRadius: 3 },
   toolScroll: { flex: 1 },
   toolGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9, paddingBottom: 18 },
   toolCard: { flexGrow: 1, flexBasis: '46%', minWidth: 130, minHeight: 158, flexDirection: 'column', alignItems: 'stretch', backgroundColor: '#142342', borderWidth: 1, borderColor: '#293F68', borderRadius: 12, padding: 9, gap: 8 },
