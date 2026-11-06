@@ -28,11 +28,17 @@ export const PropertyInspector = () => {
 
   const currentProps = selectedNode.props || {};
   const currentStyle = selectedNode.style || {};
+  const selectedLabel = currentProps.text || currentProps.label || currentProps.title || currentProps.assetName || selectedNode.type;
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Properties: {selectedNode.id}</Text>
-      <Text style={styles.typeTag}>Type: {selectedNode.type}</Text>
+      <View style={styles.headerRow}>
+        <View style={styles.headerCopy}>
+          <Text style={styles.header}>Design properties</Text>
+          <Text style={styles.selectedName} numberOfLines={1}>{selectedLabel}</Text>
+        </View>
+        <Text style={styles.typeTag}>{selectedNode.type}</Text>
+      </View>
 
       {/* Transparency / Opacity */}
       <View style={styles.section}>
@@ -51,6 +57,39 @@ export const PropertyInspector = () => {
           ))}
         </View>
       </View>
+
+      {/* Quick color controls */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Surface color</Text>
+        <View style={styles.swatchRow}>
+          {['#0D1730', '#142342', '#FFFFFF', '#398BFF', '#38E8F2', '#9065FF', '#10B981'].map(color => (
+            <TouchableOpacity
+              key={color}
+              accessibilityRole="button"
+              accessibilityLabel="Set selected component surface color"
+              style={[styles.swatch, { backgroundColor: color }, currentStyle.backgroundColor === color && styles.swatchActive]}
+              onPress={() => updateStyle(selectedNode.id, { backgroundColor: color })}
+            />
+          ))}
+        </View>
+      </View>
+
+      {(selectedNode.type === 'Text' || selectedNode.type === 'Button' || selectedNode.type === 'Badge' || selectedNode.type === 'Icon') && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Text / icon color</Text>
+          <View style={styles.swatchRow}>
+            {['#FFFFFF', '#DCE8FF', '#9AADD6', '#0D1730', '#398BFF', '#38E8F2', '#9065FF', '#10B981'].map(color => (
+              <TouchableOpacity
+                key={color}
+                accessibilityRole="button"
+                accessibilityLabel="Set selected component foreground color"
+                style={[styles.swatch, { backgroundColor: color }, currentStyle.color === color && styles.swatchActive]}
+                onPress={() => updateStyle(selectedNode.id, { color })}
+              />
+            ))}
+          </View>
+        </View>
+      )}
 
       {/* Rotation Transform */}
       <View style={styles.section}>
@@ -243,6 +282,12 @@ const styles = StyleSheet.create({
   emptyContainer: { padding: 20, alignItems: 'center' },
   emptyText: { color: '#64748b', fontSize: 12 },
   header: { fontSize: 14, fontWeight: 'bold', color: '#f8fafc' },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 10 },
+  headerCopy: { flex: 1, minWidth: 0 },
+  selectedName: { color: '#9AADD6', fontSize: 11, marginTop: 3 },
+  swatchRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
+  swatch: { width: 28, height: 28, borderRadius: 9, borderWidth: 2, borderColor: '#475569' },
+  swatchActive: { borderColor: '#FFFFFF', borderWidth: 3 },
   typeTag: { fontSize: 11, color: '#3b82f6', marginBottom: 12 },
   section: { marginBottom: 16 },
   sectionTitle: { fontSize: 12, fontWeight: '600', color: '#cbd5e1', marginBottom: 8 },
