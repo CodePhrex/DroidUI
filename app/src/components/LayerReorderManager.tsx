@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { ComponentNode } from '../types/schema';
 
@@ -37,7 +37,7 @@ export const LayerReorderManager = () => {
               <TouchableOpacity accessibilityRole="button" accessibilityLabel="Move layer down" disabled={!canMoveDown} style={[styles.actionBtn, !canMoveDown && styles.disabledBtn]} onPress={() => moveChildNode(parentId, index, index + 1)}>
                 <Text style={styles.actionText}>↓</Text>
               </TouchableOpacity>
-              <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Delete ${getLayerName(node)} layer`} style={[styles.actionBtn, styles.deleteBtn]} onPress={() => deleteNode(node.id)}>
+              <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Delete ${getLayerName(node)} layer`} style={[styles.actionBtn, styles.deleteBtn]} onPress={() => Alert.alert('Delete layer?', 'Remove this element from the design?', [{ text: 'Cancel', style: 'cancel' }, { text: 'Delete', style: 'destructive', onPress: () => deleteNode(node.id) }])}>
                 <Text style={styles.actionText}>×</Text>
               </TouchableOpacity>
             </View>
@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
   content: { paddingBottom: 14 },
   layerBlock: { marginBottom: 5 },
   layerRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  selectRow: { flex: 1, minWidth: 0, minHeight: 38, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 9, paddingVertical: 7, backgroundColor: '#172744', borderRadius: 8, borderWidth: 1, borderColor: '#263B61' },
+  selectRow: { flex: 1, minWidth: 0, minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 9, paddingVertical: 7, backgroundColor: '#172744', borderRadius: 8, borderWidth: 1, borderColor: '#263B61' },
   selectedRow: { backgroundColor: '#1D3B69', borderColor: '#398BFF' },
   layerType: { color: '#68DCEB', fontSize: 9, fontWeight: '800', minWidth: 54 },
   layerName: { flex: 1, color: '#F4F7FF', fontSize: 11, fontWeight: '600' },
   actions: { flexDirection: 'row', gap: 3 },
-  actionBtn: { width: 30, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 7, backgroundColor: '#263F68' },
+  actionBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center', borderRadius: 7, backgroundColor: '#263F68' },
   disabledBtn: { opacity: 0.35 },
   deleteBtn: { backgroundColor: '#6B2838' },
   actionText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
