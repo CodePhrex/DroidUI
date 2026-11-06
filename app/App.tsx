@@ -199,9 +199,6 @@ export default function App() {
         </View>
       </View>
 
-        </View>
-      </View>
-
       {/* Code Export Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
