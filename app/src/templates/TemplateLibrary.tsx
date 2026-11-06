@@ -241,7 +241,25 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
 
 export const TemplateLibrary = () => {
   const { selectedNodeId, rootNode, insertTemplate } = useEditorStore();
-  const targetParentId = selectedNodeId || rootNode.id;
+  const findNode = (node: ComponentNode, id: string): ComponentNode | null => {
+    if (node.id === id) return node;
+    for (const child of node.children || []) {
+      const found = findNode(child, id);
+      if (found) return found;
+    }
+    return null;
+  };
+  const findTargetContainer = (node: ComponentNode, targetId: string, currentContainerId: string): string => {
+    if (node.id === targetId) return node.type === 'Container' || node.type === 'Card' ? node.id : currentContainerId;
+    const nextContainerId = node.type === 'Container' || node.type === 'Card' ? node.id : currentContainerId;
+    for (const child of node.children || []) {
+      const found = findTargetContainer(child, targetId, nextContainerId);
+      if (found !== nextContainerId || child.id === targetId) return found;
+    }
+    return currentContainerId;
+  };
+  const selectedNode = selectedNodeId ? findNode(rootNode, selectedNodeId) : null;
+  const targetParentId = selectedNodeId ? findTargetContainer(rootNode, selectedNodeId, rootNode.id) : rootNode.id;
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const categories = ['All', 'Phone', 'Dashboard', 'Commerce', 'Social', 'Media', 'Wearable', 'TV'];
