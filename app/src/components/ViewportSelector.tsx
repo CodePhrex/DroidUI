@@ -9,7 +9,7 @@ export type ViewportMode =
   | 'pixel_tablet'
   | 'compact_phone'
   | 'wear_os_watch'
-  | 'android_tv';
+  | 'android_tv'\n  | 'galaxy_a15'\n  | 'galaxy_s25_ultra'\n  | 'pixel_9_pro'\n  | 'oneplus_13'\n  | 'redmi_note_14'\n  | 'pixel_fold'\n  | 'galaxy_tab_s10'\n  | 'chromebook';
 
 export interface ViewportSpec {
   id: ViewportMode;
@@ -94,6 +94,15 @@ export const VIEWPORTS: Record<ViewportMode, ViewportSpec> = {
     height: 360,
     icon: '📺',
   },
+  galaxy_a15: { id: 'galaxy_a15', name: 'Galaxy A15', deviceModel: 'Samsung Galaxy A15 / A14', aspectRatio: '19.5:9', width: 360, height: 800, icon: '📱' },
+  galaxy_s25_ultra: { id: 'galaxy_s25_ultra', name: 'Galaxy S25 Ultra', deviceModel: 'Samsung Galaxy S25 Ultra', aspectRatio: '19.5:9', width: 384, height: 832, icon: '📱' },
+  pixel_9_pro: { id: 'pixel_9_pro', name: 'Pixel 9 Pro', deviceModel: 'Google Pixel 9 Pro', aspectRatio: '20:9', width: 384, height: 854, icon: '📱' },
+  oneplus_13: { id: 'oneplus_13', name: 'OnePlus 13', deviceModel: 'OnePlus 13', aspectRatio: '20:9', width: 384, height: 856, icon: '📱' },
+  redmi_note_14: { id: 'redmi_note_14', name: 'Redmi Note 14', deviceModel: 'Xiaomi Redmi Note 14', aspectRatio: '20:9', width: 360, height: 800, icon: '📱' },
+  pixel_fold: { id: 'pixel_fold', name: 'Pixel Fold', deviceModel: 'Google Pixel Fold (Unfolded)', aspectRatio: '6:5', width: 480, height: 600, icon: '📖' },
+  galaxy_tab_s10: { id: 'galaxy_tab_s10', name: 'Galaxy Tab S10', deviceModel: 'Samsung Galaxy Tab S10', aspectRatio: '16:10', width: 600, height: 375, icon: '🖥️' },
+  chromebook: { id: 'chromebook', name: 'Chromebook', deviceModel: 'Android app on Chromebook', aspectRatio: '16:9', width: 720, height: 405, icon: '💻' },
+
 };
 
 interface Props {
