@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { ComponentNode } from '../types/schema';
 import { useEditorStore } from '../store/useEditorStore';
@@ -9,7 +9,7 @@ import { validateAndNormalizeSvg } from '../storage/svgAsset';
 interface Props { node: ComponentNode; previewMode?: boolean; }
 
 export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) => {
-  const { selectedNodeId, selectNode, activeSimMode, activeLocale, i18nDict, activeSplashPreview, splashConfig } = useEditorStore();
+  const { selectedNodeId, selectNode, activeSimMode, activeLocale, i18nDict, activeSplashPreview, splashConfig, duplicateNode, deleteNode, moveChildNode, rootNode } = useEditorStore();
   const isSelected = selectedNodeId === node.id;
   const outlineStyle = previewMode ? { borderWidth: 0, borderColor: 'transparent' } : isSelected ? { borderWidth: 2, borderColor: '#3b82f6' } : { borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' };
   const acc = node.accessibility;
@@ -25,6 +25,39 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
     e.stopPropagation();
     selectNode(node.id);
     if (node.soundEffect?.soundName) playSoundEffect(node.soundEffect.soundName, node.soundEffect.volume || 0.8);
+  };
+  const findParentPosition = (current: ComponentNode, targetId: string): { parentId: string; index: number } | null => {
+    for (let index = 0; index < (current.children || []).length; index += 1) {
+      const child = current.children![index];
+      if (child.id === targetId) return { parentId: current.id, index };
+      const nested = findParentPosition(child, targetId);
+      if (nested) return nested;
+    }
+    return null;
+  };
+  const handleNodeContextMenu = () => {
+    if (previewMode || node.id === rootNode.id) return;
+    selectNode(node.id);
+    const position = findParentPosition(rootNode, node.id);
+    const buttons: Array<{ text: string; onPress?: () => void; style?: 'cancel' | 'destructive' }> = [
+      { text: 'Select / Edit', onPress: () => selectNode(node.id) },
+      { text: 'Duplicate', onPress: () => duplicateNode(node.id) },
+    ];
+    if (position) {
+      buttons.push({ text: 'Move Forward', onPress: () => moveChildNode(position.parentId, position.index, Math.min(position.index + 1, (findNode(rootNode, position.parentId)?.children?.length || 1) - 1)) });
+      buttons.push({ text: 'Move Backward', onPress: () => moveChildNode(position.parentId, position.index, Math.max(0, position.index - 1)) });
+    }
+    buttons.push({ text: 'Delete', style: 'destructive', onPress: () => deleteNode(node.id) });
+    buttons.push({ text: 'Cancel', style: 'cancel' });
+    Alert.alert('Element actions', node.props?.label || node.props?.text || node.type, buttons);
+  };
+  const findNode = (current: ComponentNode, targetId: string): ComponentNode | null => {
+    if (current.id === targetId) return current;
+    for (const child of current.children || []) {
+      const found = findNode(child, targetId);
+      if (found) return found;
+    }
+    return null;
   };
 
   const transform: any = {};
@@ -43,7 +76,7 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
   const wrap = (children: React.ReactNode, style: any = {}) => previewMode ? (
     <View {...accProps} style={[style, node.style, transform, outlineStyle]}>{children}</View>
   ) : (
-    <TouchableOpacity {...accProps} activeOpacity={0.8} onPress={handleNodePress} style={[style, node.style, transform, outlineStyle]}>{children}</TouchableOpacity>
+    <TouchableOpacity {...accProps} activeOpacity={0.8} onPress={handleNodePress} onLongPress={handleNodeContextMenu} delayLongPress={450} style={[style, node.style, transform, outlineStyle]}>{children}</TouchableOpacity>
   );
 
   if (node.id === 'root_container' && activeSplashPreview) {
@@ -60,7 +93,7 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
     return previewMode ? (
       <View {...accProps} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</View>
     ) : (
-      <TouchableOpacity {...accProps} activeOpacity={0.9} onPress={handleNodePress} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</TouchableOpacity>
+      <TouchableOpacity {...accProps} activeOpacity={0.9} onPress={handleNodePress} onLongPress={handleNodeContextMenu} delayLongPress={450} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</TouchableOpacity>
     );
   }
 
