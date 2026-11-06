@@ -69,7 +69,8 @@ export default function App() {
   const [showBrandSplash, setShowBrandSplash] = useState(true);
   const [bootProgress, setBootProgress] = useState(8);
   const [bootStatus, setBootStatus] = useState('Starting DroidUI services');
-  const [floatingPanel, setFloatingPanel] = useState<'toolbox' | 'templates' | 'inspector' | null>(null);
+  const [floatingPanels, setFloatingPanels] = useState<Array<'toolbox' | 'templates' | 'inspector'>>([]);
+  const toggleFloatingPanel = (panel: 'toolbox' | 'templates' | 'inspector') => setFloatingPanels(current => current.includes(panel) ? current.filter(item => item !== panel) : [...current, panel]);
 
   useEffect(() => {
     let mounted = true;
@@ -152,7 +153,9 @@ export default function App() {
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.navActions}>
-          <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70', borderWidth: 1, borderColor: '#398BFF' }]} onPress={() => setFloatingPanel(activeTab === 'templates' ? 'templates' : activeTab === 'inspector' ? 'inspector' : 'toolbox')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>▣ Float window</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70', borderWidth: 1, borderColor: '#398BFF' }]} onPress={() => toggleFloatingPanel('toolbox')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>＋ Toolbox</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70' }]} onPress={() => toggleFloatingPanel('templates')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>▣ Templates</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70' }]} onPress={() => toggleFloatingPanel('inspector')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>◈ Inspector</Text></TouchableOpacity>
           <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={handleQuickSave} disabled={isSaving}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>{isSaving ? 'Saving…' : '💾 Save'}</Text>
           </TouchableOpacity>
@@ -267,9 +270,9 @@ export default function App() {
           </View>
         </View>
       </Modal>
-      <FloatingToolWindow visible={floatingPanel !== null} title={floatingPanel === 'templates' ? 'Template Library' : floatingPanel === 'inspector' ? 'Design Inspector' : 'Creative Toolbox'} subtitle="Drag this title bar to reposition the utility window" onClose={() => setFloatingPanel(null)}>
-        {floatingPanel === 'templates' ? <TemplateLibrary /> : floatingPanel === 'inspector' ? <PropertyInspector /> : <ComponentToolbar />}
-      </FloatingToolWindow>
+      {floatingPanels.map((panel, index) => <FloatingToolWindow key={panel} visible title={panel === 'templates' ? 'Template Library' : panel === 'inspector' ? 'Design Inspector' : 'Creative Toolbox'} subtitle="Drag this title bar to reposition • Multiple windows can stay open" offset={index} onClose={() => setFloatingPanels(current => current.filter(item => item !== panel))}>
+        {panel === 'templates' ? <TemplateLibrary /> : panel === 'inspector' ? <PropertyInspector /> : <ComponentToolbar />}
+      </FloatingToolWindow>)}
       {showBrandSplash && <BrandSplash progress={bootProgress} status={bootStatus} onFinish={() => setShowBrandSplash(false)} />}
     </SafeAreaView>
   );
