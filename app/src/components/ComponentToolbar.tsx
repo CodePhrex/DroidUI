@@ -55,7 +55,17 @@ export const ComponentToolbar = () => {
     </ScrollView>
     <ScrollView style={styles.toolScroll} contentContainerStyle={styles.toolGrid}>
       {tools.map(item => <TouchableOpacity key={item.type} style={styles.toolCard} onPress={() => addChildNode(targetParentId, item.type)} activeOpacity={0.78}>
-        <View style={styles.iconTile}><Text style={styles.toolIcon}>{item.icon}</Text></View><Text style={styles.toolLabel}>{item.label}</Text><Text style={styles.toolDescription} numberOfLines={2}>{item.description}</Text><Text style={styles.addLabel}>＋ Add</Text>
+        <View style={styles.previewTile}>
+          {item.type === 'Text' ? <><View style={styles.previewTextLineWide} /><View style={styles.previewTextLine} /><View style={styles.previewTextLineShort} /></>
+            : item.type === 'Button' ? <View style={styles.previewButton}><Text style={styles.previewButtonText}>Action</Text></View>
+            : item.type === 'Input' ? <View style={styles.previewInput}><Text style={styles.previewMuted}>Enter text…</Text></View>
+            : item.type === 'Image' || item.type === 'SvgVector' || item.type === 'AnimatedAsset' ? <View style={styles.previewMedia}><Text style={styles.previewMediaIcon}>{item.icon}</Text></View>
+            : item.type === 'Graph' ? <View style={styles.previewBars}><View style={[styles.previewBar,{height:15}]} /><View style={[styles.previewBar,{height:25}]} /><View style={[styles.previewBar,{height:19}]} /><View style={[styles.previewBar,{height:31}]} /></View>
+            : item.type === 'Switch' ? <View style={styles.previewSwitch}><View style={styles.previewSwitchDot} /></View>
+            : item.type === 'Checkbox' ? <View style={styles.previewCheck}><Text style={styles.previewCheckText}>✓</Text><View style={styles.previewTextLine} /></View>
+            : <><View style={styles.previewShape} /><View style={styles.previewTextLineWide} /><View style={styles.previewTextLineShort} /></>}
+        </View>
+        <View style={styles.toolCardMeta}><Text style={styles.toolLabel}>{item.label}</Text><Text style={styles.toolDescription} numberOfLines={2}>{item.description}</Text><Text style={styles.addLabel}>＋ Add to canvas</Text></View>
       </TouchableOpacity>)}
       {tools.length === 0 && <Text style={styles.empty}>No matching tools. Try another search.</Text>}
     </ScrollView>
@@ -78,7 +88,25 @@ const styles = StyleSheet.create({
   categoryActiveText: { color: '#FFFFFF' },
   toolScroll: { flex: 1 },
   toolGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9, paddingBottom: 18 },
-  toolCard: { width: '31%', minHeight: 112, backgroundColor: '#142342', borderWidth: 1, borderColor: '#293F68', borderRadius: 12, padding: 9 },
+  toolCard: { width: '48%', minHeight: 150, flexDirection: 'row', alignItems: 'center', backgroundColor: '#142342', borderWidth: 1, borderColor: '#293F68', borderRadius: 12, padding: 9, gap: 9 },
+  toolCardMeta: { flex: 1, minWidth: 0 },
+  previewTile: { width: 74, height: 88, borderRadius: 9, backgroundColor: '#0B1530', borderWidth: 1, borderColor: '#2B4777', alignItems: 'center', justifyContent: 'center', padding: 8, gap: 5 },
+  previewTextLineWide: { width: '90%', height: 5, borderRadius: 3, backgroundColor: '#DCE8FF' },
+  previewTextLine: { width: '72%', height: 4, borderRadius: 3, backgroundColor: '#7795C8' },
+  previewTextLineShort: { width: '48%', height: 4, borderRadius: 3, backgroundColor: '#536F9F', alignSelf: 'flex-start', marginLeft: 3 },
+  previewButton: { backgroundColor: '#398BFF', borderRadius: 6, paddingHorizontal: 11, paddingVertical: 7 },
+  previewButtonText: { color: '#FFFFFF', fontSize: 8, fontWeight: '800' },
+  previewInput: { width: '100%', height: 27, borderRadius: 5, borderWidth: 1, borderColor: '#5876A8', justifyContent: 'center', paddingHorizontal: 5 },
+  previewMuted: { color: '#7892BE', fontSize: 7 },
+  previewMedia: { width: 49, height: 52, borderRadius: 7, backgroundColor: '#1A3765', alignItems: 'center', justifyContent: 'center' },
+  previewMediaIcon: { color: '#59DDEC', fontSize: 24 },
+  previewBars: { height: 48, flexDirection: 'row', alignItems: 'flex-end', gap: 5 },
+  previewBar: { width: 8, borderRadius: 3, backgroundColor: '#38E8F2' },
+  previewSwitch: { width: 42, height: 24, borderRadius: 12, backgroundColor: '#245EB7', justifyContent: 'center', padding: 3 },
+  previewSwitchDot: { width: 18, height: 18, borderRadius: 9, backgroundColor: '#FFFFFF', alignSelf: 'flex-end' },
+  previewCheck: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  previewCheckText: { color: '#FFFFFF', backgroundColor: '#398BFF', overflow: 'hidden', borderRadius: 3, paddingHorizontal: 3, fontSize: 11 },
+  previewShape: { width: 35, height: 25, borderRadius: 6, backgroundColor: '#234B84', borderWidth: 1, borderColor: '#55DDEB' },
   iconTile: { width: 32, height: 32, borderRadius: 9, backgroundColor: '#203D70', alignItems: 'center', justifyContent: 'center', marginBottom: 7 },
   toolIcon: { color: '#55DDEB', fontSize: 19, fontWeight: '800' },
   toolLabel: { color: '#F4F7FF', fontSize: 11, fontWeight: '800' },
