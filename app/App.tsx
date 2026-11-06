@@ -186,11 +186,24 @@ export default function App() {
         {/* Live Device Preview Canvas */}
         <View style={styles.canvasArea}>
           <ViewportSelector activeViewport={activeViewport} onSelectViewport={setActiveViewport} />
-          <ScrollView horizontal contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-            <View style={[styles.deviceFrame, { width: currentVP.width, minHeight: currentVP.height, borderColor: theme.border, backgroundColor: isLightMode ? '#101A36' : 'rgba(0,0,0,0.3)' }]}>
-              <View style={[styles.deviceNotch, { backgroundColor: isLightMode ? '#cbd5e1' : '#111B35' }]} />
-              <CanvasRenderer node={rootNode} />
-            </View>
+          <ScrollView
+            style={styles.canvasScroll}
+            contentContainerStyle={styles.canvasScrollContent}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator
+          >
+            <ScrollView
+              horizontal
+              nestedScrollEnabled
+              showsHorizontalScrollIndicator
+              style={styles.deviceHorizontalScroll}
+              contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'flex-start', minHeight: currentVP.height + 28 }}
+            >
+              <View style={[styles.deviceFrame, { width: currentVP.width, minHeight: currentVP.height, borderColor: theme.border, backgroundColor: isLightMode ? '#101A36' : 'rgba(0,0,0,0.3)' }]}>
+                <View style={[styles.deviceNotch, { backgroundColor: isLightMode ? '#cbd5e1' : '#111B35' }]} />
+                <CanvasRenderer node={rootNode} />
+              </View>
+            </ScrollView>
           </ScrollView>
         </View>
 
@@ -294,6 +307,9 @@ const styles = StyleSheet.create({
   exportBtnText: { color: '#ffffff', fontSize: 11, fontWeight: 'bold' },
   workspace: { flex: 1, flexDirection: 'column' },
   canvasArea: { flex: 1, minHeight: 180, padding: 8, alignItems: 'center' },
+  canvasScroll: { flex: 1, width: '100%' },
+  canvasScrollContent: { flexGrow: 1, alignItems: 'center', paddingBottom: 14 },
+  deviceHorizontalScroll: { width: '100%' },
   deviceFrame: { borderWidth: 2, borderRadius: 24, padding: 12, alignSelf: 'center', shadowColor: '#000', shadowRadius: 10 },
   deviceNotch: { width: 60, height: 6, borderRadius: 3, alignSelf: 'center', marginBottom: 8 },
   panelArea: { height: 318, flexShrink: 0, borderTopWidth: 1 },
