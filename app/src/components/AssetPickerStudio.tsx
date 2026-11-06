@@ -47,6 +47,47 @@ export const ICON_CATEGORIES: IconCategory[] = [
     { name: 'Bluetooth', symbol: 'ᛒ', tags: 'bluetooth connect wireless' }, { name: 'CPU Processor', symbol: '💻', tags: 'cpu computer chip processing' },
     { name: 'Lock Vault', symbol: '🔒', tags: 'lock key secure privacy' }, { name: 'Key Unlock', symbol: '🔑', tags: 'key access unlock auth' },
   ]},
+  { category: 'Productivity & Files', icons: [
+    { name: 'Document', symbol: '▤', tags: 'document file page text' }, { name: 'Folder', symbol: '▰', tags: 'folder directory files' },
+    { name: 'Cloud Upload', symbol: '⇧', tags: 'cloud upload backup' }, { name: 'Cloud Download', symbol: '⇩', tags: 'cloud download restore' },
+    { name: 'Calendar', symbol: '▦', tags: 'calendar date schedule event' }, { name: 'Clock', symbol: '◷', tags: 'clock time timer history' },
+    { name: 'Clipboard', symbol: '▣', tags: 'clipboard copy paste' }, { name: 'Bookmark', symbol: '▮', tags: 'bookmark save favorite' },
+    { name: 'Filter', symbol: '▽', tags: 'filter refine results' }, { name: 'Sort', symbol: '↕', tags: 'sort order arrange' },
+    { name: 'Download', symbol: '↓', tags: 'download save export' }, { name: 'Upload', symbol: '↑', tags: 'upload import send' },
+  ]},
+  { category: 'Finance & Analytics', icons: [
+    { name: 'Wallet', symbol: '▱', tags: 'wallet balance money' }, { name: 'Chart Up', symbol: '↗', tags: 'chart analytics growth trend' },
+    { name: 'Chart Bars', symbol: '▥', tags: 'bar chart statistics data' }, { name: 'Pie Chart', symbol: '◔', tags: 'pie chart analytics' },
+    { name: 'Receipt', symbol: '▧', tags: 'receipt invoice purchase' }, { name: 'Cash', symbol: '＄', tags: 'cash currency payment' },
+    { name: 'Calculator', symbol: '⊞', tags: 'calculator math numbers' }, { name: 'Target', symbol: '◎', tags: 'target goal objective' },
+    { name: 'Trending Down', symbol: '↘', tags: 'down trend loss decline' }, { name: 'Coins', symbol: '◉', tags: 'coins savings finance' },
+  ]},
+  { category: 'Communication & Social', icons: [
+    { name: 'Message', symbol: '▱', tags: 'message chat conversation' }, { name: 'Chat Bubbles', symbol: '▤', tags: 'chat comments discussion' },
+    { name: 'Send', symbol: '➤', tags: 'send message paper plane' }, { name: 'Mail', symbol: '✉', tags: 'email mail inbox' },
+    { name: 'Phone Call', symbol: '⌕', tags: 'phone call contact' }, { name: 'Video Call', symbol: '▣', tags: 'video call meeting' },
+    { name: 'At Mention', symbol: '@', tags: 'mention email social' }, { name: 'Hashtag', symbol: '#', tags: 'hashtag tag topic' },
+    { name: 'Thumbs Up', symbol: '♧', tags: 'like approve vote' }, { name: 'Share', symbol: '⤴', tags: 'share social forward' },
+  ]},
+  { category: 'Design & Development', icons: [
+    { name: 'Code Brackets', symbol: '</>', tags: 'code developer programming' }, { name: 'Terminal', symbol: '>_', tags: 'terminal console shell' },
+    { name: 'Layers', symbol: '▱', tags: 'layers stack design' }, { name: 'Palette', symbol: '◉', tags: 'palette color paint design' },
+    { name: 'Brush', symbol: '✎', tags: 'brush draw design' }, { name: 'Crop', symbol: '⌗', tags: 'crop image resize' },
+    { name: 'Ruler', symbol: '⌁', tags: 'ruler measure dimensions' }, { name: 'Magic Wand', symbol: '✧', tags: 'magic wand effects' },
+    { name: 'Component', symbol: '◫', tags: 'component ui widget' }, { name: 'Layout Grid', symbol: '▦', tags: 'layout grid columns' },
+  ]},
+  { category: 'Travel & Lifestyle', icons: [
+    { name: 'Car', symbol: '▰', tags: 'car vehicle transport' }, { name: 'Airplane', symbol: '✈', tags: 'airplane flight travel' },
+    { name: 'Location', symbol: '⌖', tags: 'location gps map' }, { name: 'Globe', symbol: '◎', tags: 'globe world language' },
+    { name: 'Sun', symbol: '☼', tags: 'sun sunny day' }, { name: 'Moon', symbol: '☾', tags: 'moon night dark' },
+    { name: 'Coffee', symbol: '☕', tags: 'coffee cafe drink' }, { name: 'Restaurant', symbol: '♨', tags: 'restaurant food dining' },
+  ]},
+  { category: 'Security & System', icons: [
+    { name: 'Fingerprint', symbol: '◎', tags: 'fingerprint biometric identity' }, { name: 'Verified', symbol: '✓', tags: 'verified approved secure' },
+    { name: 'Eye View', symbol: '◉', tags: 'eye view visibility show' }, { name: 'Eye Hidden', symbol: '⊘', tags: 'eye hidden privacy hide' },
+    { name: 'Key', symbol: '⚿', tags: 'key password access' }, { name: 'Database', symbol: '▤', tags: 'database storage server' },
+    { name: 'Server', symbol: '▥', tags: 'server hosting infrastructure' }, { name: 'Settings Sliders', symbol: '☷', tags: 'settings preferences tune' },
+  ]},
 ];
 
 export const AssetPickerStudio = () => {
