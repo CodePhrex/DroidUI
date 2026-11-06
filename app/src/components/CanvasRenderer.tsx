@@ -62,7 +62,6 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
     if (previewMode || node.id === rootNode.id) return;
     selectNode(node.id);
     const position = findParentPosition(rootNode, node.id);
-    const position = findParentPosition(rootNode, node.id);
     Alert.alert('Element actions', node.props?.label || node.props?.text || node.type, [
       { text: 'Duplicate', onPress: () => duplicateNode(node.id) },
       { text: 'More actions', onPress: () => {
