@@ -47,7 +47,7 @@ const initialSplash: SplashScreenConfig = {
   logoIcon: '🚀',
   backgroundColor: '#0f172a',
   titleColor: '#ffffff',
-  durationMs: 2000,
+  durationMs: 5000,
   showSpinner: true,
   animationType: 'fade',
 };
