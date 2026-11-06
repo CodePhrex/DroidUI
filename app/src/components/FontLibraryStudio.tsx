@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   chipText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
   actionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, paddingBottom: 8 },
   applyBtn: { flexGrow: 1, flexBasis: 150, backgroundColor: '#3b82f6', padding: 10, borderRadius: 6, alignItems: 'center' },
-  globalBtn: { flexGrow: 1, alignItems: 'center', backgroundColor: '#8b5cf6', padding: 10, borderRadius: 6, alignItems: 'center' },
+  globalBtn: { flexGrow: 1, backgroundColor: '#8b5cf6', padding: 10, borderRadius: 6, alignItems: 'center' },
   disabledBtn: { backgroundColor: '#475569', opacity: 0.6 },
   btnText: { color: '#fff', fontSize: 11, fontWeight: 'bold' },
 });
