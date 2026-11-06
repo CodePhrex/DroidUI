@@ -6,12 +6,12 @@ import { useEditorStore } from '../store/useEditorStore';
 import { playSoundEffect } from '../audio/soundSynthesizer';
 import { validateAndNormalizeSvg } from '../storage/svgAsset';
 
-interface Props { node: ComponentNode; }
+interface Props { node: ComponentNode; previewMode?: boolean; }
 
-export const CanvasRenderer: React.FC<Props> = ({ node }) => {
+export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) => {
   const { selectedNodeId, selectNode, activeSimMode, activeLocale, i18nDict, activeSplashPreview, splashConfig } = useEditorStore();
   const isSelected = selectedNodeId === node.id;
-  const outlineStyle = isSelected ? { borderWidth: 2, borderColor: '#3b82f6' } : { borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' };
+  const outlineStyle = previewMode ? { borderWidth: 0, borderColor: 'transparent' } : isSelected ? { borderWidth: 2, borderColor: '#3b82f6' } : { borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' };
   const acc = node.accessibility;
   const accProps = acc ? {
     accessible: acc.accessible !== false,
@@ -40,7 +40,9 @@ export const CanvasRenderer: React.FC<Props> = ({ node }) => {
   }
 
   const text = (fallback: string, key?: string) => key && i18nDict[key]?.[activeLocale] ? i18nDict[key][activeLocale] : fallback;
-  const wrap = (children: React.ReactNode, style: any = {}) => (
+  const wrap = (children: React.ReactNode, style: any = {}) => previewMode ? (
+    <View {...accProps} style={[style, node.style, transform, outlineStyle]}>{children}</View>
+  ) : (
     <TouchableOpacity {...accProps} activeOpacity={0.8} onPress={handleNodePress} style={[style, node.style, transform, outlineStyle]}>{children}</TouchableOpacity>
   );
 
@@ -53,11 +55,14 @@ export const CanvasRenderer: React.FC<Props> = ({ node }) => {
     </View>;
   }
 
-  if (node.type === 'Container' || node.type === 'Card') return (
-    <TouchableOpacity {...accProps} activeOpacity={0.9} onPress={handleNodePress} style={[node.style, transform, outlineStyle, styles.containerBase]}>
-      {node.children?.map(child => <CanvasRenderer key={child.id} node={child} />)}
-    </TouchableOpacity>
-  );
+  if (node.type === 'Container' || node.type === 'Card') {
+    const content = node.children?.map(child => <CanvasRenderer key={child.id} node={child} previewMode={previewMode} />);
+    return previewMode ? (
+      <View {...accProps} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</View>
+    ) : (
+      <TouchableOpacity {...accProps} activeOpacity={0.9} onPress={handleNodePress} style={[node.style, transform, outlineStyle, styles.containerBase]}>{content}</TouchableOpacity>
+    );
+  }
 
   if (node.type === 'Text') return wrap(<Text style={node.style}>{text(node.props?.text || 'Text', node.props?.i18nKey)}</Text>, { borderRadius: 4, marginVertical: 2 });
 
