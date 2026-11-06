@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useEditorStore } from '../store/useEditorStore';
 import { ComponentNode } from '../types/schema';
 
@@ -243,21 +243,37 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
 export const TemplateLibrary = () => {
   const { selectedNodeId, rootNode, insertTemplate } = useEditorStore();
   const targetParentId = selectedNodeId || rootNode.id;
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('All');
+  const categories = ['All', 'Phone', 'Dashboard', 'Commerce', 'Social', 'Media', 'Wearable', 'TV'];
+  const filteredTemplates = useMemo(() => PREBUILT_TEMPLATES.filter(item => {
+    const matchesQuery = (item.name + ' ' + item.description + ' ' + item.deviceTag).toLowerCase().includes(query.toLowerCase());
+    const matchesCategory = category === 'All' || item.deviceTag.toLowerCase().includes(category.toLowerCase()) || item.name.toLowerCase().includes(category.toLowerCase()) || (category === 'Dashboard' && /dashboard|analytics|wallet/i.test(item.name));
+    return matchesQuery && matchesCategory;
+  }), [query, category]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Device-Tailored Component Templates</Text>
-      <Text style={styles.subtitle}>Target Container: [{targetParentId}]</Text>
-
+      <Text style={styles.subtitle}>Complete, editable screens and components • Target: {targetParentId === rootNode.id ? 'Screen' : 'Selected group'}</Text>
+      <TextInput value={query} onChangeText={setQuery} placeholder="Search templates and devices" placeholderTextColor="#8194B8" style={styles.search} />
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categories}>
+        {categories.map(value => <TouchableOpacity key={value} onPress={() => setCategory(value)} style={[styles.category, category === value && styles.categoryActive]}><Text style={[styles.categoryText, category === value && styles.categoryTextActive]}>{value}</Text></TouchableOpacity>)}
+      </ScrollView>
       <ScrollView style={{ marginTop: 8 }}>
-        {PREBUILT_TEMPLATES.map((item) => (
+        {filteredTemplates.map((item) => (
           <TouchableOpacity
             key={item.id}
             style={styles.card}
             onPress={() => insertTemplate(targetParentId, item.node)}
           >
             <View style={styles.cardHeader}>
-              <Text style={styles.cardIcon}>{item.icon}</Text>
+              <View style={styles.thumbnail}>
+                <View style={[styles.thumbHero, { backgroundColor: item.id === 'commerce_storefront' ? '#BBAA92' : item.id === 'music_player' ? '#7455B7' : item.id === 'social_creator_profile' ? '#6953B5' : item.id === 'finance_overview' ? '#235B9C' : '#25446F' }]}><Text style={styles.thumbHeroText}>{item.icon}</Text></View>
+                <View style={styles.thumbLines}><View style={styles.thumbLineWide} /><View style={styles.thumbLine} /><View style={styles.thumbButton} /></View>
+                <View style={styles.thumbFooter}><View style={styles.thumbDot} /><View style={styles.thumbDot} /><View style={styles.thumbDot} /></View>
+              </View>
+              <View style={styles.cardIconWrap}><Text style={styles.cardIcon}>{item.icon}</Text></View>
               <View style={styles.cardMeta}>
                 <Text style={styles.cardTitle}>{item.name}</Text>
                 <Text style={styles.deviceTag}>Tag: {item.deviceTag}</Text>
@@ -269,6 +285,7 @@ export const TemplateLibrary = () => {
             </View>
           </TouchableOpacity>
         ))}
+        {filteredTemplates.length === 0 && <Text style={styles.empty}>No templates match that search. Try another category.</Text>}
       </ScrollView>
     </View>
   );
@@ -286,7 +303,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#334155',
   },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 },
+  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 9 },
+  search: { backgroundColor: '#111F3D', color: '#F4F7FF', borderColor: '#2A416C', borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9, fontSize: 12, marginTop: 8 },
+  categories: { gap: 7, paddingVertical: 9 },
+  category: { backgroundColor: '#172744', borderWidth: 1, borderColor: '#2A416C', borderRadius: 16, paddingHorizontal: 11, paddingVertical: 6 },
+  categoryActive: { backgroundColor: '#245EB7', borderColor: '#398BFF' },
+  categoryText: { color: '#A9B9D9', fontSize: 10, fontWeight: '700' },
+  categoryTextActive: { color: '#FFFFFF' },
+  thumbnail: { width: 82, height: 104, backgroundColor: '#0D1730', borderRadius: 8, borderWidth: 1, borderColor: '#3A5076', padding: 6, justifyContent: 'space-between' },
+  thumbHero: { height: 37, borderRadius: 5, alignItems: 'center', justifyContent: 'center' },
+  thumbHeroText: { color: '#FFFFFF', fontSize: 19, fontWeight: 'bold' },
+  thumbLines: { gap: 4, paddingHorizontal: 2 },
+  thumbLineWide: { width: '92%', height: 4, borderRadius: 3, backgroundColor: '#D6E4FF' },
+  thumbLine: { width: '66%', height: 3, borderRadius: 3, backgroundColor: '#8299C2' },
+  thumbButton: { width: '58%', height: 7, borderRadius: 3, backgroundColor: '#398BFF', marginTop: 2 },
+  thumbFooter: { flexDirection: 'row', gap: 5 },
+  thumbDot: { width: 13, height: 5, borderRadius: 3, backgroundColor: '#304A75' },
+  cardIconWrap: { width: 24, alignItems: 'center' },
+  empty: { color: '#A9B9D9', fontSize: 12, padding: 16 },
   cardIcon: { fontSize: 20 },
   cardMeta: { flex: 1 },
   cardTitle: { fontSize: 13, fontWeight: 'bold', color: '#ffffff' },
