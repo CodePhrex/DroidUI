@@ -170,6 +170,7 @@ interface EditorState {
   insertTemplate: (parentId: string, templateNode: ComponentNode) => void;
   moveChildNode: (parentId: string, fromIndex: number, toIndex: number) => void;
   deleteNode: (id: string) => void;
+  duplicateNode: (id: string) => void;
   undo: () => void;
   redo: () => void;
 
@@ -522,6 +523,28 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       rootNode: deleteRecursive(rootNode),
       selectedNodeId: null,
     });
+  },
+
+  duplicateNode: (id) => {
+    const { rootNode, history } = get();
+    let duplicateId: string | null = null;
+    const cloneWithNewIds = (node: ComponentNode): ComponentNode => {
+      const cloned = randomizeIds(node);
+      duplicateId = cloned.id;
+      return cloned;
+    };
+    const duplicateRecursive = (node: ComponentNode): ComponentNode => {
+      if (!node.children) return node;
+      const nextChildren: ComponentNode[] = [];
+      node.children.forEach((child) => {
+        nextChildren.push(duplicateRecursive(child));
+        if (child.id === id) nextChildren.push(cloneWithNewIds(child));
+      });
+      return { ...node, children: nextChildren };
+    };
+    const nextRoot = duplicateRecursive(rootNode);
+    if (!duplicateId) return;
+    set({ history: [...history, rootNode], future: [], rootNode: nextRoot, selectedNodeId: duplicateId });
   },
 
   undo: () => {
