@@ -60,7 +60,8 @@ export const FontLibraryStudio = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.screenScroll} contentContainerStyle={styles.container} showsVerticalScrollIndicator={true} keyboardShouldPersistTaps="handled">
+
       <Text style={styles.title}>Typography & Font Library</Text>
       <Text style={styles.subtitle}>Select custom fonts and typography styles for your UI</Text>
 
@@ -152,12 +153,13 @@ export const FontLibraryStudio = () => {
           <Text style={styles.btnText}>Apply Globally</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 12, flex: 1 },
+  screenScroll: { flex: 1, minHeight: 0 },
+  container: { padding: 12, paddingBottom: 36, flexGrow: 1 },
   title: { fontSize: 16, fontWeight: 'bold', color: '#f8fafc', marginBottom: 2 },
   subtitle: { fontSize: 11, color: '#94a3b8', marginBottom: 12 },
   fontRow: { maxHeight: 90, marginBottom: 12 },
@@ -201,9 +203,9 @@ const styles = StyleSheet.create({
   chip: { backgroundColor: '#334155', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
   activeChip: { backgroundColor: '#3b82f6' },
   chipText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
-  actionRow: { flexDirection: 'row', gap: 8 },
-  applyBtn: { flex: 1, backgroundColor: '#3b82f6', padding: 10, borderRadius: 6, alignItems: 'center' },
-  globalBtn: { backgroundColor: '#8b5cf6', padding: 10, borderRadius: 6, alignItems: 'center' },
+  actionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, paddingBottom: 8 },
+  applyBtn: { flexGrow: 1, flexBasis: 150, backgroundColor: '#3b82f6', padding: 10, borderRadius: 6, alignItems: 'center' },
+  globalBtn: { flexGrow: 1, alignItems: 'center', backgroundColor: '#8b5cf6', padding: 10, borderRadius: 6, alignItems: 'center' },
   disabledBtn: { backgroundColor: '#475569', opacity: 0.6 },
   btnText: { color: '#fff', fontSize: 11, fontWeight: 'bold' },
 });
