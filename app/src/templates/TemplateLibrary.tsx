@@ -144,7 +144,101 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
       ],
     },
   },
-];
+,
+{
+    id: 'finance_overview', name: 'Fintech Wallet Dashboard', deviceTag: 'Phone • Tablet',
+    description: 'A complete finance home screen with balance summary, spending progress, transaction rows, account shortcuts and a strong primary action.',
+    icon: '💳',
+    node: { id: 'finance_root', type: 'Container', style: { flexDirection: 'column', padding: 16, backgroundColor: '#0B1224', borderRadius: 18, gap: 12 }, children: [
+      { id: 'finance_greeting', type: 'Text', props: { text: 'Good morning, Alex 👋' }, style: { fontSize: 19, color: '#F8FAFC', fontWeight: 'bold' } },
+      { id: 'finance_balance', type: 'Card', style: { padding: 16, backgroundColor: '#173B72', borderRadius: 16, gap: 7 }, children: [
+        { id: 'finance_label', type: 'Text', props: { text: 'TOTAL BALANCE' }, style: { fontSize: 10, color: '#B9D7FF', fontWeight: 'bold' } },
+        { id: 'finance_amount', type: 'Text', props: { text: '$24,680.50' }, style: { fontSize: 29, color: '#FFFFFF', fontWeight: 'bold' } },
+        { id: 'finance_change', type: 'Badge', props: { text: '↗ 12.8% this month' }, style: { backgroundColor: '#126B64', padding: 6, borderRadius: 14 } },
+        { id: 'finance_send', type: 'Button', props: { label: '＋  Send money' }, style: { backgroundColor: '#38E8F2', color: '#081126', padding: 11, borderRadius: 9, alignItems: 'center' } }
+      ]},
+      { id: 'finance_actions_title', type: 'Text', props: { text: 'Quick actions' }, style: { fontSize: 15, color: '#F8FAFC', fontWeight: 'bold' } },
+      { id: 'finance_actions', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-between', gap: 7 }, children: [
+        { id: 'finance_a1', type: 'Card', style: { flex: 1, padding: 10, backgroundColor: '#17243D', borderRadius: 10 }, children: [{ id: 'finance_a1t', type: 'Text', props: { text: '↗ Transfer' }, style: { color: '#DCE8FF', fontSize: 10 } }] },
+        { id: 'finance_a2', type: 'Card', style: { flex: 1, padding: 10, backgroundColor: '#17243D', borderRadius: 10 }, children: [{ id: 'finance_a2t', type: 'Text', props: { text: '▣ Cards' }, style: { color: '#DCE8FF', fontSize: 10 } }] },
+        { id: 'finance_a3', type: 'Card', style: { flex: 1, padding: 10, backgroundColor: '#17243D', borderRadius: 10 }, children: [{ id: 'finance_a3t', type: 'Text', props: { text: '◷ History' }, style: { color: '#DCE8FF', fontSize: 10 } }] }
+      ]},
+      { id: 'finance_spend_title', type: 'Text', props: { text: 'Monthly spending' }, style: { fontSize: 15, color: '#F8FAFC', fontWeight: 'bold' } },
+      { id: 'finance_spend', type: 'ProgressBar', props: { label: '$1,840 of $3,000 budget', progress: 61, barColor: '#38E8F2' }, style: { backgroundColor: '#17243D', padding: 10, borderRadius: 10 } },
+      { id: 'finance_recent', type: 'Text', props: { text: 'Recent activity' }, style: { fontSize: 15, color: '#F8FAFC', fontWeight: 'bold' } },
+      { id: 'finance_tx1', type: 'Card', style: { padding: 11, backgroundColor: '#17243D', borderRadius: 10 }, children: [{ id: 'finance_tx1t', type: 'Text', props: { text: '☕  Coffee House                 -$6.80' }, style: { color: '#DCE8FF', fontSize: 11 } }] },
+      { id: 'finance_tx2', type: 'Card', style: { padding: 11, backgroundColor: '#17243D', borderRadius: 10 }, children: [{ id: 'finance_tx2t', type: 'Text', props: { text: '↗  Salary deposit             +$3,850' }, style: { color: '#38E8F2', fontSize: 11 } }] }
+    ]}
+  },
+  {
+    id: 'commerce_storefront', name: 'Premium Commerce Storefront', deviceTag: 'Phone • Tablet',
+    description: 'A polished shopping landing page with campaign hero, category chips, featured product cards, price hierarchy and shopping CTA.',
+    icon: '🛍️',
+    node: { id: 'shop_root', type: 'Container', style: { flexDirection: 'column', padding: 15, backgroundColor: '#F5F3EF', borderRadius: 16, gap: 11 }, children: [
+      { id: 'shop_brand', type: 'Text', props: { text: 'ATELIER  /  NEW SEASON' }, style: { fontSize: 11, color: '#20252D', fontWeight: 'bold' } },
+      { id: 'shop_hero', type: 'Card', style: { padding: 18, backgroundColor: '#D9D1C4', borderRadius: 14, gap: 8 }, children: [
+        { id: 'shop_kicker', type: 'Text', props: { text: 'THE EDIT • 2026' }, style: { fontSize: 10, color: '#5D554B', fontWeight: 'bold' } },
+        { id: 'shop_title', type: 'Text', props: { text: 'Objects for a better everyday.' }, style: { fontSize: 25, color: '#1D242B', fontWeight: 'bold' } },
+        { id: 'shop_desc', type: 'Text', props: { text: 'Thoughtful essentials. Exceptional details.' }, style: { fontSize: 12, color: '#514C45' } },
+        { id: 'shop_cta', type: 'Button', props: { label: 'Explore collection  →' }, style: { backgroundColor: '#1D242B', padding: 11, borderRadius: 8, alignItems: 'center' } }
+      ]},
+      { id: 'shop_categories', type: 'Text', props: { text: 'Discover   •   Clothing   •   Objects   •   Living' }, style: { fontSize: 11, color: '#343B43', fontWeight: 'bold' } },
+      { id: 'shop_featured', type: 'Text', props: { text: 'Featured pieces' }, style: { fontSize: 18, color: '#20252D', fontWeight: 'bold' } },
+      { id: 'shop_product1', type: 'Card', style: { padding: 13, backgroundColor: '#FFFFFF', borderRadius: 12, gap: 5 }, children: [
+        { id: 'shop_product1_art', type: 'Container', style: { height: 90, backgroundColor: '#C6B8A5', borderRadius: 8, alignItems: 'center', justifyContent: 'center' }, children: [{ id: 'shop_product1_icon', type: 'Text', props: { text: '✦  SIGNATURE COLLECTION  ✦' }, style: { color: '#54483A', fontSize: 10, fontWeight: 'bold' } }] },
+        { id: 'shop_product1_name', type: 'Text', props: { text: 'Everyday Essential Jacket' }, style: { fontSize: 13, color: '#20252D', fontWeight: 'bold' } },
+        { id: 'shop_product1_price', type: 'Text', props: { text: '$148.00   •   New arrival' }, style: { fontSize: 11, color: '#65615A' } },
+        { id: 'shop_product1_btn', type: 'Button', props: { label: 'Add to bag' }, style: { backgroundColor: '#20252D', padding: 10, borderRadius: 7, alignItems: 'center' } }
+      ]}
+    ]}
+  },
+  {
+    id: 'social_creator_profile', name: 'Creator Social Profile', deviceTag: 'Phone',
+    description: 'A complete creator profile with identity header, stats, follow action, bio, highlight tiles and a visual post grid.',
+    icon: '✨',
+    node: { id: 'creator_root', type: 'Container', style: { flexDirection: 'column', padding: 15, backgroundColor: '#101426', borderRadius: 16, gap: 10 }, children: [
+      { id: 'creator_top', type: 'Container', style: { flexDirection: 'row', alignItems: 'center', gap: 12 }, children: [
+        { id: 'creator_avatar', type: 'Container', style: { width: 68, height: 68, borderRadius: 34, backgroundColor: '#7257D9', alignItems: 'center', justifyContent: 'center' }, children: [{ id: 'creator_avatar_text', type: 'Text', props: { text: 'JD' }, style: { color: '#FFFFFF', fontSize: 22, fontWeight: 'bold' } }] },
+        { id: 'creator_identity', type: 'Container', style: { flex: 1, gap: 4 }, children: [
+          { id: 'creator_name', type: 'Text', props: { text: 'Jordan Davis  ✓' }, style: { color: '#FFFFFF', fontSize: 17, fontWeight: 'bold' } },
+          { id: 'creator_handle', type: 'Text', props: { text: '@jordandcreates' }, style: { color: '#A5B0D0', fontSize: 11 } },
+          { id: 'creator_stats', type: 'Text', props: { text: '128 posts  •  24.8K followers' }, style: { color: '#D7DDF1', fontSize: 10 } }
+        ]}
+      ]},
+      { id: 'creator_follow', type: 'Button', props: { label: '＋  Follow creator' }, style: { backgroundColor: '#7657E8', padding: 11, borderRadius: 9, alignItems: 'center' } },
+      { id: 'creator_bio', type: 'Text', props: { text: 'Designer • storyteller • building things that move culture.\nNew work every week ↓' }, style: { color: '#D8DEF0', fontSize: 12, lineHeight: 18 } },
+      { id: 'creator_highlights', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-between', gap: 7 }, children: [
+        { id: 'creator_h1', type: 'Card', style: { flex: 1, padding: 10, backgroundColor: '#27305A', borderRadius: 10 }, children: [{ id: 'creator_h1t', type: 'Text', props: { text: '◉  Work' }, style: { color: '#FFFFFF', fontSize: 10 } }] },
+        { id: 'creator_h2', type: 'Card', style: { flex: 1, padding: 10, backgroundColor: '#27305A', borderRadius: 10 }, children: [{ id: 'creator_h2t', type: 'Text', props: { text: '♫  Audio' }, style: { color: '#FFFFFF', fontSize: 10 } }] },
+        { id: 'creator_h3', type: 'Card', style: { flex: 1, padding: 10, backgroundColor: '#27305A', borderRadius: 10 }, children: [{ id: 'creator_h3t', type: 'Text', props: { text: '☆  About' }, style: { color: '#FFFFFF', fontSize: 10 } }] }
+      ]},
+      { id: 'creator_gridtitle', type: 'Text', props: { text: 'Latest posts' }, style: { color: '#FFFFFF', fontSize: 15, fontWeight: 'bold' } },
+      { id: 'creator_grid', type: 'Container', style: { flexDirection: 'row', gap: 7 }, children: [
+        { id: 'creator_post1', type: 'Card', style: { flex: 1, height: 76, backgroundColor: '#A15F73', borderRadius: 8, alignItems: 'center', justifyContent: 'center' }, children: [{ id: 'creator_post1t', type: 'Text', props: { text: '01' }, style: { color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' } }] },
+        { id: 'creator_post2', type: 'Card', style: { flex: 1, height: 76, backgroundColor: '#3D7890', borderRadius: 8, alignItems: 'center', justifyContent: 'center' }, children: [{ id: 'creator_post2t', type: 'Text', props: { text: '02' }, style: { color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' } }] },
+        { id: 'creator_post3', type: 'Card', style: { flex: 1, height: 76, backgroundColor: '#8C754D', borderRadius: 8, alignItems: 'center', justifyContent: 'center' }, children: [{ id: 'creator_post3t', type: 'Text', props: { text: '03' }, style: { color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' } }] }
+      ]}
+    ]}
+  },
+  {
+    id: 'music_player', name: 'Music Player Experience', deviceTag: 'Phone • Tablet',
+    description: 'A full now-playing screen with album artwork treatment, track metadata, playback controls, progress and queue shortcut.',
+    icon: '🎧',
+    node: { id: 'music_root', type: 'Container', style: { flexDirection: 'column', padding: 18, backgroundColor: '#111027', borderRadius: 18, alignItems: 'center', gap: 12 }, children: [
+      { id: 'music_header', type: 'Text', props: { text: 'NOW PLAYING  •  YOUR MIX' }, style: { color: '#B8B0E8', fontSize: 10, fontWeight: 'bold' } },
+      { id: 'music_art', type: 'Container', style: { width: '100%', height: 180, backgroundColor: '#6245A8', borderRadius: 16, alignItems: 'center', justifyContent: 'center' }, children: [{ id: 'music_art_icon', type: 'Text', props: { text: '♫' }, style: { color: '#FFFFFF', fontSize: 76, fontWeight: 'bold' } }] },
+      { id: 'music_track', type: 'Text', props: { text: 'Midnight in Motion' }, style: { color: '#FFFFFF', fontSize: 21, fontWeight: 'bold' } },
+      { id: 'music_artist', type: 'Text', props: { text: 'The New Frequencies' }, style: { color: '#B8B0E8', fontSize: 12 } },
+      { id: 'music_progress', type: 'ProgressBar', props: { label: '02:14                                  04:08', progress: 54, barColor: '#A98AFF' }, style: { width: '100%', padding: 8 } },
+      { id: 'music_controls', type: 'Container', style: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', alignItems: 'center' }, children: [
+        { id: 'music_shuffle', type: 'Text', props: { text: '⤨' }, style: { color: '#C7BDF2', fontSize: 22 } },
+        { id: 'music_prev', type: 'Text', props: { text: '◀◀' }, style: { color: '#FFFFFF', fontSize: 19 } },
+        { id: 'music_play', type: 'Button', props: { label: 'Ⅱ' }, style: { backgroundColor: '#9B7CF5', padding: 15, borderRadius: 28, alignItems: 'center' } },
+        { id: 'music_next', type: 'Text', props: { text: '▶▶' }, style: { color: '#FFFFFF', fontSize: 19 } },
+        { id: 'music_queue', type: 'Text', props: { text: '☷' }, style: { color: '#C7BDF2', fontSize: 22 } }
+      ]}
+    ]}
+  },];
 
 export const TemplateLibrary = () => {
   const { selectedNodeId, rootNode, insertTemplate } = useEditorStore();
