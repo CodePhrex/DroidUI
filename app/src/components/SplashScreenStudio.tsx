@@ -100,15 +100,15 @@ export const SplashScreenStudio = () => {
 
       {/* Duration & Animation Config */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Display Duration (ms)</Text>
+        <Text style={styles.sectionTitle}>Branding Display Duration</Text>
         <View style={styles.chipRow}>
-          {[1000, 1500, 2000, 3000, 4000].map((d) => (
+          {[2000, 3000, 4000, 5000, 6000, 8000, 10000].map((d) => (
             <TouchableOpacity
               key={d}
               style={[styles.chip, splashConfig.durationMs === d && styles.activeChip]}
               onPress={() => updateSplashConfig({ durationMs: d })}
             >
-              <Text style={styles.chipText}>{d}ms</Text>
+              <Text style={styles.chipText}>{d / 1000}s</Text>
             </TouchableOpacity>
           ))}
         </View>
