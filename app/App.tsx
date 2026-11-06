@@ -64,6 +64,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'toolbox' | 'more' | 'inspector' | 'deeplink' | 'release' | 'droid_file' | 'svg_importer' | 'store' | 'export_android' | 'splash' | 'sounds' | 'transitions' | 'assets' | 'templates' | 'cicd' | 'tests' | 'profiler' | 'i18n' | 'accessibility' | 'states' | 'spacing' | 'presets' | 'code' | 'font' | 'search' | 'assets' | 'projects' | 'layers' | 'theme' | 'theme_io'>('inspector');
   const [activeViewport, setActiveViewport] = useState<ViewportMode>('galaxy_s24_ultra');
   const [modalVisible, setModalVisible] = useState(false);
+  const [projectPreviewVisible, setProjectPreviewVisible] = useState(false);
   const [codeOutput, setCodeOutput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [showBrandSplash, setShowBrandSplash] = useState(true);
@@ -155,6 +156,7 @@ export default function App() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.navActions}>
           <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70', borderWidth: 1, borderColor: '#398BFF' }]} onPress={() => toggleFloatingPanel('toolbox')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>＋ Toolbox</Text></TouchableOpacity>
           <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70' }]} onPress={() => toggleFloatingPanel('templates')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>▣ Templates</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#173D45', borderWidth: 1, borderColor: '#38E8F2' }]} onPress={() => setProjectPreviewVisible(true)}><Text style={[styles.navBtnText, { color: '#BDFBFF' }]}>▶ Preview</Text></TouchableOpacity>
           <TouchableOpacity style={[styles.navBtn, { backgroundColor: '#203D70' }]} onPress={() => toggleFloatingPanel('inspector')}><Text style={[styles.navBtnText, { color: '#DCE8FF' }]}>◈ Inspector</Text></TouchableOpacity>
           <TouchableOpacity style={[styles.navBtn, { backgroundColor: isLightMode ? '#E5EDFF' : '#111B35' }]} onPress={handleQuickSave} disabled={isSaving}>
             <Text style={[styles.navBtnText, { color: theme.textPrimary }]}>{isSaving ? 'Saving…' : '💾 Save'}</Text>
@@ -257,6 +259,25 @@ export default function App() {
           {activeTab === 'theme' && <ThemeManager />}
         </View>
       </View>
+
+      <Modal visible={projectPreviewVisible} animationType="fade" transparent={false} onRequestClose={() => setProjectPreviewVisible(false)}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#080D1F' }}>
+          <View style={{ minHeight: 54, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#263B61' }}>
+            <View>
+              <Text style={{ color: '#F4F7FF', fontSize: 15, fontWeight: '800' }}>Project Preview</Text>
+              <Text style={{ color: '#91A5CC', fontSize: 10 }}>{currentProjectName} · {activeViewport}</Text>
+            </View>
+            <TouchableOpacity onPress={() => setProjectPreviewVisible(false)} style={{ backgroundColor: '#203D70', borderRadius: 9, paddingHorizontal: 14, paddingVertical: 9 }}>
+              <Text style={{ color: '#FFFFFF', fontWeight: '800', fontSize: 12 }}>✕ Close Preview</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 18 }}>
+            <View style={{ width: currentVP.width, minHeight: currentVP.height, maxWidth: '100%', borderRadius: 24, overflow: 'hidden', backgroundColor: '#101A36', borderWidth: 1, borderColor: '#334155', paddingTop: 8 }}>
+              <CanvasRenderer node={rootNode} previewMode />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
 
       {/* Code Export Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
