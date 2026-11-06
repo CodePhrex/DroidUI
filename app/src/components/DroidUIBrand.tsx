@@ -24,40 +24,47 @@ export const BrandMark: React.FC<{ size?: number; showWordmark?: boolean; compac
   </View>
 );
 
-export const BrandSplash: React.FC<{ onFinish?: () => void }> = ({ onFinish }) => {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.82)).current;
+export const BrandSplash: React.FC<{ onFinish?: () => void; progress?: number; status?: string }> = ({ onFinish, progress = 0, status = 'Preparing your workspace' }) => {
+  const opacity = useRef(new Animated.Value(1)).current;
+  const scale = useRef(new Animated.Value(0.88)).current;
   const glow = useRef(new Animated.Value(0.35)).current;
   const finishRef = useRef(onFinish);
   useEffect(() => { finishRef.current = onFinish; }, [onFinish]);
   useEffect(() => {
     Animated.parallel([
-      Animated.sequence([
-        Animated.timing(opacity, { toValue: 1, duration: 420, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-        Animated.delay(1250),
-        Animated.timing(opacity, { toValue: 0, duration: 420, easing: Easing.in(Easing.cubic), useNativeDriver: true })
-      ]),
       Animated.spring(scale, { toValue: 1, speed: 1.5, bounciness: 8, useNativeDriver: true }),
       Animated.sequence([
-        Animated.timing(glow, { toValue: 1, duration: 650, useNativeDriver: true }),
-        Animated.timing(glow, { toValue: 0.45, duration: 700, useNativeDriver: true })
+        Animated.timing(glow, { toValue: 0.95, duration: 700, useNativeDriver: true }),
+        Animated.timing(glow, { toValue: 0.45, duration: 900, useNativeDriver: true })
       ])
-    ]).start(({ finished }) => { if (finished) finishRef.current?.(); });
-  }, [opacity, scale, glow]);
+    ]).start();
+  }, [scale, glow]);
+  useEffect(() => {
+    if (progress < 100) return;
+    const timer = setTimeout(() => {
+      Animated.timing(opacity, { toValue: 0, duration: 380, easing: Easing.in(Easing.cubic), useNativeDriver: true })
+        .start(({ finished }) => { if (finished) finishRef.current?.(); });
+    }, 260);
+    return () => clearTimeout(timer);
+  }, [progress, opacity]);
+  const safeProgress = Math.max(0, Math.min(100, progress));
   return (
-    <Animated.View pointerEvents="none" style={[styles.splash, { opacity }]}>
+    <Animated.View pointerEvents="auto" style={[styles.splash, { opacity }]}>
       <Animated.View style={[styles.orb, { opacity: glow, transform: [{ scale }] }]} />
       <Animated.View style={{ alignItems: 'center', transform: [{ scale }] }}>
         <BrandMark size={112} showWordmark={false} />
         <Text style={styles.splashTitle}>Droid<Text style={styles.wordmarkAccent}>UI</Text></Text>
         <Text style={styles.splashTagline}>DESIGN • BUILD • INSPIRE</Text>
-        <View style={styles.progressTrack}><View style={styles.progressFill} /></View>
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${safeProgress}%` }]} />
+        </View>
+        <Text style={styles.loadingStatus}>{status}</Text>
+        <Text style={styles.progressLabel}>{Math.round(safeProgress)}%</Text>
       </Animated.View>
-      <Text style={styles.footer}>YOUR CREATIVE WORKSPACE</Text>
+      <Text style={styles.footer}>INITIALIZING YOUR CREATIVE WORKSPACE</Text>
     </Animated.View>
   );
 };
-
 const styles = StyleSheet.create({
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 9 },
   wordmarkWrap: { justifyContent: 'center' },
@@ -70,6 +77,8 @@ const styles = StyleSheet.create({
   splashTitle: { color: COLORS.white, fontSize: 42, fontWeight: '900', letterSpacing: -1.5, marginTop: 16 },
   splashTagline: { color: '#A7B8E2', fontSize: 10, fontWeight: '800', letterSpacing: 3, marginTop: 8 },
   progressTrack: { width: 128, height: 3, borderRadius: 3, backgroundColor: '#263454', overflow: 'hidden', marginTop: 34 },
-  progressFill: { width: '72%', height: 3, backgroundColor: COLORS.cyan, borderRadius: 3 },
+  progressFill: { height: 3, backgroundColor: COLORS.cyan, borderRadius: 3 },
+  loadingStatus: { color: '#B7C8E9', fontSize: 11, fontWeight: '600', marginTop: 14, minHeight: 16 },
+  progressLabel: { color: '#6E82B1', fontSize: 9, fontWeight: '800', marginTop: 6 },
   footer: { position: 'absolute', bottom: 42, color: '#6E82B1', fontSize: 9, fontWeight: '700', letterSpacing: 2.2 }
 });
