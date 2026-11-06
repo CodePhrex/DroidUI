@@ -51,7 +51,25 @@ export const ICON_CATEGORIES: IconCategory[] = [
 
 export const AssetPickerStudio = () => {
   const { selectedNodeId, rootNode, addChildNode, updateProps } = useEditorStore();
-  const targetParentId = selectedNodeId || rootNode.id;
+  const findNode = (node: any, id: string): any => {
+    if (node.id === id) return node;
+    for (const child of node.children || []) {
+      const found = findNode(child, id);
+      if (found) return found;
+    }
+    return null;
+  };
+  const findTargetContainer = (node: any, targetId: string, currentContainerId: string): string => {
+    if (node.id === targetId) return node.type === 'Container' || node.type === 'Card' ? node.id : currentContainerId;
+    const nextContainerId = node.type === 'Container' || node.type === 'Card' ? node.id : currentContainerId;
+    for (const child of node.children || []) {
+      const found = findTargetContainer(child, targetId, nextContainerId);
+      if (found !== nextContainerId || child.id === targetId) return found;
+    }
+    return currentContainerId;
+  };
+  const selectedNode = selectedNodeId ? findNode(rootNode, selectedNodeId) : null;
+  const targetParentId = selectedNodeId ? findTargetContainer(rootNode, selectedNodeId, rootNode.id) : rootNode.id;
   const [searchQuery, setSearchQuery] = useState('');
   const [renameId, setRenameId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
@@ -92,8 +110,8 @@ export const AssetPickerStudio = () => {
         assetSizeBytes: picked.fileSize,
         assetCreatedAt: new Date().toISOString(),
       };
-      if (selectedNodeId) {
-        updateProps(selectedNodeId, props);
+      if (selectedNode?.type === 'Image') {
+        updateProps(selectedNode.id, props);
       } else {
         addChildNode(targetParentId, 'Image');
         const createdId = useEditorStore.getState().selectedNodeId;
@@ -122,8 +140,8 @@ export const AssetPickerStudio = () => {
   };
 
   const handleSelectIcon = (symbol: string) => {
-    if (selectedNodeId) {
-      updateProps(selectedNodeId, { iconSymbol: symbol, name: symbol });
+    if (selectedNode?.type === 'Icon') {
+      updateProps(selectedNode.id, { iconSymbol: symbol, name: symbol });
       return;
     }
     addChildNode(targetParentId, 'Icon');
