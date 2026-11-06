@@ -144,7 +144,6 @@ export const PREBUILT_TEMPLATES: { id: string; name: string; deviceTag: string; 
       ],
     },
   },
-,
 {
     id: 'finance_overview', name: 'Fintech Wallet Dashboard', deviceTag: 'Phone • Tablet',
     description: 'A complete finance home screen with balance summary, spending progress, transaction rows, account shortcuts and a strong primary action.',
