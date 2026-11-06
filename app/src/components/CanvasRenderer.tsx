@@ -62,17 +62,22 @@ export const CanvasRenderer: React.FC<Props> = ({ node, previewMode = false }) =
     if (previewMode || node.id === rootNode.id) return;
     selectNode(node.id);
     const position = findParentPosition(rootNode, node.id);
-    const buttons: Array<{ text: string; onPress?: () => void; style?: 'cancel' | 'destructive' }> = [
-      { text: 'Select / Edit', onPress: () => selectNode(node.id) },
+    const position = findParentPosition(rootNode, node.id);
+    Alert.alert('Element actions', node.props?.label || node.props?.text || node.type, [
       { text: 'Duplicate', onPress: () => duplicateNode(node.id) },
-    ];
-    if (position) {
-      buttons.push({ text: 'Move Forward', onPress: () => moveChildNode(position.parentId, position.index, Math.min(position.index + 1, (findNode(rootNode, position.parentId)?.children?.length || 1) - 1)) });
-      buttons.push({ text: 'Move Backward', onPress: () => moveChildNode(position.parentId, position.index, Math.max(0, position.index - 1)) });
-    }
-    buttons.push({ text: 'Delete', style: 'destructive', onPress: () => deleteNode(node.id) });
-    buttons.push({ text: 'Cancel', style: 'cancel' });
-    Alert.alert('Element actions', node.props?.label || node.props?.text || node.type, buttons);
+      { text: 'More actions', onPress: () => {
+        const currentPosition = findParentPosition(rootNode, node.id);
+        if (!currentPosition) return;
+        const parent = findNode(rootNode, currentPosition.parentId);
+        const lastIndex = Math.max(0, (parent?.children?.length || 1) - 1);
+        Alert.alert('Arrange element', 'Move this element within its current group.', [
+          { text: 'Move Forward', onPress: () => moveChildNode(currentPosition.parentId, currentPosition.index, Math.min(currentPosition.index + 1, lastIndex)) },
+          { text: 'Move Backward', onPress: () => moveChildNode(currentPosition.parentId, currentPosition.index, Math.max(0, currentPosition.index - 1)) },
+          { text: 'Cancel', style: 'cancel' },
+        ]);
+      } },
+      { text: 'Delete', style: 'destructive', onPress: () => deleteNode(node.id) },
+    ]);
   };
   const findNode = (current: ComponentNode, targetId: string): ComponentNode | null => {
     if (current.id === targetId) return current;
