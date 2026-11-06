@@ -9,7 +9,15 @@ export type ViewportMode =
   | 'pixel_tablet'
   | 'compact_phone'
   | 'wear_os_watch'
-  | 'android_tv'\n  | 'galaxy_a15'\n  | 'galaxy_s25_ultra'\n  | 'pixel_9_pro'\n  | 'oneplus_13'\n  | 'redmi_note_14'\n  | 'pixel_fold'\n  | 'galaxy_tab_s10'\n  | 'chromebook';
+  | 'android_tv'
+  | 'galaxy_a15'
+  | 'galaxy_s25_ultra'
+  | 'pixel_9_pro'
+  | 'oneplus_13'
+  | 'redmi_note_14'
+  | 'pixel_fold'
+  | 'galaxy_tab_s10'
+  | 'chromebook';
 
 export interface ViewportSpec {
   id: ViewportMode;
