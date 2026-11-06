@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { Animated, Modal, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, PanResponder, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface Props {
   visible: boolean;
@@ -7,10 +7,11 @@ interface Props {
   subtitle?: string;
   onClose: () => void;
   children: React.ReactNode;
+  offset?: number;
 }
 
 /** A draggable, always-on-top utility window for the mobile studio workspace. */
-export const FloatingToolWindow: React.FC<Props> = ({ visible, title, subtitle, onClose, children }) => {
+export const FloatingToolWindow: React.FC<Props> = ({ visible, title, subtitle, onClose, children, offset = 0 }) => {
   const position = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const responder = useMemo(() => PanResponder.create({
     onStartShouldSetPanResponder: () => false,
@@ -25,9 +26,8 @@ export const FloatingToolWindow: React.FC<Props> = ({ visible, title, subtitle, 
   }), [position]);
 
   return (
-    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
-      <View style={styles.backdrop}>
-        <Animated.View style={[styles.window, { transform: position.getTranslateTransform() }]}>
+    visible ? <View pointerEvents="box-none" style={styles.backdrop}>
+        <Animated.View style={[styles.window, { top: 72 + offset * 24, left: 10 + offset * 16, transform: position.getTranslateTransform() }]}>
           <View style={styles.titleBar} {...responder.panHandlers}>
             <View style={styles.grip}><View style={styles.gripLine} /></View>
             <View style={styles.heading}>
@@ -39,14 +39,13 @@ export const FloatingToolWindow: React.FC<Props> = ({ visible, title, subtitle, 
           </View>
           <View style={styles.content}>{children}</View>
         </Animated.View>
-      </View>
-    </Modal>
+      </View> : null
   );
 };
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(3,8,22,0.48)', justifyContent: 'center', alignItems: 'center', padding: 12 },
-  window: { width: '100%', maxWidth: 560, height: '76%', backgroundColor: '#0D1730', borderRadius: 18, borderWidth: 1, borderColor: '#3A5E96', overflow: 'hidden', elevation: 28, shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 24 },
+  backdrop: { ...StyleSheet.absoluteFillObject, zIndex: 50, elevation: 25 },
+  window: { position: 'absolute', width: '92%', maxWidth: 560, height: '70%', backgroundColor: '#0D1730', borderRadius: 18, borderWidth: 1, borderColor: '#3A5E96', overflow: 'hidden', elevation: 28, shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 24 },
   titleBar: { minHeight: 68, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 13, backgroundColor: '#142442', borderBottomWidth: 1, borderBottomColor: '#2B4269' },
   grip: { width: 22, height: 38, justifyContent: 'center', marginRight: 8 },
   gripLine: { width: 4, height: 25, borderRadius: 3, backgroundColor: '#5276A9' },
