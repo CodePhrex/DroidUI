@@ -11,8 +11,8 @@ import { CICDPipelineStudio } from './src/components/CICDPipelineStudio';
 import { generateGitHubActionsYAML } from './src/compiler/cicdPipelineGenerator';
 import { UnitTestGeneratorStudio } from './src/components/UnitTestGeneratorStudio';
 import { generateJestTestSpec } from './src/compiler/jestTestGenerator';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, SafeAreaView, Alert, InteractionManager } from 'react-native';
 import { useEditorStore } from './src/store/useEditorStore';
 import { CanvasRenderer } from './src/components/CanvasRenderer';
 import { PropertyInspector } from './src/components/PropertyInspector';
@@ -53,7 +53,8 @@ export default function App() {
     currentProjectName,
     undo,
     redo,
-    saveCurrentProject
+    saveCurrentProject,
+    refreshProjectList
   } = useEditorStore();
 
   const theme = THEMES[currentTheme] || THEMES.dark;
@@ -65,6 +66,45 @@ export default function App() {
   const [codeOutput, setCodeOutput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [showBrandSplash, setShowBrandSplash] = useState(true);
+  const [bootProgress, setBootProgress] = useState(8);
+  const [bootStatus, setBootStatus] = useState('Starting DroidUI services');
+
+  useEffect(() => {
+    let mounted = true;
+    const initializeStudio = async () => {
+      try {
+        setBootStatus('Restoring your project library');
+        setBootProgress(24);
+        await refreshProjectList();
+
+        if (!mounted) return;
+        setBootStatus('Preparing the design canvas');
+        setBootProgress(56);
+        const editorState = useEditorStore.getState();
+        if (!editorState.rootNode || !editorState.rootNode.id) {
+          throw new Error('The editor workspace could not be initialized.');
+        }
+
+        setBootStatus('Loading studio tools and design systems');
+        setBootProgress(78);
+        await new Promise<void>(resolve => {
+          InteractionManager.runAfterInteractions(() => resolve());
+        });
+
+        if (!mounted) return;
+        setBootStatus('Finishing workspace setup');
+        setBootProgress(100);
+      } catch (error) {
+        if (!mounted) return;
+        // Keep startup resilient: the editor can still open with its default workspace
+        // when local project storage is unavailable or empty.
+        setBootStatus('Opening a fresh workspace');
+        setBootProgress(100);
+      }
+    };
+    initializeStudio();
+    return () => { mounted = false; };
+  }, [refreshProjectList]);
 
   const currentVP = VIEWPORTS[activeViewport] || VIEWPORTS.galaxy_s24_ultra;
 
@@ -224,7 +264,7 @@ export default function App() {
           </View>
         </View>
       </Modal>
-      {showBrandSplash && <BrandSplash onFinish={() => setShowBrandSplash(false)} />}
+      {showBrandSplash && <BrandSplash progress={bootProgress} status={bootStatus} onFinish={() => setShowBrandSplash(false)} />}
     </SafeAreaView>
   );
 }
