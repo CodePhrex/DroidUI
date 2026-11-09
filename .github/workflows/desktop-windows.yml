@@ -52,6 +52,19 @@ jobs:
       - name: Build desktop web frontend
         run: npm run build
       - name: Build Tauri Windows installer
+        id: installer
+        continue-on-error: true
+        run: npm run desktop:build
+      - name: Upload compiled portable executable
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: droidui-desktop-windows-portable
+          path: desktop/src-tauri/target/release/droidui-desktop.exe
+          if-no-files-found: error
+          retention-days: 14
+      - name: Retry installer packaging after transient network failure
+        if: steps.installer.outcome == 'failure'
         run: npm run desktop:build
       - name: Verify installer exists
         shell: pwsh
